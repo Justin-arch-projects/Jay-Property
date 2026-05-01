@@ -354,6 +354,33 @@
     margin-top: 4px; font-family: inherit;
   }
 
+  /* ── BOOK BUTTON ── */
+  .book-btn {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--accent); color: white;
+    border: none; border-radius: 20px;
+    font-size: 12px; font-weight: 700;
+    padding: 5px 12px; cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    flex-shrink: 0;
+  }
+  .book-btn:active { opacity: 0.8; transform: scale(0.96); }
+
+  /* ── BOOKING LIST ON CARD ── */
+  .booking-list { margin-top: 8px; }
+  .booking-chip {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg3); border-radius: var(--r-sm);
+    padding: 7px 10px; margin-bottom: 5px; font-size: 12px;
+  }
+  .booking-chip-name { font-weight: 600; color: var(--text); }
+  .booking-chip-dates { color: var(--text2); font-size: 11px; margin-top: 1px; }
+  .booking-chip-del {
+    background: none; border: none; color: var(--text3);
+    font-size: 16px; cursor: pointer; padding: 0 2px; line-height: 1;
+  }
+  .booking-chip-del:active { color: var(--red); }
+
   /* ── PULL CHIP ── */
   .pull-chip { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 16px; }
 
@@ -503,6 +530,38 @@
   </button>
 </div>
 
+<!-- BOOK MODAL -->
+<div class="modal-overlay" id="bookModalOverlay" onclick="closeBookModal(event)">
+  <div class="modal">
+    <div class="pull-chip"></div>
+    <h3 id="bookModalTitle">New booking</h3>
+    <div class="modal-field">
+      <div class="modal-label">Guest name</div>
+      <input class="modal-input" id="bookGuest" type="text" placeholder="e.g. Smith Family">
+    </div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <div class="modal-label">Check-in date</div>
+        <input class="modal-input" id="bookCheckin" type="date">
+      </div>
+      <div class="modal-field">
+        <div class="modal-label">Check-out date</div>
+        <input class="modal-input" id="bookCheckout" type="date">
+      </div>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Rate / night (optional)</div>
+      <input class="modal-input" id="bookRate" type="number" placeholder="e.g. 250">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Notes (optional)</div>
+      <input class="modal-input" id="bookNotes" type="text" placeholder="e.g. Pet-friendly, early check-in...">
+    </div>
+    <button class="modal-btn" onclick="saveBooking()">Confirm booking</button>
+    <button class="modal-btn-cancel" onclick="document.getElementById('bookModalOverlay').classList.remove('open')">Cancel</button>
+  </div>
+</div>
+
 <!-- ADD TASK MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal">
@@ -638,8 +697,29 @@ function renderProperties() {
   const s2b = { booked:'badge-booked', vacant:'badge-vacant', maint:'badge-maint', prep:'badge-prep' };
   const s2t = { booked:'Booked', vacant:'Vacant', maint:'Maintenance', prep:'Preparing' };
   const s2dc = { booked:'var(--teal)', vacant:'var(--amber)', maint:'var(--red)', prep:'var(--purple)' };
-  document.getElementById('propList').innerHTML = properties.map(p => `
-    <div class="prop-card" onclick="goTasks(${p.id})">
+
+  function fmtDate(d) {
+    if (!d) return '';
+    const dt = new Date(d + 'T00:00:00');
+    return (dt.getMonth()+1) + '/' + dt.getDate() + '/' + String(dt.getFullYear()).slice(2);
+  }
+
+  document.getElementById('propList').innerHTML = properties.map(p => {
+    const propBookings = bookings.filter(b => b.propId === p.id);
+    const bookingChips = propBookings.map((b, i) => {
+      const ci = b.si instanceof Date ? fmtDate(b.si.toISOString().slice(0,10)) : fmtDate(b.si);
+      const co = b.ei instanceof Date ? fmtDate(b.ei.toISOString().slice(0,10)) : fmtDate(b.ei);
+      const globalIdx = bookings.indexOf(b);
+      return `<div class="booking-chip">
+        <div>
+          <div class="booking-chip-name">${b.guest}</div>
+          <div class="booking-chip-dates">${ci} → ${co}${b.notes ? ' · ' + b.notes : ''}</div>
+        </div>
+        <button class="booking-chip-del" onclick="event.stopPropagation();deleteBooking(${globalIdx})">×</button>
+      </div>`;
+    }).join('');
+
+    return `<div class="prop-card" onclick="goTasks(${p.id})">
       <div class="prop-row1">
         <div class="prop-left">
           <div class="prop-emoji" style="background:${p.iconBg}">${p.icon}</div>
@@ -648,7 +728,10 @@ function renderProperties() {
             <div class="prop-addr">${p.addr}</div>
           </div>
         </div>
-        <span class="badge ${s2b[p.status]}">${s2t[p.status]}</span>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+          <span class="badge ${s2b[p.status]}">${s2t[p.status]}</span>
+          <button class="book-btn" onclick="event.stopPropagation();openBookModal(${p.id})">+ Book</button>
+        </div>
       </div>
       <div class="renter-row">
         <div class="renter-dot" style="background:${s2dc[p.status]}"></div>
@@ -657,13 +740,15 @@ function renderProperties() {
           <span style="color:var(--text3);font-size:11px;"> · ${p.rate === 'Monthly' ? '30 days' : p.nextRenter.nights + ' nights'} · ${p.nextRenter.checkin} → ${p.nextRenter.checkout}</span>
         </div>
       </div>
+      ${propBookings.length > 0 ? `<div class="booking-list">${bookingChips}</div>` : ''}
       <div class="prop-stats">
         <div class="prop-stat"><div class="stat-val">${p.revenue}</div><div class="stat-lbl">Revenue</div></div>
         <div class="prop-stat"><div class="stat-val" style="color:${p.tasks > 0 ? 'var(--amber)' : 'var(--text)'}">${p.tasks}</div><div class="stat-lbl">Tasks</div></div>
         <div class="prop-stat"><div class="stat-val">${p.occ}%</div><div class="stat-lbl">Occupancy</div></div>
         <div class="prop-stat"><div class="stat-val" style="font-size:11px;color:var(--text2)">${p.rate}</div><div class="stat-lbl">Type</div></div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function goTasks(propId) {
@@ -812,28 +897,90 @@ function changeMonth(dir) {
 
 // ── UPCOMING ──
 function renderUpcoming() {
-  const items = [
-    { day:2,  mon:'May', name:'Deep clean — Lakeside Cabin', detail:'Before Chen Family check-in · urgent task', type:'task',     tc:'var(--red-bg)',    tt:'var(--red)' },
-    { day:2,  mon:'May', name:'Williams Family check-in',   detail:'Mountain Chalet · 3 nights',               type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
-    { day:3,  mon:'May', name:'Chen Family check-in',       detail:'Lakeside Cabin · 3 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
-    { day:5,  mon:'May', name:'Williams Family check-out',  detail:'Mountain Chalet · clean + review',         type:'check-out', tc:'var(--amber-bg)',  tt:'var(--amber)' },
-    { day:6,  mon:'May', name:'Chen Family check-out',      detail:'Lakeside Cabin · clean + review',          type:'check-out', tc:'var(--amber-bg)',  tt:'var(--amber)' },
-    { day:7,  mon:'May', name:'Torres Couple check-in',     detail:'Garden Cottage · 4 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
-    { day:8,  mon:'May', name:'Sarah Mitchell moves in',    detail:'Downtown Loft · 30-day stay',              type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
-    { day:10, mon:'May', name:'Patel Group check-in',       detail:'Beach Bungalow · 4 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
-    { day:11, mon:'May', name:'Torres Couple check-out',    detail:'Garden Cottage · clean + review',          type:'check-out', tc:'var(--amber-bg)',  tt:'var(--amber)' },
-    { day:14, mon:'May', name:'Patel Group check-out',      detail:'Beach Bungalow · clean + review',          type:'check-out', tc:'var(--amber-bg)',  tt:'var(--amber)' },
-    { day:17, mon:'May', name:'Park Family check-in',       detail:'Garden Cottage · 3 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
-    { day:18, mon:'May', name:'Johnson check-in',           detail:'Lakeside Cabin · 3 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
-    { day:20, mon:'May', name:'Anderson check-in',          detail:'Mountain Chalet · 4 nights',               type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
-    { day:22, mon:'May', name:'Williams check-in',          detail:'Beach Bungalow · 3 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
-  ];
-  document.getElementById('upcomingList').innerHTML = items.map(i => `
+  const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  // Build items from live bookings
+  let items = [];
+  bookings.forEach(b => {
+    const propName = properties[b.propId] ? properties[b.propId].name : '';
+    const si = b.si instanceof Date ? b.si : new Date(b.si + 'T00:00:00');
+    const ei = b.ei instanceof Date ? b.ei : new Date(b.ei + 'T00:00:00');
+    const nights = Math.round((ei - si) / 86400000);
+    items.push({ ts: si, day: si.getDate(), mon: MONTH_SHORT[si.getMonth()], name: b.guest + ' check-in', detail: propName + ' · ' + nights + ' night' + (nights!==1?'s':''), type:'check-in', tc:'var(--teal-bg)', tt:'var(--teal)' });
+    items.push({ ts: ei, day: ei.getDate(), mon: MONTH_SHORT[ei.getMonth()], name: b.guest + ' check-out', detail: propName + ' · clean + review', type:'check-out', tc:'var(--amber-bg)', tt:'var(--amber)' });
+  });
+  // Add urgent tasks
+  tasks.filter(t => !t.done && (t.prio === 'urgent' || t.prio === 'high')).forEach(t => {
+    const propName = properties[t.propId] ? properties[t.propId].name : '';
+    items.push({ ts: new Date(), day: new Date().getDate(), mon: MONTH_SHORT[new Date().getMonth()], name: t.text, detail: propName + ' · urgent task', type:'task', tc:'var(--red-bg)', tt:'var(--red)' });
+  });
+  items.sort((a,b) => a.ts - b.ts);
+  // Only show future + today
+  const todayStart = new Date(TY, TM, TD);
+  items = items.filter(i => i.ts >= todayStart);
+  document.getElementById('upcomingList').innerHTML = items.length === 0
+    ? '<div class="empty"><div class="icon">🎉</div>Nothing coming up!</div>'
+    : items.map(i => `
     <div class="upcoming-item">
       <div class="up-date"><div class="up-day">${i.day}</div><div class="up-mon">${i.mon}</div></div>
       <div class="up-info"><div class="up-name">${i.name}</div><div class="up-detail">${i.detail}</div></div>
       <span class="badge" style="background:${i.tc};color:${i.tt};white-space:nowrap">${i.type}</span>
     </div>`).join('');
+}
+
+// ── BOOK MODAL ──
+let bookingPropId = -1;
+
+function openBookModal(propId) {
+  bookingPropId = propId;
+  const prop = properties[propId];
+  document.getElementById('bookModalTitle').textContent = 'Book · ' + prop.name;
+  document.getElementById('bookGuest').value = '';
+  document.getElementById('bookRate').value = '';
+  document.getElementById('bookNotes').value = '';
+  // default check-in to tomorrow
+  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+  const dayAfter = new Date(); dayAfter.setDate(dayAfter.getDate()+2);
+  document.getElementById('bookCheckin').value = tomorrow.toISOString().slice(0,10);
+  document.getElementById('bookCheckout').value = dayAfter.toISOString().slice(0,10);
+  document.getElementById('bookModalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('bookGuest').focus(), 300);
+}
+
+function closeBookModal(e) {
+  if (e.target === document.getElementById('bookModalOverlay'))
+    document.getElementById('bookModalOverlay').classList.remove('open');
+}
+
+function saveBooking() {
+  const guest = document.getElementById('bookGuest').value.trim();
+  const ci = document.getElementById('bookCheckin').value;
+  const co = document.getElementById('bookCheckout').value;
+  if (!guest || !ci || !co) { alert('Please fill in guest name, check-in and check-out dates.'); return; }
+  if (ci >= co) { alert('Check-out must be after check-in.'); return; }
+  const notes = document.getElementById('bookNotes').value.trim();
+  const rate = document.getElementById('bookRate').value;
+  bookings.push({
+    propId: bookingPropId,
+    guest,
+    si: new Date(ci + 'T00:00:00'),
+    ei: new Date(co + 'T00:00:00'),
+    notes: notes || '',
+    rate: rate ? parseInt(rate) : null
+  });
+  // update property status to booked
+  properties[bookingPropId].status = 'booked';
+  document.getElementById('bookModalOverlay').classList.remove('open');
+  renderProperties();
+  if (currentView === 'calendar') renderCalendar();
+  if (currentView === 'upcoming') renderUpcoming();
+}
+
+function deleteBooking(idx) {
+  if (!confirm('Remove this booking?')) return;
+  bookings.splice(idx, 1);
+  renderProperties();
+  if (currentView === 'calendar') renderCalendar();
+  if (currentView === 'upcoming') renderUpcoming();
 }
 
 // ── INIT ──
