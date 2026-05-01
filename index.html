@@ -5,490 +5,223 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Properties">
+<meta name="apple-mobile-web-app-title" content="Caldwell Rentals">
 <meta name="theme-color" content="#0F172A">
-<title>Property Dashboard</title>
+<title>Caldwell Rentals</title>
 <style>
   :root {
-    --bg: #0F172A;
-    --bg2: #1E293B;
-    --bg3: #273448;
-    --surface: #1E293B;
-    --card: #243044;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.14);
-    --text: #F1F5F9;
-    --text2: #94A3B8;
-    --text3: #64748B;
-    --accent: #3B82F6;
-    --accent2: #1D4ED8;
-    --teal: #14B8A6;
-    --teal-bg: rgba(20,184,166,0.12);
-    --amber: #F59E0B;
-    --amber-bg: rgba(245,158,11,0.12);
-    --red: #EF4444;
-    --red-bg: rgba(239,68,68,0.12);
-    --green: #22C55E;
-    --green-bg: rgba(34,197,94,0.12);
-    --purple: #A78BFA;
-    --purple-bg: rgba(167,139,250,0.12);
-    --coral: #FB7185;
-    --coral-bg: rgba(251,113,133,0.12);
-    --r: 12px;
-    --r-sm: 8px;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --bg:#0F172A;--bg2:#1E293B;--bg3:#273448;--card:#243044;
+    --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+    --text:#F1F5F9;--text2:#94A3B8;--text3:#64748B;
+    --accent:#3B82F6;--teal:#14B8A6;--teal-bg:rgba(20,184,166,0.12);
+    --amber:#F59E0B;--amber-bg:rgba(245,158,11,0.12);
+    --red:#EF4444;--red-bg:rgba(239,68,68,0.12);
+    --green:#22C55E;--green-bg:rgba(34,197,94,0.12);
+    --purple:#A78BFA;--purple-bg:rgba(167,139,250,0.12);
+    --r:12px;--r-sm:8px;
+    --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; overflow: hidden; }
-  body {
-    font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    display: flex;
-    flex-direction: column;
-    max-width: 430px;
-    margin: 0 auto;
-    position: relative;
-  }
-
-  /* ── TOP BAR ── */
-  .topbar {
-    padding: calc(var(--safe-top) + 12px) 16px 12px;
-    background: var(--bg);
-    border-bottom: 0.5px solid var(--border);
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  .topbar-left h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-  .topbar-left .sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
-  .topbar-icon {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: var(--bg3); display: flex; align-items: center;
-    justify-content: center; font-size: 16px; cursor: pointer;
-    border: 0.5px solid var(--border2);
-  }
-
-  /* ── SCROLL AREA ── */
-  .scroll-area {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: calc(70px + var(--safe-bottom));
-  }
-  .scroll-area::-webkit-scrollbar { display: none; }
-
-  /* ── METRICS ── */
-  .metrics {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 14px 16px;
-  }
-  .metric {
-    background: var(--card);
-    border-radius: var(--r);
-    padding: 14px;
-    border: 0.5px solid var(--border);
-  }
-  .metric-label { font-size: 11px; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
-  .metric-val { font-size: 26px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; }
-  .metric-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
-
-  /* ── SECTION ── */
-  .section { padding: 0 16px 20px; }
-  .section-head {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 12px; padding-top: 4px;
-  }
-  .section-head h2 { font-size: 16px; font-weight: 600; }
-  .sec-action {
-    font-size: 13px; color: var(--accent); cursor: pointer;
-    background: none; border: none; padding: 4px 0;
-  }
-
-  /* ── PROPERTY CARD ── */
-  .prop-card {
-    background: var(--card);
-    border-radius: var(--r);
-    border: 0.5px solid var(--border);
-    padding: 14px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    transition: transform 0.1s, border-color 0.15s;
-    -webkit-user-select: none;
-  }
-  .prop-card:active { transform: scale(0.98); }
-  .prop-card.selected { border-color: var(--accent); }
-  .prop-row1 { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
-  .prop-left { display: flex; align-items: flex-start; gap: 10px; }
-  .prop-emoji {
-    width: 40px; height: 40px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; flex-shrink: 0;
-  }
-  .prop-name { font-size: 15px; font-weight: 600; line-height: 1.2; }
-  .prop-addr { font-size: 11px; color: var(--text2); margin-top: 2px; line-height: 1.3; }
-  .badge {
-    font-size: 11px; font-weight: 600; padding: 3px 9px;
-    border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-left: 6px;
-  }
-  .badge-booked { background: var(--teal-bg); color: var(--teal); }
-  .badge-vacant { background: var(--amber-bg); color: var(--amber); }
-  .badge-maint  { background: var(--red-bg); color: var(--red); }
-  .badge-prep   { background: var(--purple-bg); color: var(--purple); }
-
-  .renter-row {
-    background: var(--bg3);
-    border-radius: var(--r-sm);
-    padding: 9px 11px;
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 10px;
-    font-size: 12px; color: var(--text2);
-  }
-  .renter-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-  .renter-name { font-size: 13px; font-weight: 600; color: var(--text); }
-
-  .prop-stats { display: flex; gap: 0; border-top: 0.5px solid var(--border); padding-top: 10px; }
-  .prop-stat { flex: 1; text-align: center; }
-  .prop-stat + .prop-stat { border-left: 0.5px solid var(--border); }
-  .stat-val { font-size: 14px; font-weight: 600; }
-  .stat-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.3px; margin-top: 1px; }
-
-  /* ── TASKS ── */
-  .task-item {
-    background: var(--card);
-    border-radius: var(--r);
-    border: 0.5px solid var(--border);
-    padding: 12px 14px;
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: transform 0.1s;
-  }
-  .task-item:active { transform: scale(0.98); }
-  .task-check {
-    width: 22px; height: 22px; border-radius: 6px;
-    border: 1.5px solid var(--border2);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; font-size: 12px; transition: all 0.15s;
-  }
-  .task-check.done { background: var(--teal); border-color: var(--teal); }
-  .task-body { flex: 1; min-width: 0; }
-  .task-text { font-size: 14px; line-height: 1.3; }
-  .task-text.done { text-decoration: line-through; color: var(--text3); }
-  .task-meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
-  .task-due {
-    font-size: 11px; font-weight: 600; padding: 3px 8px;
-    border-radius: 20px; flex-shrink: 0;
-  }
-  .due-today { background: var(--red-bg); color: var(--red); }
-  .due-soon  { background: var(--amber-bg); color: var(--amber); }
-  .due-later { background: var(--green-bg); color: var(--green); }
-  .prio-bar { width: 3px; height: 36px; border-radius: 2px; flex-shrink: 0; }
-
-  /* ── CALENDAR ── */
-  .cal-wrap {
-    background: var(--card);
-    border-radius: var(--r);
-    border: 0.5px solid var(--border);
-    overflow: hidden;
-  }
-  .cal-top {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 14px;
-    border-bottom: 0.5px solid var(--border);
-  }
-  .cal-month-nav { display: flex; align-items: center; gap: 12px; }
-  .cal-btn {
-    background: var(--bg3); border: 0.5px solid var(--border2);
-    border-radius: 8px; width: 30px; height: 30px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; cursor: pointer; color: var(--text);
-  }
-  .cal-month-name { font-size: 15px; font-weight: 600; min-width: 110px; text-align: center; }
-  .cal-filter { display: flex; gap: 5px; flex-wrap: wrap; }
-  .cal-filter-btn {
-    font-size: 11px; padding: 4px 10px; border-radius: 20px;
-    border: 0.5px solid var(--border2); background: transparent;
-    color: var(--text2); cursor: pointer; transition: all 0.15s;
-  }
-  .cal-filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
-
-  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); }
-  .cal-dow { padding: 7px 2px; text-align: center; font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; background: var(--bg3); border-bottom: 0.5px solid var(--border); }
-  .cal-day {
-    min-height: 58px; border-right: 0.5px solid var(--border);
-    border-bottom: 0.5px solid var(--border);
-    padding: 4px 3px; cursor: pointer; position: relative;
-  }
-  .cal-day:nth-child(7n) { border-right: none; }
-  .cal-num {
-    font-size: 12px; width: 22px; height: 22px;
-    border-radius: 50%; display: flex; align-items: center;
-    justify-content: center; margin-bottom: 2px;
-  }
-  .cal-num.today { background: var(--accent); color: white; font-weight: 700; }
-  .cal-num.other { color: var(--text3); }
-  .cal-ev {
-    font-size: 9px; padding: 1px 3px; border-radius: 3px;
-    margin-top: 1px; line-height: 1.3; overflow: hidden;
-    white-space: nowrap; text-overflow: ellipsis;
-  }
-  .ev-in { background: var(--teal-bg); color: var(--teal); }
-  .ev-out { background: var(--amber-bg); color: var(--amber); }
-  .ev-stay { background: rgba(59,130,246,0.12); color: #93C5FD; }
-  .cal-legend {
-    display: flex; gap: 14px; padding: 10px 14px;
-    background: var(--bg3); flex-wrap: wrap;
-    border-top: 0.5px solid var(--border);
-  }
-  .leg { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text2); }
-  .leg-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
-
-  /* ── UPCOMING ── */
-  .upcoming-item {
-    background: var(--card);
-    border-radius: var(--r);
-    border: 0.5px solid var(--border);
-    padding: 12px 14px;
-    display: flex; align-items: flex-start; gap: 12px;
-    margin-bottom: 8px;
-  }
-  .up-date { text-align: center; min-width: 38px; flex-shrink: 0; }
-  .up-day { font-size: 22px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; }
-  .up-mon { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
-  .up-info { flex: 1; min-width: 0; }
-  .up-name { font-size: 14px; font-weight: 600; }
-  .up-detail { font-size: 12px; color: var(--text2); margin-top: 2px; line-height: 1.4; }
-
-  /* ── BOTTOM NAV ── */
-  .bottom-nav {
-    position: fixed;
-    bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100%; max-width: 430px;
-    background: rgba(15,23,42,0.92);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 0.5px solid var(--border2);
-    display: flex;
-    padding-bottom: var(--safe-bottom);
-    z-index: 20;
-  }
-  .nav-item {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 10px 4px 8px; cursor: pointer;
-    transition: all 0.15s; border: none; background: none;
-    -webkit-user-select: none;
-  }
-  .nav-icon { font-size: 20px; line-height: 1; margin-bottom: 3px; }
-  .nav-lbl { font-size: 10px; color: var(--text3); font-weight: 500; }
-  .nav-item.active .nav-lbl { color: var(--accent); }
-  .nav-item.active .nav-icon { transform: scale(1.1); }
-  .nav-badge {
-    position: absolute;
-    top: 6px; right: calc(50% - 14px);
-    background: var(--red); color: white;
-    font-size: 9px; font-weight: 700; border-radius: 10px;
-    padding: 1px 5px; min-width: 16px; text-align: center;
-  }
-  .nav-item { position: relative; }
-
-  /* ── VIEWS ── */
-  .view { display: none; }
-  .view.active { display: block; }
-
-  /* ── ADD TASK MODAL ── */
-  .modal-overlay {
-    position: fixed; inset: 0; z-index: 50;
-    background: rgba(0,0,0,0.6);
-    display: none; align-items: flex-end;
-    backdrop-filter: blur(4px);
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--bg2);
-    border-radius: 20px 20px 0 0;
-    padding: 20px 20px calc(20px + var(--safe-bottom));
-    width: 100%;
-    border-top: 0.5px solid var(--border2);
-    animation: slideUp 0.25s ease;
-  }
-  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal h3 { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
-  .modal-field { margin-bottom: 12px; }
-  .modal-label { font-size: 12px; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
-  .modal-input {
-    width: 100%; background: var(--bg3); border: 0.5px solid var(--border2);
-    border-radius: var(--r-sm); padding: 11px 13px;
-    font-size: 15px; color: var(--text); outline: none;
-    font-family: inherit;
-  }
-  .modal-input:focus { border-color: var(--accent); }
-  .modal-select {
-    width: 100%; background: var(--bg3); border: 0.5px solid var(--border2);
-    border-radius: var(--r-sm); padding: 11px 13px;
-    font-size: 15px; color: var(--text); outline: none;
-    font-family: inherit; -webkit-appearance: none; appearance: none;
-  }
-  .modal-row { display: flex; gap: 10px; }
-  .modal-row .modal-field { flex: 1; }
-  .modal-btn {
-    width: 100%; padding: 14px;
-    background: var(--accent); color: white;
-    border: none; border-radius: var(--r); font-size: 16px;
-    font-weight: 700; cursor: pointer; margin-top: 4px;
-    font-family: inherit;
-  }
-  .modal-btn-cancel {
-    width: 100%; padding: 12px;
-    background: transparent; color: var(--text2);
-    border: none; font-size: 15px; cursor: pointer;
-    margin-top: 4px; font-family: inherit;
-  }
-
-  /* ── BOOK BUTTON ── */
-  .book-btn {
-    display: flex; align-items: center; gap: 5px;
-    background: var(--accent); color: white;
-    border: none; border-radius: 20px;
-    font-size: 12px; font-weight: 700;
-    padding: 5px 12px; cursor: pointer;
-    transition: opacity 0.15s, transform 0.1s;
-    flex-shrink: 0;
-  }
-  .book-btn:active { opacity: 0.8; transform: scale(0.96); }
-
-  /* ── BOOKING LIST ON CARD ── */
-  .booking-list { margin-top: 8px; }
-  .booking-chip {
-    display: flex; align-items: center; justify-content: space-between;
-    background: var(--bg3); border-radius: var(--r-sm);
-    padding: 7px 10px; margin-bottom: 5px; font-size: 12px;
-  }
-  .booking-chip-name { font-weight: 600; color: var(--text); }
-  .booking-chip-dates { color: var(--text2); font-size: 11px; margin-top: 1px; }
-  .booking-chip-del {
-    background: none; border: none; color: var(--text3);
-    font-size: 16px; cursor: pointer; padding: 0 2px; line-height: 1;
-  }
-  .booking-chip-del:active { color: var(--red); }
-
-  /* ── PULL CHIP ── */
-  .pull-chip { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 16px; }
-
-  /* ── EMPTY STATE ── */
-  .empty { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }
-  .empty .icon { font-size: 40px; margin-bottom: 10px; }
-
-  /* ── FILTER ROW ── */
-  .filter-row {
-    display: flex; gap: 6px; padding: 0 16px 12px;
-    overflow-x: auto; -webkit-overflow-scrolling: touch;
-  }
-  .filter-row::-webkit-scrollbar { display: none; }
-  .filter-chip {
-    white-space: nowrap; font-size: 12px; padding: 6px 12px;
-    border-radius: 20px; border: 0.5px solid var(--border2);
-    background: transparent; color: var(--text2); cursor: pointer;
-    transition: all 0.15s; font-weight: 500;
-  }
-  .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
-
-  /* ── OCCUPANCY BAR ── */
-  .occ-bar { height: 4px; background: var(--bg3); border-radius: 2px; margin-top: 6px; overflow: hidden; }
-  .occ-fill { height: 100%; border-radius: 2px; background: var(--teal); transition: width 0.5s ease; }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;overflow:hidden;}
+  body{font-family:-apple-system,'SF Pro Display',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;max-width:430px;margin:0 auto;}
+  .topbar{padding:calc(var(--safe-top)+12px) 16px 12px;background:var(--bg);border-bottom:0.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;}
+  .topbar-left h1{font-size:22px;font-weight:700;letter-spacing:-0.5px;}
+  .topbar-left .sub{font-size:12px;color:var(--text2);margin-top:1px;}
+  .topbar-icon{width:36px;height:36px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;border:0.5px solid var(--border2);}
+  .scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(74px + var(--safe-bottom));}
+  .scroll-area::-webkit-scrollbar{display:none;}
+  .metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px;}
+  .metric{background:var(--card);border-radius:var(--r);padding:14px;border:0.5px solid var(--border);}
+  .metric-label{font-size:11px;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px;}
+  .metric-val{font-size:26px;font-weight:700;line-height:1;letter-spacing:-0.5px;}
+  .metric-sub{font-size:11px;color:var(--text3);margin-top:4px;}
+  .section{padding:0 16px 20px;}
+  .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-top:4px;}
+  .section-head h2{font-size:16px;font-weight:600;}
+  .sec-action{font-size:13px;color:var(--accent);cursor:pointer;background:none;border:none;padding:4px 0;}
+  /* PROPERTY CARD */
+  .prop-card{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:14px;margin-bottom:10px;cursor:pointer;transition:transform 0.1s;-webkit-user-select:none;}
+  .prop-card:active{transform:scale(0.98);}
+  .prop-row1{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+  .prop-left{display:flex;align-items:flex-start;gap:10px;}
+  .prop-emoji{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .prop-name{font-size:15px;font-weight:600;line-height:1.2;}
+  .prop-addr{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.3;}
+  .badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+  .badge-booked{background:var(--teal-bg);color:var(--teal);}
+  .badge-vacant{background:var(--amber-bg);color:var(--amber);}
+  .badge-maint{background:var(--red-bg);color:var(--red);}
+  .badge-prep{background:var(--purple-bg);color:var(--purple);}
+  .renter-row{background:var(--bg3);border-radius:var(--r-sm);padding:9px 11px;display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;color:var(--text2);}
+  .renter-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .renter-name{font-size:13px;font-weight:600;color:var(--text);}
+  .prop-stats{display:flex;border-top:0.5px solid var(--border);padding-top:10px;}
+  .prop-stat{flex:1;text-align:center;}
+  .prop-stat+.prop-stat{border-left:0.5px solid var(--border);}
+  .stat-val{font-size:13px;font-weight:600;}
+  .stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.3px;margin-top:1px;}
+  /* TASKS */
+  .task-item{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:8px;cursor:pointer;transition:transform 0.1s;}
+  .task-item:active{transform:scale(0.98);}
+  .task-check{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;transition:all 0.15s;}
+  .task-check.done{background:var(--teal);border-color:var(--teal);}
+  .task-body{flex:1;min-width:0;}
+  .task-text{font-size:14px;line-height:1.3;}
+  .task-text.done{text-decoration:line-through;color:var(--text3);}
+  .task-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+  .task-due{font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;flex-shrink:0;}
+  .due-today{background:var(--red-bg);color:var(--red);}
+  .due-soon{background:var(--amber-bg);color:var(--amber);}
+  .due-later{background:var(--green-bg);color:var(--green);}
+  .prio-bar{width:3px;height:36px;border-radius:2px;flex-shrink:0;}
+  /* CALENDAR */
+  .cal-wrap{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);overflow:hidden;}
+  .cal-top{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:0.5px solid var(--border);}
+  .cal-month-nav{display:flex;align-items:center;gap:12px;}
+  .cal-btn{background:var(--bg3);border:0.5px solid var(--border2);border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;color:var(--text);}
+  .cal-month-name{font-size:15px;font-weight:600;min-width:110px;text-align:center;}
+  .cal-filter{display:flex;gap:5px;flex-wrap:wrap;}
+  .cal-filter-btn{font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;}
+  .cal-filter-btn.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:600;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
+  .cal-dow{padding:7px 2px;text-align:center;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;background:var(--bg3);border-bottom:0.5px solid var(--border);}
+  .cal-day{min-height:58px;border-right:0.5px solid var(--border);border-bottom:0.5px solid var(--border);padding:4px 3px;}
+  .cal-day:nth-child(7n){border-right:none;}
+  .cal-num{font-size:12px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:2px;}
+  .cal-num.today{background:var(--accent);color:white;font-weight:700;}
+  .cal-num.other{color:var(--text3);}
+  .cal-ev{font-size:9px;padding:1px 3px;border-radius:3px;margin-top:1px;line-height:1.3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+  .ev-in{background:var(--teal-bg);color:var(--teal);}
+  .ev-out{background:var(--amber-bg);color:var(--amber);}
+  .ev-stay{background:rgba(59,130,246,0.12);color:#93C5FD;}
+  .cal-legend{display:flex;gap:14px;padding:10px 14px;background:var(--bg3);flex-wrap:wrap;border-top:0.5px solid var(--border);}
+  .leg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text2);}
+  .leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+  /* UPCOMING */
+  .upcoming-item{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;margin-bottom:8px;}
+  .up-date{text-align:center;min-width:38px;flex-shrink:0;}
+  .up-day{font-size:22px;font-weight:700;line-height:1;letter-spacing:-0.5px;}
+  .up-mon{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;}
+  .up-info{flex:1;min-width:0;}
+  .up-name{font-size:14px;font-weight:600;}
+  .up-detail{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.4;}
+  /* FINANCE */
+  .fin-prop-tabs{display:flex;gap:6px;padding:10px 16px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .fin-prop-tabs::-webkit-scrollbar{display:none;}
+  .fin-tab{white-space:nowrap;font-size:12px;padding:6px 13px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-weight:500;}
+  .fin-tab.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:600;}
+  .fin-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+  .fin-card{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:12px;text-align:center;}
+  .fin-card-lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:5px;}
+  .fin-card-val{font-size:17px;font-weight:700;line-height:1;}
+  .fin-card-sub{font-size:10px;color:var(--text3);margin-top:3px;}
+  .fin-profit-bar{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:14px;margin-bottom:14px;}
+  .fin-bar-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;}
+  .fin-bar-track{height:12px;background:var(--bg3);border-radius:6px;overflow:hidden;position:relative;}
+  .fin-bar-income{height:100%;border-radius:6px;background:var(--teal);}
+  .fin-bar-expense{position:absolute;top:0;right:0;height:100%;background:var(--red);}
+  .fin-pct-row{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;}
+  .fin-breakdown{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);overflow:hidden;margin-bottom:14px;}
+  .fin-breakdown-head{padding:12px 14px;border-bottom:0.5px solid var(--border);font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:center;}
+  .fin-row{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:0.5px solid var(--border);}
+  .fin-row:last-child{border-bottom:none;}
+  .fin-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+  .fin-cat{flex:1;font-size:13px;}
+  .fin-cat-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+  .fin-amt{font-size:13px;font-weight:600;text-align:right;}
+  .fin-pct-pill{font-size:10px;padding:2px 7px;border-radius:10px;background:var(--bg3);color:var(--text2);}
+  .fin-bar-mini{height:3px;background:var(--bg3);border-radius:2px;margin-top:5px;overflow:hidden;}
+  .fin-bar-mini-fill{height:100%;border-radius:2px;}
+  .fin-add-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--bg3);border:0.5px dashed var(--border2);border-radius:var(--r);padding:14px;color:var(--text2);font-size:13px;cursor:pointer;margin-bottom:20px;}
+  /* OVERALL */
+  .overall-prop-row{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:12px 14px;margin-bottom:8px;cursor:pointer;}
+  .overall-prop-row:active{transform:scale(0.98);}
+  .overall-prop-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .overall-prop-name{font-size:14px;font-weight:600;flex:1;}
+  .overall-prop-net{font-size:14px;font-weight:700;}
+  .overall-stacked{height:8px;border-radius:4px;background:var(--bg3);overflow:hidden;display:flex;margin-bottom:6px;}
+  .overall-inc{background:var(--teal);}
+  .overall-exp{background:var(--red);}
+  .overall-row-stats{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);}
+  /* BOTTOM NAV */
+  .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(15,23,42,0.93);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);display:flex;padding-bottom:var(--safe-bottom);z-index:20;}
+  .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 2px 8px;cursor:pointer;border:none;background:none;-webkit-user-select:none;position:relative;}
+  .nav-icon{font-size:18px;line-height:1;margin-bottom:3px;}
+  .nav-lbl{font-size:9px;color:var(--text3);font-weight:500;}
+  .nav-item.active .nav-lbl{color:var(--accent);}
+  .nav-item.active .nav-icon{transform:scale(1.1);}
+  .nav-badge{position:absolute;top:6px;right:calc(50% - 16px);background:var(--red);color:white;font-size:9px;font-weight:700;border-radius:10px;padding:1px 5px;min-width:16px;text-align:center;}
+  .view{display:none;}
+  .view.active{display:block;}
+  /* MODALS */
+  .modal-overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.6);display:none;align-items:flex-end;backdrop-filter:blur(4px);}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px 20px calc(20px + var(--safe-bottom));width:100%;border-top:0.5px solid var(--border2);animation:slideUp 0.25s ease;max-height:90vh;overflow-y:auto;}
+  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .modal h3{font-size:17px;font-weight:700;margin-bottom:16px;}
+  .modal-field{margin-bottom:12px;}
+  .modal-label{font-size:12px;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px;}
+  .modal-input{width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r-sm);padding:11px 13px;font-size:15px;color:var(--text);outline:none;font-family:inherit;}
+  .modal-input:focus{border-color:var(--accent);}
+  .modal-select{width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r-sm);padding:11px 13px;font-size:15px;color:var(--text);outline:none;font-family:inherit;-webkit-appearance:none;}
+  .modal-row{display:flex;gap:10px;}
+  .modal-row .modal-field{flex:1;}
+  .modal-btn{width:100%;padding:14px;background:var(--accent);color:white;border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;margin-top:4px;font-family:inherit;}
+  .modal-btn-cancel{width:100%;padding:12px;background:transparent;color:var(--text2);border:none;font-size:15px;cursor:pointer;margin-top:4px;font-family:inherit;}
+  .pull-chip{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px;}
+  .book-btn{display:flex;align-items:center;gap:5px;background:var(--accent);color:white;border:none;border-radius:20px;font-size:12px;font-weight:700;padding:5px 12px;cursor:pointer;flex-shrink:0;}
+  .booking-list{margin-top:8px;}
+  .booking-chip{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border-radius:var(--r-sm);padding:7px 10px;margin-bottom:5px;font-size:12px;}
+  .booking-chip-name{font-weight:600;color:var(--text);}
+  .booking-chip-dates{color:var(--text2);font-size:11px;margin-top:1px;}
+  .booking-chip-del{background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer;padding:0 2px;line-height:1;}
+  .empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px;}
+  .empty .icon{font-size:40px;margin-bottom:10px;}
+  .filter-row{display:flex;gap:6px;padding:0 16px 12px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .filter-row::-webkit-scrollbar{display:none;}
+  .filter-chip{white-space:nowrap;font-size:12px;padding:6px 12px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-weight:500;}
+  .filter-chip.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:600;}
+  .occ-bar{height:4px;background:var(--bg3);border-radius:2px;margin-top:6px;overflow:hidden;}
+  .occ-fill{height:100%;border-radius:2px;background:var(--teal);}
 </style>
 </head>
 <body>
-
 <div class="topbar">
   <div class="topbar-left">
-    <h1>My Properties</h1>
-    <div class="sub" id="topSub">5 properties · May 2026</div>
+    <h1>Caldwell Rentals</h1>
+    <div class="sub">5 properties · May 2026</div>
+    <div style="font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:0.4px;">v3.0.0</div>
   </div>
   <div class="topbar-icon" onclick="openAddTask()">＋</div>
 </div>
 
 <div class="scroll-area" id="scrollArea">
-
-  <!-- METRICS -->
   <div class="metrics">
-    <div class="metric">
-      <div class="metric-label">Occupancy</div>
-      <div class="metric-val" style="color:var(--teal)">72%</div>
-      <div class="occ-bar"><div class="occ-fill" style="width:72%"></div></div>
-      <div class="metric-sub">This month</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Revenue</div>
-      <div class="metric-val" style="color:var(--green)">$9.4K</div>
-      <div class="metric-sub">May forecast</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Tasks due</div>
-      <div class="metric-val" id="metricTasks" style="color:var(--red)">4</div>
-      <div class="metric-sub">Today</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Check-ins</div>
-      <div class="metric-val" style="color:var(--purple)">3</div>
-      <div class="metric-sub">This week</div>
-    </div>
+    <div class="metric"><div class="metric-label">Occupancy</div><div class="metric-val" style="color:var(--teal)">72%</div><div class="occ-bar"><div class="occ-fill" style="width:72%"></div></div><div class="metric-sub">This month</div></div>
+    <div class="metric"><div class="metric-label">Net income</div><div class="metric-val" id="metricNet" style="color:var(--green)">$0</div><div class="metric-sub">After expenses</div></div>
+    <div class="metric"><div class="metric-label">Tasks due</div><div class="metric-val" id="metricTasks" style="color:var(--red)">4</div><div class="metric-sub">Today</div></div>
+    <div class="metric"><div class="metric-label">Check-ins</div><div class="metric-val" style="color:var(--purple)">3</div><div class="metric-sub">This week</div></div>
   </div>
 
-  <!-- PROPERTIES VIEW -->
   <div id="view-properties" class="view active">
-    <div class="section">
-      <div class="section-head">
-        <h2>All properties</h2>
-        <button class="sec-action" onclick="switchView('calendar')">Calendar →</button>
-      </div>
-      <div id="propList"></div>
-    </div>
+    <div class="section"><div class="section-head"><h2>All properties</h2><button class="sec-action" onclick="switchView('calendar')">Calendar →</button></div><div id="propList"></div></div>
   </div>
 
-  <!-- TASKS VIEW -->
   <div id="view-tasks" class="view">
-    <div class="filter-row" id="taskFilter">
-      <button class="filter-chip active" onclick="filterTasks('all', this)">All</button>
-      <button class="filter-chip" onclick="filterTasks('today', this)">Today</button>
-      <button class="filter-chip" onclick="filterTasks('upcoming', this)">Upcoming</button>
-      <button class="filter-chip" onclick="filterTasks('done', this)">Done</button>
+    <div class="filter-row">
+      <button class="filter-chip active" onclick="filterTasks('all',this)">All</button>
+      <button class="filter-chip" onclick="filterTasks('today',this)">Today</button>
+      <button class="filter-chip" onclick="filterTasks('upcoming',this)">Upcoming</button>
+      <button class="filter-chip" onclick="filterTasks('done',this)">Done</button>
     </div>
-    <div class="section">
-      <div class="section-head">
-        <h2 id="tasksHeading">All tasks</h2>
-        <button class="sec-action" onclick="openAddTask()">+ Add</button>
-      </div>
-      <div id="taskList"></div>
-    </div>
+    <div class="section"><div class="section-head"><h2 id="tasksHeading">All tasks</h2><button class="sec-action" onclick="openAddTask()">+ Add</button></div><div id="taskList"></div></div>
   </div>
 
-  <!-- CALENDAR VIEW -->
   <div id="view-calendar" class="view">
-    <div class="section">
-      <div class="section-head"><h2>Booking calendar</h2></div>
+    <div class="section"><div class="section-head"><h2>Booking calendar</h2></div>
       <div class="cal-wrap">
-        <div class="cal-top">
-          <div class="cal-month-nav">
-            <button class="cal-btn" onclick="changeMonth(-1)">‹</button>
-            <span class="cal-month-name" id="calLabel"></span>
-            <button class="cal-btn" onclick="changeMonth(1)">›</button>
-          </div>
-        </div>
-        <div style="padding: 10px 14px 8px; border-bottom: 0.5px solid var(--border);">
-          <div class="cal-filter" id="calFilter">
-            <button class="cal-filter-btn active" onclick="setCalProp(-1,this)">All</button>
-          </div>
-        </div>
+        <div class="cal-top"><div class="cal-month-nav"><button class="cal-btn" onclick="changeMonth(-1)">‹</button><span class="cal-month-name" id="calLabel"></span><button class="cal-btn" onclick="changeMonth(1)">›</button></div></div>
+        <div style="padding:10px 14px 8px;border-bottom:0.5px solid var(--border);"><div class="cal-filter" id="calFilter"></div></div>
         <div class="cal-grid" id="calGrid"></div>
         <div class="cal-legend">
           <div class="leg"><div class="leg-dot" style="background:var(--teal)"></div>Check-in</div>
@@ -499,64 +232,40 @@
     </div>
   </div>
 
-  <!-- UPCOMING VIEW -->
   <div id="view-upcoming" class="view">
-    <div class="section">
-      <div class="section-head"><h2>Upcoming activity</h2></div>
-      <div id="upcomingList"></div>
-    </div>
+    <div class="section"><div class="section-head"><h2>Upcoming activity</h2></div><div id="upcomingList"></div></div>
   </div>
 
-</div><!-- end scroll-area -->
+  <div id="view-finance" class="view">
+    <div class="fin-prop-tabs" id="finPropTabs"></div>
+    <div class="section" id="finContent"></div>
+  </div>
+
+  <div id="view-overall" class="view">
+    <div class="section"><div class="section-head"><h2>Portfolio overview</h2></div><div id="overallContent"></div></div>
+  </div>
+</div>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
-  <button class="nav-item active" onclick="switchView('properties')" id="nav-properties">
-    <div class="nav-icon">🏠</div>
-    <div class="nav-lbl">Properties</div>
-  </button>
-  <button class="nav-item" onclick="switchView('tasks')" id="nav-tasks">
-    <div class="nav-icon">✅</div>
-    <div class="nav-lbl">Tasks</div>
-    <span class="nav-badge" id="taskBadge">4</span>
-  </button>
-  <button class="nav-item" onclick="switchView('calendar')" id="nav-calendar">
-    <div class="nav-icon">📅</div>
-    <div class="nav-lbl">Calendar</div>
-  </button>
-  <button class="nav-item" onclick="switchView('upcoming')" id="nav-upcoming">
-    <div class="nav-icon">🔔</div>
-    <div class="nav-lbl">Upcoming</div>
-  </button>
+  <button class="nav-item active" onclick="switchView('properties')" id="nav-properties"><div class="nav-icon">🏠</div><div class="nav-lbl">Properties</div></button>
+  <button class="nav-item" onclick="switchView('tasks')" id="nav-tasks"><div class="nav-icon">✅</div><div class="nav-lbl">Tasks</div><span class="nav-badge" id="taskBadge">4</span></button>
+  <button class="nav-item" onclick="switchView('calendar')" id="nav-calendar"><div class="nav-icon">📅</div><div class="nav-lbl">Calendar</div></button>
+  <button class="nav-item" onclick="switchView('finance')" id="nav-finance"><div class="nav-icon">💰</div><div class="nav-lbl">Finances</div></button>
+  <button class="nav-item" onclick="switchView('overall')" id="nav-overall"><div class="nav-icon">📊</div><div class="nav-lbl">Overview</div></button>
 </div>
 
 <!-- BOOK MODAL -->
 <div class="modal-overlay" id="bookModalOverlay" onclick="closeBookModal(event)">
   <div class="modal">
-    <div class="pull-chip"></div>
-    <h3 id="bookModalTitle">New booking</h3>
-    <div class="modal-field">
-      <div class="modal-label">Guest name</div>
-      <input class="modal-input" id="bookGuest" type="text" placeholder="e.g. Smith Family">
-    </div>
+    <div class="pull-chip"></div><h3 id="bookModalTitle">New booking</h3>
+    <div class="modal-field"><div class="modal-label">Guest name</div><input class="modal-input" id="bookGuest" type="text" placeholder="e.g. Smith Family"></div>
     <div class="modal-row">
-      <div class="modal-field">
-        <div class="modal-label">Check-in date</div>
-        <input class="modal-input" id="bookCheckin" type="date">
-      </div>
-      <div class="modal-field">
-        <div class="modal-label">Check-out date</div>
-        <input class="modal-input" id="bookCheckout" type="date">
-      </div>
+      <div class="modal-field"><div class="modal-label">Check-in</div><input class="modal-input" id="bookCheckin" type="date"></div>
+      <div class="modal-field"><div class="modal-label">Check-out</div><input class="modal-input" id="bookCheckout" type="date"></div>
     </div>
-    <div class="modal-field">
-      <div class="modal-label">Rate / night (optional)</div>
-      <input class="modal-input" id="bookRate" type="number" placeholder="e.g. 250">
-    </div>
-    <div class="modal-field">
-      <div class="modal-label">Notes (optional)</div>
-      <input class="modal-input" id="bookNotes" type="text" placeholder="e.g. Pet-friendly, early check-in...">
-    </div>
+    <div class="modal-field"><div class="modal-label">Rate / night (optional)</div><input class="modal-input" id="bookRate" type="number" placeholder="e.g. 250"></div>
+    <div class="modal-field"><div class="modal-label">Notes (optional)</div><input class="modal-input" id="bookNotes" type="text" placeholder="e.g. early check-in..."></div>
     <button class="modal-btn" onclick="saveBooking()">Confirm booking</button>
     <button class="modal-btn-cancel" onclick="document.getElementById('bookModalOverlay').classList.remove('open')">Cancel</button>
   </div>
@@ -565,427 +274,349 @@
 <!-- ADD TASK MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal">
-    <div class="pull-chip"></div>
-    <h3>New task</h3>
-    <div class="modal-field">
-      <div class="modal-label">Task description</div>
-      <input class="modal-input" id="newTaskText" type="text" placeholder="e.g. Replace light bulbs...">
-    </div>
+    <div class="pull-chip"></div><h3>New task</h3>
+    <div class="modal-field"><div class="modal-label">Task description</div><input class="modal-input" id="newTaskText" type="text" placeholder="e.g. Replace light bulbs..."></div>
     <div class="modal-row">
-      <div class="modal-field">
-        <div class="modal-label">Property</div>
-        <select class="modal-select" id="newTaskProp"></select>
-      </div>
-      <div class="modal-field">
-        <div class="modal-label">Priority</div>
-        <select class="modal-select" id="newTaskPrio">
-          <option value="urgent">Urgent</option>
-          <option value="high">High</option>
-          <option value="med" selected>Medium</option>
-          <option value="low">Low</option>
-        </select>
-      </div>
+      <div class="modal-field"><div class="modal-label">Property</div><select class="modal-select" id="newTaskProp"></select></div>
+      <div class="modal-field"><div class="modal-label">Priority</div><select class="modal-select" id="newTaskPrio"><option value="urgent">Urgent</option><option value="high">High</option><option value="med" selected>Medium</option><option value="low">Low</option></select></div>
     </div>
-    <div class="modal-field">
-      <div class="modal-label">Due date</div>
-      <input class="modal-input" id="newTaskDue" type="text" placeholder="e.g. today, May 10...">
-    </div>
+    <div class="modal-field"><div class="modal-label">Due date</div><input class="modal-input" id="newTaskDue" type="text" placeholder="e.g. today, May 10..."></div>
     <button class="modal-btn" onclick="saveTask()">Add task</button>
     <button class="modal-btn-cancel" onclick="document.getElementById('modalOverlay').classList.remove('open')">Cancel</button>
   </div>
 </div>
 
+<!-- ADD EXPENSE MODAL -->
+<div class="modal-overlay" id="expenseModalOverlay" onclick="closeExpenseModal(event)">
+  <div class="modal">
+    <div class="pull-chip"></div><h3 id="expenseModalTitle">Add expense</h3>
+    <div class="modal-field"><div class="modal-label">Category</div>
+      <select class="modal-select" id="expCat">
+        <option value="landscaping">🌿 Landscaping</option>
+        <option value="plumbing">🔧 Plumbing</option>
+        <option value="electrical">⚡ Electrical</option>
+        <option value="cleaning">🧹 Cleaning</option>
+        <option value="hvac">❄️ HVAC / AC</option>
+        <option value="appliances">🏠 Appliances</option>
+        <option value="painting">🎨 Painting</option>
+        <option value="roofing">🏗️ Roofing</option>
+        <option value="pest">🐛 Pest Control</option>
+        <option value="supplies">📦 Supplies</option>
+        <option value="insurance">🛡️ Insurance</option>
+        <option value="mortgage">🏦 Mortgage</option>
+        <option value="taxes">📋 Property Tax</option>
+        <option value="other">💬 Other</option>
+      </select>
+    </div>
+    <div class="modal-field"><div class="modal-label">Description</div><input class="modal-input" id="expDesc" type="text" placeholder="e.g. Replaced kitchen faucet"></div>
+    <div class="modal-row">
+      <div class="modal-field"><div class="modal-label">Amount ($)</div><input class="modal-input" id="expAmt" type="number" placeholder="0"></div>
+      <div class="modal-field"><div class="modal-label">Date</div><input class="modal-input" id="expDate" type="date"></div>
+    </div>
+    <button class="modal-btn" onclick="saveExpense()">Save expense</button>
+    <button class="modal-btn-cancel" onclick="document.getElementById('expenseModalOverlay').classList.remove('open')">Cancel</button>
+  </div>
+</div>
+
 <script>
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DOWS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const now = new Date();
-const TY = now.getFullYear(), TM = now.getMonth(), TD = now.getDate();
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_S=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOWS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const now=new Date(),TY=now.getFullYear(),TM=now.getMonth(),TD=now.getDate();
 
-const properties = [
-  {
-    id:0, name:'Lakeside Cabin', addr:'12 Pine Ridge Dr, Blue Ridge, GA',
-    icon:'🏕️', iconBg:'rgba(20,184,166,0.15)', status:'booked', rate:'Daily',
-    nextRenter:{ name:'The Chen Family', checkin:'May 3', checkout:'May 6', nights:3 },
-    revenue:'$1,950', tasks:0, occ:82
-  },
-  {
-    id:1, name:'Downtown Loft', addr:'88 Peachtree St NW, Atlanta, GA',
-    icon:'🏙️', iconBg:'rgba(59,130,246,0.15)', status:'vacant', rate:'Monthly',
-    nextRenter:{ name:'Sarah Mitchell', checkin:'May 8', checkout:'Jun 8', nights:30 },
-    revenue:'$2,800', tasks:0, occ:65
-  },
-  {
-    id:2, name:'Beach Bungalow', addr:'4 Dune Rd, Tybee Island, GA',
-    icon:'🏖️', iconBg:'rgba(245,158,11,0.15)', status:'maint', rate:'Daily',
-    nextRenter:{ name:'Patel Group', checkin:'May 10', checkout:'May 14', nights:4 },
-    revenue:'$1,490', tasks:0, occ:71
-  },
-  {
-    id:3, name:'Mountain Chalet', addr:'77 Summit Pass, Ellijay, GA',
-    icon:'⛰️', iconBg:'rgba(167,139,250,0.15)', status:'booked', rate:'Daily',
-    nextRenter:{ name:'Williams Family', checkin:'May 2', checkout:'May 5', nights:3 },
-    revenue:'$1,750', tasks:0, occ:78
-  },
-  {
-    id:4, name:'Garden Cottage', addr:'32 Magnolia Ln, Savannah, GA',
-    icon:'🌿', iconBg:'rgba(34,197,94,0.15)', status:'prep', rate:'Daily',
-    nextRenter:{ name:'Torres Couple', checkin:'May 7', checkout:'May 11', nights:4 },
-    revenue:'$1,380', tasks:0, occ:60
-  }
+const CAT_META={
+  landscaping:{label:'Landscaping',icon:'🌿',color:'#22C55E'},
+  plumbing:{label:'Plumbing',icon:'🔧',color:'#3B82F6'},
+  electrical:{label:'Electrical',icon:'⚡',color:'#F59E0B'},
+  cleaning:{label:'Cleaning',icon:'🧹',color:'#14B8A6'},
+  hvac:{label:'HVAC / AC',icon:'❄️',color:'#60A5FA'},
+  appliances:{label:'Appliances',icon:'🏠',color:'#A78BFA'},
+  painting:{label:'Painting',icon:'🎨',color:'#FB7185'},
+  roofing:{label:'Roofing',icon:'🏗️',color:'#94A3B8'},
+  pest:{label:'Pest Control',icon:'🐛',color:'#84CC16'},
+  supplies:{label:'Supplies',icon:'📦',color:'#F97316'},
+  insurance:{label:'Insurance',icon:'🛡️',color:'#8B5CF6'},
+  mortgage:{label:'Mortgage',icon:'🏦',color:'#EF4444'},
+  taxes:{label:'Property Tax',icon:'📋',color:'#EC4899'},
+  other:{label:'Other',icon:'💬',color:'#64748B'},
+};
+
+const properties=[
+  {id:0,name:'Lakeside Cabin',  addr:'12 Pine Ridge Dr, Blue Ridge, GA',     icon:'🏕️',iconBg:'rgba(20,184,166,0.15)', status:'booked', rate:'Daily',   nextRenter:{name:'Augustine',checkin:'May 3', checkout:'May 6', nights:3}, revenue:1950,tasks:0,occ:82},
+  {id:1,name:'Downtown Loft',   addr:'88 Peachtree St NW, Atlanta, GA',       icon:'🏙️',iconBg:'rgba(59,130,246,0.15)', status:'vacant', rate:'Monthly', nextRenter:{name:'Walter',   checkin:'May 8', checkout:'Jun 8', nights:30},revenue:2800,tasks:0,occ:65},
+  {id:2,name:'Beach Bungalow',  addr:'4 Dune Rd, Tybee Island, GA',           icon:'🏖️',iconBg:'rgba(245,158,11,0.15)',status:'maint',  rate:'Daily',   nextRenter:{name:'McGuire',  checkin:'May 10',checkout:'May 14',nights:4}, revenue:1490,tasks:0,occ:71},
+  {id:3,name:'Mountain Chalet', addr:'77 Summit Pass, Ellijay, GA',           icon:'⛰️',iconBg:'rgba(167,139,250,0.15)',status:'booked', rate:'Daily',   nextRenter:{name:'McCammon', checkin:'May 2', checkout:'May 5', nights:3}, revenue:1750,tasks:0,occ:78},
+  {id:4,name:'Garden Cottage',  addr:'32 Magnolia Ln, Savannah, GA',          icon:'🌿',iconBg:'rgba(34,197,94,0.15)', status:'prep',   rate:'Daily',   nextRenter:{name:'Augustine',checkin:'May 7', checkout:'May 11',nights:4}, revenue:1380,tasks:0,occ:60},
 ];
 
-let tasks = [
-  { id:0, text:'Replace AC filter', propId:0, prio:'high', due:'today', done:false },
-  { id:1, text:'Restock kitchen supplies before Chen arrival', propId:0, prio:'high', due:'today', done:false },
-  { id:2, text:'Fix bathroom faucet leak', propId:2, prio:'urgent', due:'today', done:false },
-  { id:3, text:'Repair deck railing', propId:3, prio:'high', due:'today', done:false },
-  { id:4, text:'Deep clean before check-in May 3', propId:0, prio:'med', due:'May 2', done:false },
-  { id:5, text:'Inspect smoke detectors', propId:1, prio:'med', due:'May 5', done:false },
-  { id:6, text:'Restock welcome basket', propId:4, prio:'med', due:'May 6', done:false },
-  { id:7, text:'Arrange airport pickup note', propId:3, prio:'low', due:'May 7', done:false },
-  { id:8, text:'Update welcome guide', propId:2, prio:'low', due:'May 8', done:true },
-  { id:9, text:'Schedule HVAC service', propId:1, prio:'low', due:'May 12', done:false },
-  { id:10, text:'Pool cleaning service', propId:2, prio:'med', due:'May 9', done:false },
-  { id:11, text:'New bath towels for Chalet', propId:3, prio:'low', due:'May 15', done:false },
+let tasks=[
+  {id:0, text:'Replace AC filter',                              propId:0,prio:'high',  due:'today',done:false},
+  {id:1, text:'Restock kitchen supplies before Augustine arrival',propId:0,prio:'high', due:'today',done:false},
+  {id:2, text:'Fix bathroom faucet leak',                        propId:2,prio:'urgent',due:'today',done:false},
+  {id:3, text:'Repair deck railing',                             propId:3,prio:'high',  due:'today',done:false},
+  {id:4, text:'Deep clean before check-in May 3',                propId:0,prio:'med',   due:'May 2',done:false},
+  {id:5, text:'Inspect smoke detectors',                         propId:1,prio:'med',   due:'May 5',done:false},
+  {id:6, text:'Restock welcome basket',                          propId:4,prio:'med',   due:'May 6',done:false},
+  {id:7, text:'Arrange airport pickup note',                     propId:3,prio:'low',   due:'May 7',done:false},
+  {id:8, text:'Update welcome guide',                            propId:2,prio:'low',   due:'May 8',done:true},
+  {id:9, text:'Schedule HVAC service',                           propId:1,prio:'low',   due:'May 12',done:false},
+  {id:10,text:'Pool cleaning service',                           propId:2,prio:'med',   due:'May 9',done:false},
+  {id:11,text:'New bath towels for Chalet',                      propId:3,prio:'low',   due:'May 15',done:false},
 ];
 
-const bookings = [
-  { propId:0, guest:'Chen Family',    si: new Date(TY,TM,3),  ei: new Date(TY,TM,6) },
-  { propId:0, guest:'Johnson',        si: new Date(TY,TM,18), ei: new Date(TY,TM,21) },
-  { propId:1, guest:'S. Mitchell',    si: new Date(TY,TM,8),  ei: new Date(TY,TM+1,8) },
-  { propId:2, guest:'Patel Group',    si: new Date(TY,TM,10), ei: new Date(TY,TM,14) },
-  { propId:2, guest:'Williams',       si: new Date(TY,TM,22), ei: new Date(TY,TM,25) },
-  { propId:3, guest:'Williams Fam',   si: new Date(TY,TM,2),  ei: new Date(TY,TM,5) },
-  { propId:3, guest:'Anderson',       si: new Date(TY,TM,20), ei: new Date(TY,TM,24) },
-  { propId:4, guest:'Torres Couple',  si: new Date(TY,TM,7),  ei: new Date(TY,TM,11) },
-  { propId:4, guest:'Park Family',    si: new Date(TY,TM,17), ei: new Date(TY,TM,20) },
+const bookings=[
+  {propId:0,guest:'Augustine',si:new Date(TY,TM,3), ei:new Date(TY,TM,6)},
+  {propId:0,guest:'McGuire',  si:new Date(TY,TM,18),ei:new Date(TY,TM,21)},
+  {propId:1,guest:'Walter',   si:new Date(TY,TM,8), ei:new Date(TY,TM+1,8)},
+  {propId:2,guest:'McGuire',  si:new Date(TY,TM,10),ei:new Date(TY,TM,14)},
+  {propId:2,guest:'McCammon', si:new Date(TY,TM,22),ei:new Date(TY,TM,25)},
+  {propId:3,guest:'McCammon', si:new Date(TY,TM,2), ei:new Date(TY,TM,5)},
+  {propId:3,guest:'Augustine',si:new Date(TY,TM,20),ei:new Date(TY,TM,24)},
+  {propId:4,guest:'Augustine',si:new Date(TY,TM,7), ei:new Date(TY,TM,11)},
+  {propId:4,guest:'Walter',   si:new Date(TY,TM,17),ei:new Date(TY,TM,20)},
 ];
 
-let calMonth = TM, calYear = TY, calPropFilter = -1;
-let taskFilter = 'all';
-let currentView = 'properties';
+let expenses=[
+  {propId:0,cat:'landscaping',desc:'Monthly lawn service',       amt:180,date:'2026-05-01'},
+  {propId:0,cat:'cleaning',   desc:'Post-checkout deep clean',   amt:150,date:'2026-05-06'},
+  {propId:0,cat:'hvac',       desc:'AC filter + tune-up',        amt:220,date:'2026-05-01'},
+  {propId:0,cat:'supplies',   desc:'Welcome basket restock',     amt:85, date:'2026-05-02'},
+  {propId:0,cat:'mortgage',   desc:'Monthly mortgage',           amt:920,date:'2026-05-01'},
+  {propId:1,cat:'plumbing',   desc:'Bathroom faucet repair',     amt:310,date:'2026-05-03'},
+  {propId:1,cat:'electrical', desc:'Outlet replacement x3',      amt:240,date:'2026-05-05'},
+  {propId:1,cat:'mortgage',   desc:'Monthly mortgage',           amt:1400,date:'2026-05-01'},
+  {propId:1,cat:'insurance',  desc:'Monthly insurance',          amt:180,date:'2026-05-01'},
+  {propId:2,cat:'plumbing',   desc:'Faucet leak fix',            amt:275,date:'2026-05-01'},
+  {propId:2,cat:'pest',       desc:'Quarterly pest control',     amt:120,date:'2026-05-02'},
+  {propId:2,cat:'cleaning',   desc:'Pre-arrival clean',          amt:140,date:'2026-05-09'},
+  {propId:2,cat:'mortgage',   desc:'Monthly mortgage',           amt:780,date:'2026-05-01'},
+  {propId:3,cat:'roofing',    desc:'Shingle patch repair',       amt:450,date:'2026-05-03'},
+  {propId:3,cat:'landscaping',desc:'Tree trimming',              amt:200,date:'2026-05-04'},
+  {propId:3,cat:'mortgage',   desc:'Monthly mortgage',           amt:860,date:'2026-05-01'},
+  {propId:3,cat:'supplies',   desc:'Bath towels + amenities',    amt:95, date:'2026-05-07'},
+  {propId:4,cat:'painting',   desc:'Touch-up interior paint',    amt:320,date:'2026-05-02'},
+  {propId:4,cat:'landscaping',desc:'Garden maintenance',         amt:150,date:'2026-05-01'},
+  {propId:4,cat:'mortgage',   desc:'Monthly mortgage',           amt:680,date:'2026-05-01'},
+  {propId:4,cat:'appliances', desc:'Dishwasher repair',          amt:185,date:'2026-05-05'},
+];
 
-// ── COUNTS ──
-function updateTaskCount() {
-  const dueToday = tasks.filter(t => t.due === 'today' && !t.done).length;
-  document.getElementById('metricTasks').textContent = dueToday;
-  const badge = document.getElementById('taskBadge');
-  const total = tasks.filter(t => !t.done).length;
-  badge.textContent = total;
-  badge.style.display = total > 0 ? '' : 'none';
-  // update prop task counts
-  properties.forEach(p => { p.tasks = tasks.filter(t => t.propId === p.id && !t.done).length; });
+let calMonth=TM,calYear=TY,calPropFilter=-1,taskFilter='all',currentView='properties',finPropId=0,expensePropId=0;
+
+const $=id=>document.getElementById(id);
+const fmt$=n=>'$'+n.toLocaleString();
+const fmtDate=d=>{if(!d)return'';const dt=new Date(d+'T00:00:00');return(dt.getMonth()+1)+'/'+dt.getDate()+'/'+String(dt.getFullYear()).slice(2);};
+const propIncome=id=>properties[id].revenue;
+const propExpenses=id=>expenses.filter(e=>e.propId===id).reduce((s,e)=>s+e.amt,0);
+const propNet=id=>propIncome(id)-propExpenses(id);
+
+function updateTaskCount(){
+  const dueToday=tasks.filter(t=>t.due==='today'&&!t.done).length;
+  $('metricTasks').textContent=dueToday;
+  const total=tasks.filter(t=>!t.done).length;
+  $('taskBadge').textContent=total;$('taskBadge').style.display=total>0?'':'none';
+  properties.forEach(p=>{p.tasks=tasks.filter(t=>t.propId===p.id&&!t.done).length;});
+  const totalNet=properties.reduce((s,p)=>s+propNet(p.id),0);
+  $('metricNet').textContent=fmt$(totalNet);
 }
 
-// ── VIEWS ──
-function switchView(v) {
-  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('view-' + v).classList.add('active');
-  document.getElementById('nav-' + v).classList.add('active');
-  document.getElementById('scrollArea').scrollTop = 0;
-  currentView = v;
-  if (v === 'calendar') renderCalendar();
-  if (v === 'upcoming') renderUpcoming();
-  if (v === 'tasks') renderTasks();
-  if (v === 'properties') renderProperties();
+function switchView(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  $('view-'+v).classList.add('active');$('nav-'+v).classList.add('active');
+  $('scrollArea').scrollTop=0;currentView=v;
+  if(v==='calendar')renderCalendar();
+  if(v==='upcoming')renderUpcoming();
+  if(v==='tasks')renderTasks();
+  if(v==='properties')renderProperties();
+  if(v==='finance')renderFinance();
+  if(v==='overall')renderOverall();
 }
 
-// ── PROPERTIES ──
-function renderProperties() {
+function renderProperties(){
   updateTaskCount();
-  const s2b = { booked:'badge-booked', vacant:'badge-vacant', maint:'badge-maint', prep:'badge-prep' };
-  const s2t = { booked:'Booked', vacant:'Vacant', maint:'Maintenance', prep:'Preparing' };
-  const s2dc = { booked:'var(--teal)', vacant:'var(--amber)', maint:'var(--red)', prep:'var(--purple)' };
-
-  function fmtDate(d) {
-    if (!d) return '';
-    const dt = new Date(d + 'T00:00:00');
-    return (dt.getMonth()+1) + '/' + dt.getDate() + '/' + String(dt.getFullYear()).slice(2);
-  }
-
-  document.getElementById('propList').innerHTML = properties.map(p => {
-    const propBookings = bookings.filter(b => b.propId === p.id);
-    const bookingChips = propBookings.map((b, i) => {
-      const ci = b.si instanceof Date ? fmtDate(b.si.toISOString().slice(0,10)) : fmtDate(b.si);
-      const co = b.ei instanceof Date ? fmtDate(b.ei.toISOString().slice(0,10)) : fmtDate(b.ei);
-      const globalIdx = bookings.indexOf(b);
-      return `<div class="booking-chip">
-        <div>
-          <div class="booking-chip-name">${b.guest}</div>
-          <div class="booking-chip-dates">${ci} → ${co}${b.notes ? ' · ' + b.notes : ''}</div>
-        </div>
-        <button class="booking-chip-del" onclick="event.stopPropagation();deleteBooking(${globalIdx})">×</button>
-      </div>`;
+  const s2b={booked:'badge-booked',vacant:'badge-vacant',maint:'badge-maint',prep:'badge-prep'};
+  const s2t={booked:'Booked',vacant:'Vacant',maint:'Maintenance',prep:'Preparing'};
+  const s2dc={booked:'var(--teal)',vacant:'var(--amber)',maint:'var(--red)',prep:'var(--purple)'};
+  $('propList').innerHTML=properties.map(p=>{
+    const pb=bookings.filter(b=>b.propId===p.id);
+    const chips=pb.map(b=>{
+      const ci=b.si instanceof Date?fmtDate(b.si.toISOString().slice(0,10)):fmtDate(b.si);
+      const co=b.ei instanceof Date?fmtDate(b.ei.toISOString().slice(0,10)):fmtDate(b.ei);
+      const gi=bookings.indexOf(b);
+      return `<div class="booking-chip"><div><div class="booking-chip-name">${b.guest}</div><div class="booking-chip-dates">${ci} → ${co}${b.notes?' · '+b.notes:''}</div></div><button class="booking-chip-del" onclick="event.stopPropagation();deleteBooking(${gi})">×</button></div>`;
     }).join('');
-
+    const net=propNet(p.id),exp=propExpenses(p.id);
     return `<div class="prop-card" onclick="goTasks(${p.id})">
       <div class="prop-row1">
-        <div class="prop-left">
-          <div class="prop-emoji" style="background:${p.iconBg}">${p.icon}</div>
-          <div>
-            <div class="prop-name">${p.name}</div>
-            <div class="prop-addr">${p.addr}</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-          <span class="badge ${s2b[p.status]}">${s2t[p.status]}</span>
-          <button class="book-btn" onclick="event.stopPropagation();openBookModal(${p.id})">+ Book</button>
-        </div>
+        <div class="prop-left"><div class="prop-emoji" style="background:${p.iconBg}">${p.icon}</div><div><div class="prop-name">${p.name}</div><div class="prop-addr">${p.addr}</div></div></div>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;"><span class="badge ${s2b[p.status]}">${s2t[p.status]}</span><button class="book-btn" onclick="event.stopPropagation();openBookModal(${p.id})">+ Book</button></div>
       </div>
-      <div class="renter-row">
-        <div class="renter-dot" style="background:${s2dc[p.status]}"></div>
-        <div>
-          <span class="renter-name">${p.nextRenter.name}</span>
-          <span style="color:var(--text3);font-size:11px;"> · ${p.rate === 'Monthly' ? '30 days' : p.nextRenter.nights + ' nights'} · ${p.nextRenter.checkin} → ${p.nextRenter.checkout}</span>
-        </div>
-      </div>
-      ${propBookings.length > 0 ? `<div class="booking-list">${bookingChips}</div>` : ''}
+      <div class="renter-row"><div class="renter-dot" style="background:${s2dc[p.status]}"></div><div><span class="renter-name">${p.nextRenter.name}</span><span style="color:var(--text3);font-size:11px;"> · ${p.rate==='Monthly'?'30 days':p.nextRenter.nights+' nights'} · ${p.nextRenter.checkin} → ${p.nextRenter.checkout}</span></div></div>
+      ${pb.length>0?`<div class="booking-list">${chips}</div>`:''}
       <div class="prop-stats">
-        <div class="prop-stat"><div class="stat-val">${p.revenue}</div><div class="stat-lbl">Revenue</div></div>
-        <div class="prop-stat"><div class="stat-val" style="color:${p.tasks > 0 ? 'var(--amber)' : 'var(--text)'}">${p.tasks}</div><div class="stat-lbl">Tasks</div></div>
-        <div class="prop-stat"><div class="stat-val">${p.occ}%</div><div class="stat-lbl">Occupancy</div></div>
-        <div class="prop-stat"><div class="stat-val" style="font-size:11px;color:var(--text2)">${p.rate}</div><div class="stat-lbl">Type</div></div>
+        <div class="prop-stat"><div class="stat-val" style="color:var(--teal)">${fmt$(p.revenue)}</div><div class="stat-lbl">Income</div></div>
+        <div class="prop-stat"><div class="stat-val" style="color:var(--red)">${fmt$(exp)}</div><div class="stat-lbl">Expenses</div></div>
+        <div class="prop-stat"><div class="stat-val" style="color:${net>=0?'var(--green)':'var(--red)'}">${fmt$(net)}</div><div class="stat-lbl">Net</div></div>
+        <div class="prop-stat"><div class="stat-val" style="color:${p.tasks>0?'var(--amber)':'var(--text)'}">${p.tasks}</div><div class="stat-lbl">Tasks</div></div>
       </div>
     </div>`;
   }).join('');
 }
 
-function goTasks(propId) {
-  switchView('tasks');
-  // filter by prop — find chip or just filter
-  taskFilter = 'prop:' + propId;
-  document.querySelectorAll('.filter-chip').forEach(el => el.classList.remove('active'));
-  renderTasks();
-}
+function goTasks(pid){switchView('tasks');taskFilter='prop:'+pid;document.querySelectorAll('.filter-chip').forEach(el=>el.classList.remove('active'));renderTasks();}
+function filterTasks(f,el){taskFilter=f;document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));if(el)el.classList.add('active');renderTasks();}
 
-// ── TASKS ──
-function filterTasks(f, el) {
-  taskFilter = f;
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  if (el) el.classList.add('active');
-  renderTasks();
-}
-
-function renderTasks(propId) {
-  if (propId !== undefined) taskFilter = 'prop:' + propId;
-  let filtered = [...tasks];
-  const dueOrder = { today: 0, 'May 2':1,'May 5':2,'May 6':3,'May 7':4,'May 8':5,'May 9':6,'May 10':7,'May 12':8,'May 15':9 };
-  if (taskFilter === 'today') {
-    filtered = filtered.filter(t => t.due === 'today' && !t.done);
-    document.getElementById('tasksHeading').textContent = 'Due today';
-  } else if (taskFilter === 'upcoming') {
-    filtered = filtered.filter(t => t.due !== 'today' && !t.done);
-    document.getElementById('tasksHeading').textContent = 'Upcoming tasks';
-  } else if (taskFilter === 'done') {
-    filtered = filtered.filter(t => t.done);
-    document.getElementById('tasksHeading').textContent = 'Completed';
-  } else if (taskFilter.startsWith('prop:')) {
-    const pid = parseInt(taskFilter.split(':')[1]);
-    filtered = filtered.filter(t => t.propId === pid);
-    document.getElementById('tasksHeading').textContent = properties[pid].name;
-  } else {
-    document.getElementById('tasksHeading').textContent = 'All tasks';
-  }
-  filtered.sort((a, b) => {
-    if (a.done !== b.done) return a.done ? 1 : -1;
-    return (dueOrder[a.due] ?? 99) - (dueOrder[b.due] ?? 99);
-  });
-  const prioColor = { urgent:'var(--red)', high:'var(--amber)', med:'var(--accent)', low:'var(--text3)' };
-  const dueCls = due => due === 'today' ? 'due-today' : ['May 2','May 5','May 6','May 7'].includes(due) ? 'due-soon' : 'due-later';
-
-  document.getElementById('taskList').innerHTML = filtered.length === 0
-    ? '<div class="empty"><div class="icon">✨</div>No tasks here!</div>'
-    : filtered.map(t => `
-    <div class="task-item" onclick="toggleTask(${t.id})">
-      <div class="prio-bar" style="background:${prioColor[t.prio]}"></div>
-      <div class="task-check ${t.done ? 'done' : ''}">${t.done ? '✓' : ''}</div>
-      <div class="task-body">
-        <div class="task-text ${t.done ? 'done' : ''}">${t.text}</div>
-        <div class="task-meta">${properties[t.propId] ? properties[t.propId].name : ''}</div>
-      </div>
-      <span class="task-due ${dueCls(t.due)}">${t.due}</span>
-    </div>`).join('');
+function renderTasks(pid){
+  if(pid!==undefined)taskFilter='prop:'+pid;
+  let fl=[...tasks];
+  const dO={today:0,'May 2':1,'May 5':2,'May 6':3,'May 7':4,'May 8':5,'May 9':6,'May 10':7,'May 12':8,'May 15':9};
+  if(taskFilter==='today'){fl=fl.filter(t=>t.due==='today'&&!t.done);$('tasksHeading').textContent='Due today';}
+  else if(taskFilter==='upcoming'){fl=fl.filter(t=>t.due!=='today'&&!t.done);$('tasksHeading').textContent='Upcoming';}
+  else if(taskFilter==='done'){fl=fl.filter(t=>t.done);$('tasksHeading').textContent='Completed';}
+  else if(taskFilter.startsWith('prop:')){const p=parseInt(taskFilter.split(':')[1]);fl=fl.filter(t=>t.propId===p);$('tasksHeading').textContent=properties[p].name;}
+  else $('tasksHeading').textContent='All tasks';
+  fl.sort((a,b)=>{if(a.done!==b.done)return a.done?1:-1;return(dO[a.due]??99)-(dO[b.due]??99);});
+  const pc={urgent:'var(--red)',high:'var(--amber)',med:'var(--accent)',low:'var(--text3)'};
+  const dc=d=>d==='today'?'due-today':['May 2','May 5','May 6','May 7'].includes(d)?'due-soon':'due-later';
+  $('taskList').innerHTML=fl.length===0?'<div class="empty"><div class="icon">✨</div>No tasks here!</div>'
+    :fl.map(t=>`<div class="task-item" onclick="toggleTask(${t.id})"><div class="prio-bar" style="background:${pc[t.prio]}"></div><div class="task-check ${t.done?'done':''}">${t.done?'✓':''}</div><div class="task-body"><div class="task-text ${t.done?'done':''}">${t.text}</div><div class="task-meta">${properties[t.propId]?properties[t.propId].name:''}</div></div><span class="task-due ${dc(t.due)}">${t.due}</span></div>`).join('');
   updateTaskCount();
 }
 
-function toggleTask(id) {
-  const t = tasks.find(t => t.id === id);
-  if (t) t.done = !t.done;
-  renderTasks();
-  renderProperties();
+function toggleTask(id){const t=tasks.find(t=>t.id===id);if(t)t.done=!t.done;renderTasks();renderProperties();}
+function openAddTask(){$('newTaskProp').innerHTML=properties.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');$('newTaskText').value='';$('newTaskDue').value='';$('modalOverlay').classList.add('open');setTimeout(()=>$('newTaskText').focus(),300);}
+function closeModal(e){if(e.target===$('modalOverlay'))$('modalOverlay').classList.remove('open');}
+function saveTask(){const text=$('newTaskText').value.trim();if(!text)return;const propId=parseInt($('newTaskProp').value);const prio=$('newTaskPrio').value;const due=$('newTaskDue').value.trim()||'today';tasks.push({id:tasks.length,text,propId,prio,due,done:false});$('modalOverlay').classList.remove('open');renderTasks();renderProperties();}
+
+let bookingPropId=-1;
+function openBookModal(pid){bookingPropId=pid;$('bookModalTitle').textContent='Book · '+properties[pid].name;$('bookGuest').value='';$('bookRate').value='';$('bookNotes').value='';const t=new Date();t.setDate(t.getDate()+1);const t2=new Date();t2.setDate(t2.getDate()+2);$('bookCheckin').value=t.toISOString().slice(0,10);$('bookCheckout').value=t2.toISOString().slice(0,10);$('bookModalOverlay').classList.add('open');setTimeout(()=>$('bookGuest').focus(),300);}
+function closeBookModal(e){if(e.target===$('bookModalOverlay'))$('bookModalOverlay').classList.remove('open');}
+function saveBooking(){const guest=$('bookGuest').value.trim();const ci=$('bookCheckin').value;const co=$('bookCheckout').value;if(!guest||!ci||!co){alert('Fill in guest name, check-in and check-out.');return;}if(ci>=co){alert('Check-out must be after check-in.');return;}bookings.push({propId:bookingPropId,guest,si:new Date(ci+'T00:00:00'),ei:new Date(co+'T00:00:00'),notes:$('bookNotes').value.trim(),rate:$('bookRate').value?parseInt($('bookRate').value):null});properties[bookingPropId].status='booked';$('bookModalOverlay').classList.remove('open');renderProperties();if(currentView==='calendar')renderCalendar();if(currentView==='upcoming')renderUpcoming();}
+function deleteBooking(idx){if(!confirm('Remove this booking?'))return;bookings.splice(idx,1);renderProperties();if(currentView==='calendar')renderCalendar();}
+
+function renderCalendar(){
+  $('calLabel').textContent=MONTHS[calMonth]+' '+calYear;
+  $('calFilter').innerHTML=`<button class="cal-filter-btn ${calPropFilter===-1?'active':''}" onclick="setCalProp(-1,this)">All</button>`+properties.map(p=>`<button class="cal-filter-btn ${calPropFilter===p.id?'active':''}" onclick="setCalProp(${p.id},this)">${p.name.split(' ')[0]}</button>`).join('');
+  const fd=new Date(calYear,calMonth,1).getDay(),dim=new Date(calYear,calMonth+1,0).getDate(),prev=new Date(calYear,calMonth,0).getDate();
+  const active=calPropFilter===-1?bookings:bookings.filter(b=>b.propId===calPropFilter);
+  function getBk(y,m,d){const dt=new Date(y,m,d);return active.find(b=>dt>=b.si&&dt<=b.ei);}
+  let h=DOWS.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  for(let i=0;i<fd;i++)h+=`<div class="cal-day"><div class="cal-num other">${prev-fd+1+i}</div></div>`;
+  for(let d=1;d<=dim;d++){const iT=d===TD&&calMonth===TM&&calYear===TY;const bk=getBk(calYear,calMonth,d);let ev='';if(bk){const dt=new Date(calYear,calMonth,d);const lb=bk.guest.split(' ')[0];if(+dt===+bk.si)ev=`<div class="cal-ev ev-in">↓ ${lb}</div>`;else if(+dt===+bk.ei)ev=`<div class="cal-ev ev-out">↑ ${lb}</div>`;else ev=`<div class="cal-ev ev-stay">${lb}</div>`;}h+=`<div class="cal-day"><div class="cal-num${iT?' today':''}">${d}</div>${ev}</div>`;}
+  const rem=42-fd-dim;for(let d=1;d<=rem;d++)h+=`<div class="cal-day"><div class="cal-num other">${d}</div></div>`;
+  $('calGrid').innerHTML=h;
+}
+function setCalProp(id,el){calPropFilter=id;renderCalendar();}
+function changeMonth(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+
+function renderUpcoming(){
+  let items=[];
+  bookings.forEach(b=>{const pn=properties[b.propId]?properties[b.propId].name:'';const si=b.si instanceof Date?b.si:new Date(b.si+'T00:00:00');const ei=b.ei instanceof Date?b.ei:new Date(b.ei+'T00:00:00');const n=Math.round((ei-si)/86400000);items.push({ts:si,day:si.getDate(),mon:MONTHS_S[si.getMonth()],name:b.guest+' check-in',detail:pn+' · '+n+' night'+(n!==1?'s':''),type:'check-in',tc:'var(--teal-bg)',tt:'var(--teal)'});items.push({ts:ei,day:ei.getDate(),mon:MONTHS_S[ei.getMonth()],name:b.guest+' check-out',detail:pn+' · clean + review',type:'check-out',tc:'var(--amber-bg)',tt:'var(--amber)'});});
+  tasks.filter(t=>!t.done&&(t.prio==='urgent'||t.prio==='high')).forEach(t=>{const pn=properties[t.propId]?properties[t.propId].name:'';items.push({ts:new Date(),day:TD,mon:MONTHS_S[TM],name:t.text,detail:pn+' · urgent task',type:'task',tc:'var(--red-bg)',tt:'var(--red)'});});
+  items.sort((a,b)=>a.ts-b.ts);const ts=new Date(TY,TM,TD);items=items.filter(i=>i.ts>=ts);
+  $('upcomingList').innerHTML=items.length===0?'<div class="empty"><div class="icon">🎉</div>Nothing coming up!</div>'
+    :items.map(i=>`<div class="upcoming-item"><div class="up-date"><div class="up-day">${i.day}</div><div class="up-mon">${i.mon}</div></div><div class="up-info"><div class="up-name">${i.name}</div><div class="up-detail">${i.detail}</div></div><span class="badge" style="background:${i.tc};color:${i.tt};white-space:nowrap">${i.type}</span></div>`).join('');
 }
 
-// ── ADD TASK MODAL ──
-function openAddTask() {
-  const sel = document.getElementById('newTaskProp');
-  sel.innerHTML = properties.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-  document.getElementById('newTaskText').value = '';
-  document.getElementById('newTaskDue').value = '';
-  document.getElementById('modalOverlay').classList.add('open');
-  setTimeout(() => document.getElementById('newTaskText').focus(), 300);
-}
+// ── EXPENSE MODAL ──
+function openExpenseModal(pid){expensePropId=pid;$('expenseModalTitle').textContent='Add expense · '+properties[pid].name;$('expDesc').value='';$('expAmt').value='';$('expDate').value=new Date().toISOString().slice(0,10);$('expenseModalOverlay').classList.add('open');}
+function closeExpenseModal(e){if(e.target===$('expenseModalOverlay'))$('expenseModalOverlay').classList.remove('open');}
+function saveExpense(){const amt=parseFloat($('expAmt').value);if(!amt||amt<=0){alert('Enter a valid amount.');return;}expenses.push({propId:expensePropId,cat:$('expCat').value,desc:$('expDesc').value.trim()||CAT_META[$('expCat').value].label,amt,date:$('expDate').value});$('expenseModalOverlay').classList.remove('open');renderFinance();renderOverall();renderProperties();updateTaskCount();}
+function deleteExpense(idx){if(!confirm('Remove this expense?'))return;expenses.splice(idx,1);renderFinance();renderOverall();renderProperties();updateTaskCount();}
 
-function closeModal(e) {
-  if (e.target === document.getElementById('modalOverlay'))
-    document.getElementById('modalOverlay').classList.remove('open');
-}
+// ── FINANCE PER PROPERTY ──
+function setFinProp(id){finPropId=id;renderFinance();}
 
-function saveTask() {
-  const text = document.getElementById('newTaskText').value.trim();
-  if (!text) return;
-  const propId = parseInt(document.getElementById('newTaskProp').value);
-  const prio = document.getElementById('newTaskPrio').value;
-  const due = document.getElementById('newTaskDue').value.trim() || 'today';
-  tasks.push({ id: tasks.length, text, propId, prio, due, done: false });
-  document.getElementById('modalOverlay').classList.remove('open');
-  renderTasks();
-  renderProperties();
-}
+function renderFinance(){
+  $('finPropTabs').innerHTML=properties.map(p=>`<button class="fin-tab ${finPropId===p.id?'active':''}" onclick="setFinProp(${p.id})">${p.icon} ${p.name.split(' ')[0]}</button>`).join('');
+  const income=propIncome(finPropId),exp=propExpenses(finPropId),net=income-exp;
+  const expPct=income>0?Math.round(exp/income*100):0,netPct=100-expPct;
+  const catTotals={};expenses.filter(e=>e.propId===finPropId).forEach(e=>{catTotals[e.cat]=(catTotals[e.cat]||0)+e.amt;});
+  const catEntries=Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);
+  const propExps=expenses.filter(e=>e.propId===finPropId).sort((a,b)=>new Date(b.date)-new Date(a.date));
 
-// ── CALENDAR ──
-function renderCalendar() {
-  document.getElementById('calLabel').textContent = MONTHS[calMonth] + ' ' + calYear;
-  const filter = document.getElementById('calFilter');
-  filter.innerHTML = `<button class="cal-filter-btn ${calPropFilter===-1?'active':''}" onclick="setCalProp(-1,this)">All</button>` +
-    properties.map(p => `<button class="cal-filter-btn ${calPropFilter===p.id?'active':''}" onclick="setCalProp(${p.id},this)">${p.name.split(' ')[0]}</button>`).join('');
+  let h=`<div class="fin-summary">
+    <div class="fin-card"><div class="fin-card-lbl">Income</div><div class="fin-card-val" style="color:var(--teal)">${fmt$(income)}</div><div class="fin-card-sub">This month</div></div>
+    <div class="fin-card"><div class="fin-card-lbl">Expenses</div><div class="fin-card-val" style="color:var(--red)">${fmt$(exp)}</div><div class="fin-card-sub">${expPct}% of income</div></div>
+    <div class="fin-card"><div class="fin-card-lbl">Net</div><div class="fin-card-val" style="color:${net>=0?'var(--green)':'var(--red)'}">${fmt$(net)}</div><div class="fin-card-sub">${netPct}% margin</div></div>
+  </div>
+  <div class="fin-profit-bar">
+    <div class="fin-bar-label"><span style="color:var(--teal);font-weight:600">${fmt$(income)} income</span><span style="color:var(--red);font-weight:600">${fmt$(exp)} expenses</span></div>
+    <div class="fin-bar-track"><div class="fin-bar-income" style="width:100%"></div><div class="fin-bar-expense" style="width:${expPct}%"></div></div>
+    <div class="fin-pct-row"><span style="color:var(--teal)">▪ ${netPct}% profit</span><span style="color:var(--red)">▪ ${expPct}% costs</span></div>
+  </div>
+  <div class="fin-breakdown">
+    <div class="fin-breakdown-head"><span>Cost breakdown</span><span style="font-size:11px;color:var(--text2)">${catEntries.length} categories</span></div>`;
 
-  const firstDay = new Date(calYear, calMonth, 1).getDay();
-  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
-  const prevDays = new Date(calYear, calMonth, 0).getDate();
-  const active = calPropFilter === -1 ? bookings : bookings.filter(b => b.propId === calPropFilter);
+  catEntries.forEach(([cat,total])=>{
+    const m=CAT_META[cat]||CAT_META.other;const pct=income>0?Math.round(total/income*100):0;
+    const catExps=expenses.filter(e=>e.propId===finPropId&&e.cat===cat);
+    h+=`<div class="fin-row"><div class="fin-dot" style="background:${m.color}"></div>
+      <div class="fin-cat"><div style="font-size:13px">${m.icon} ${m.label}</div>
+      <div class="fin-bar-mini"><div class="fin-bar-mini-fill" style="width:${Math.min(pct*2,100)}%;background:${m.color}"></div></div>
+      ${catExps.map(e=>`<div class="fin-cat-sub" style="margin-top:3px">· ${e.desc} <span style="color:var(--text3)">${fmtDate(e.date)}</span></div>`).join('')}
+      </div><div style="text-align:right;flex-shrink:0"><div class="fin-amt" style="color:var(--red)">${fmt$(total)}</div><span class="fin-pct-pill">${pct}%</span></div></div>`;
+  });
+  if(!catEntries.length)h+=`<div style="padding:20px;text-align:center;color:var(--text3);font-size:13px;">No expenses yet</div>`;
+  h+=`</div>`;
 
-  function getBooking(y,m,d) {
-    const date = new Date(y,m,d);
-    return active.find(b => date >= b.si && date <= b.ei);
+  if(propExps.length){
+    h+=`<div class="fin-breakdown"><div class="fin-breakdown-head"><span>All expenses</span><span style="font-size:11px;color:var(--text2)">${fmt$(exp)} total</span></div>`;
+    propExps.forEach(e=>{const m=CAT_META[e.cat]||CAT_META.other;const gi=expenses.indexOf(e);
+      h+=`<div class="fin-row"><div class="fin-dot" style="background:${m.color}"></div><div class="fin-cat"><div>${m.icon} ${e.desc}</div><div class="fin-cat-sub">${m.label} · ${fmtDate(e.date)}</div></div><div style="display:flex;align-items:center;gap:8px"><div class="fin-amt" style="color:var(--red)">${fmt$(e.amt)}</div><button onclick="deleteExpense(${gi})" style="background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;line-height:1">×</button></div></div>`;
+    });
+    h+=`</div>`;
   }
 
-  let html = DOWS.map(d => `<div class="cal-dow">${d}</div>`).join('');
-  for (let i=0;i<firstDay;i++) {
-    const d = prevDays - firstDay + 1 + i;
-    html += `<div class="cal-day"><div class="cal-num other">${d}</div></div>`;
-  }
-  for (let d=1;d<=daysInMonth;d++) {
-    const isToday = d===TD && calMonth===TM && calYear===TY;
-    const bk = getBooking(calYear, calMonth, d);
-    let ev = '';
-    if (bk) {
-      const dt = new Date(calYear, calMonth, d);
-      const label = bk.guest.split(' ')[0];
-      if (+dt === +bk.si) ev = `<div class="cal-ev ev-in">↓ ${label}</div>`;
-      else if (+dt === +bk.ei) ev = `<div class="cal-ev ev-out">↑ ${label}</div>`;
-      else ev = `<div class="cal-ev ev-stay">${label}</div>`;
-    }
-    html += `<div class="cal-day"><div class="cal-num${isToday?' today':''}">${d}</div>${ev}</div>`;
-  }
-  const rem = 42 - firstDay - daysInMonth;
-  for (let d=1;d<=rem;d++) html += `<div class="cal-day"><div class="cal-num other">${d}</div></div>`;
-  document.getElementById('calGrid').innerHTML = html;
+  $('finContent').innerHTML=h;
+  const btn=document.createElement('div');btn.className='fin-add-btn';btn.innerHTML='+ Add expense';btn.onclick=()=>openExpenseModal(finPropId);$('finContent').appendChild(btn);
 }
 
-function setCalProp(id, el) {
-  calPropFilter = id;
-  renderCalendar();
-}
+// ── OVERALL ──
+function renderOverall(){
+  const ti=properties.reduce((s,p)=>s+propIncome(p.id),0);
+  const te=properties.reduce((s,p)=>s+propExpenses(p.id),0);
+  const tn=ti-te;const expPct=ti>0?Math.round(te/ti*100):0,netPct=100-expPct;
+  const allCat={};expenses.forEach(e=>{allCat[e.cat]=(allCat[e.cat]||0)+e.amt;});
+  const allCatE=Object.entries(allCat).sort((a,b)=>b[1]-a[1]);
 
-function changeMonth(dir) {
-  calMonth += dir;
-  if (calMonth > 11) { calMonth=0; calYear++; }
-  if (calMonth < 0)  { calMonth=11; calYear--; }
-  renderCalendar();
-}
+  let h=`<div class="fin-summary">
+    <div class="fin-card"><div class="fin-card-lbl">Total income</div><div class="fin-card-val" style="color:var(--teal)">${fmt$(ti)}</div><div class="fin-card-sub">5 properties</div></div>
+    <div class="fin-card"><div class="fin-card-lbl">Total expenses</div><div class="fin-card-val" style="color:var(--red)">${fmt$(te)}</div><div class="fin-card-sub">${expPct}% of income</div></div>
+    <div class="fin-card"><div class="fin-card-lbl">Net profit</div><div class="fin-card-val" style="color:${tn>=0?'var(--green)':'var(--red)'}">${fmt$(tn)}</div><div class="fin-card-sub">${netPct}% margin</div></div>
+  </div>
+  <div class="fin-profit-bar">
+    <div class="fin-bar-label"><span style="font-size:13px;font-weight:600;color:var(--text)">Portfolio P&amp;L</span></div>
+    <div class="fin-bar-track" style="height:14px"><div class="fin-bar-income" style="width:100%"></div><div class="fin-bar-expense" style="width:${expPct}%"></div></div>
+    <div class="fin-pct-row"><span style="color:var(--teal);font-weight:600">▪ ${netPct}% profit · ${fmt$(tn)}</span><span style="color:var(--red);font-weight:600">▪ ${expPct}% costs · ${fmt$(te)}</span></div>
+  </div>
+  <div class="section-head" style="padding-top:4px;margin-bottom:10px;"><h2>By property</h2><span style="font-size:12px;color:var(--text2)">Tap for details</span></div>`;
 
-// ── UPCOMING ──
-function renderUpcoming() {
-  const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  // Build items from live bookings
-  let items = [];
-  bookings.forEach(b => {
-    const propName = properties[b.propId] ? properties[b.propId].name : '';
-    const si = b.si instanceof Date ? b.si : new Date(b.si + 'T00:00:00');
-    const ei = b.ei instanceof Date ? b.ei : new Date(b.ei + 'T00:00:00');
-    const nights = Math.round((ei - si) / 86400000);
-    items.push({ ts: si, day: si.getDate(), mon: MONTH_SHORT[si.getMonth()], name: b.guest + ' check-in', detail: propName + ' · ' + nights + ' night' + (nights!==1?'s':''), type:'check-in', tc:'var(--teal-bg)', tt:'var(--teal)' });
-    items.push({ ts: ei, day: ei.getDate(), mon: MONTH_SHORT[ei.getMonth()], name: b.guest + ' check-out', detail: propName + ' · clean + review', type:'check-out', tc:'var(--amber-bg)', tt:'var(--amber)' });
+  properties.forEach(p=>{
+    const inc=propIncome(p.id),exp=propExpenses(p.id),net=propNet(p.id);
+    const expW=inc>0?Math.round(exp/inc*100):0;
+    h+=`<div class="overall-prop-row" onclick="setFinProp(${p.id});switchView('finance')">
+      <div class="overall-prop-top"><span style="font-size:18px">${p.icon}</span><div class="overall-prop-name">${p.name}</div><div class="overall-prop-net" style="color:${net>=0?'var(--green)':'var(--red)'}">${fmt$(net)}</div></div>
+      <div class="overall-stacked"><div class="overall-inc" style="flex:${100-expW}"></div><div class="overall-exp" style="flex:${expW}"></div></div>
+      <div class="overall-row-stats"><span style="color:var(--teal)">↑ ${fmt$(inc)}</span><span style="color:var(--red)">↓ ${fmt$(exp)} (${expW}%)</span><span style="color:var(--accent);font-size:10px">Details →</span></div>
+    </div>`;
   });
-  // Add urgent tasks
-  tasks.filter(t => !t.done && (t.prio === 'urgent' || t.prio === 'high')).forEach(t => {
-    const propName = properties[t.propId] ? properties[t.propId].name : '';
-    items.push({ ts: new Date(), day: new Date().getDate(), mon: MONTH_SHORT[new Date().getMonth()], name: t.text, detail: propName + ' · urgent task', type:'task', tc:'var(--red-bg)', tt:'var(--red)' });
+
+  h+=`<div class="section-head" style="padding-top:16px;margin-bottom:10px;"><h2>All costs by type</h2></div><div class="fin-breakdown">`;
+  allCatE.forEach(([cat,total])=>{
+    const m=CAT_META[cat]||CAT_META.other;const pct=ti>0?Math.round(total/ti*100):0;
+    const expPctOfExp=te>0?Math.round(total/te*100):0;
+    h+=`<div class="fin-row"><div class="fin-dot" style="background:${m.color}"></div>
+      <div class="fin-cat"><div style="font-size:13px">${m.icon} ${m.label}</div>
+      <div class="fin-bar-mini"><div class="fin-bar-mini-fill" style="width:${Math.min(expPctOfExp,100)}%;background:${m.color}"></div></div>
+      <div class="fin-cat-sub">${expPctOfExp}% of total expenses</div></div>
+      <div style="text-align:right;flex-shrink:0"><div class="fin-amt" style="color:var(--red)">${fmt$(total)}</div><span class="fin-pct-pill">${pct}% of income</span></div></div>`;
   });
-  items.sort((a,b) => a.ts - b.ts);
-  // Only show future + today
-  const todayStart = new Date(TY, TM, TD);
-  items = items.filter(i => i.ts >= todayStart);
-  document.getElementById('upcomingList').innerHTML = items.length === 0
-    ? '<div class="empty"><div class="icon">🎉</div>Nothing coming up!</div>'
-    : items.map(i => `
-    <div class="upcoming-item">
-      <div class="up-date"><div class="up-day">${i.day}</div><div class="up-mon">${i.mon}</div></div>
-      <div class="up-info"><div class="up-name">${i.name}</div><div class="up-detail">${i.detail}</div></div>
-      <span class="badge" style="background:${i.tc};color:${i.tt};white-space:nowrap">${i.type}</span>
-    </div>`).join('');
+  h+=`</div>`;
+  $('overallContent').innerHTML=h;
 }
 
-// ── BOOK MODAL ──
-let bookingPropId = -1;
-
-function openBookModal(propId) {
-  bookingPropId = propId;
-  const prop = properties[propId];
-  document.getElementById('bookModalTitle').textContent = 'Book · ' + prop.name;
-  document.getElementById('bookGuest').value = '';
-  document.getElementById('bookRate').value = '';
-  document.getElementById('bookNotes').value = '';
-  // default check-in to tomorrow
-  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
-  const dayAfter = new Date(); dayAfter.setDate(dayAfter.getDate()+2);
-  document.getElementById('bookCheckin').value = tomorrow.toISOString().slice(0,10);
-  document.getElementById('bookCheckout').value = dayAfter.toISOString().slice(0,10);
-  document.getElementById('bookModalOverlay').classList.add('open');
-  setTimeout(() => document.getElementById('bookGuest').focus(), 300);
-}
-
-function closeBookModal(e) {
-  if (e.target === document.getElementById('bookModalOverlay'))
-    document.getElementById('bookModalOverlay').classList.remove('open');
-}
-
-function saveBooking() {
-  const guest = document.getElementById('bookGuest').value.trim();
-  const ci = document.getElementById('bookCheckin').value;
-  const co = document.getElementById('bookCheckout').value;
-  if (!guest || !ci || !co) { alert('Please fill in guest name, check-in and check-out dates.'); return; }
-  if (ci >= co) { alert('Check-out must be after check-in.'); return; }
-  const notes = document.getElementById('bookNotes').value.trim();
-  const rate = document.getElementById('bookRate').value;
-  bookings.push({
-    propId: bookingPropId,
-    guest,
-    si: new Date(ci + 'T00:00:00'),
-    ei: new Date(co + 'T00:00:00'),
-    notes: notes || '',
-    rate: rate ? parseInt(rate) : null
-  });
-  // update property status to booked
-  properties[bookingPropId].status = 'booked';
-  document.getElementById('bookModalOverlay').classList.remove('open');
-  renderProperties();
-  if (currentView === 'calendar') renderCalendar();
-  if (currentView === 'upcoming') renderUpcoming();
-}
-
-function deleteBooking(idx) {
-  if (!confirm('Remove this booking?')) return;
-  bookings.splice(idx, 1);
-  renderProperties();
-  if (currentView === 'calendar') renderCalendar();
-  if (currentView === 'upcoming') renderUpcoming();
-}
-
-// ── INIT ──
-renderProperties();
-renderCalendar();
+updateTaskCount();renderProperties();renderCalendar();
 </script>
 </body>
 </html>
