@@ -28,7 +28,7 @@
   .topbar-left h1{font-size:22px;font-weight:700;letter-spacing:-0.5px;}
   .topbar-left .sub{font-size:12px;color:var(--text2);margin-top:1px;}
   .topbar-icon{width:36px;height:36px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;border:0.5px solid var(--border2);}
-  .scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(74px + var(--safe-bottom));}
+  .scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(78px + var(--safe-bottom));}
   .scroll-area::-webkit-scrollbar{display:none;}
   .metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px;}
   .metric{background:var(--card);border-radius:var(--r);padding:14px;border:0.5px solid var(--border);}
@@ -183,6 +183,43 @@
   .filter-chip.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:600;}
   .occ-bar{height:4px;background:var(--bg3);border-radius:2px;margin-top:6px;overflow:hidden;}
   .occ-fill{height:100%;border-radius:2px;background:var(--teal);}
+
+
+  /* GUEST HISTORY */
+  .guest-section{margin-top:10px;border-top:0.5px solid var(--border);padding-top:10px;}
+  .guest-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .guest-top-label{font-size:12px;font-weight:600;color:var(--text2);}
+  .repeat-toggle{display:flex;align-items:center;gap:7px;cursor:pointer;-webkit-user-select:none;}
+  .repeat-checkbox{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:all 0.15s;}
+  .repeat-checkbox.checked{background:var(--teal);border-color:var(--teal);}
+  .repeat-label{font-size:12px;color:var(--text2);}
+  .repeat-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:var(--teal-bg);color:var(--teal);font-weight:600;margin-left:4px;}
+  .stay-history{display:flex;flex-direction:column;gap:5px;margin-top:8px;}
+  .stay-row{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border-radius:var(--r-sm);padding:7px 10px;font-size:12px;}
+  .stay-dates{color:var(--text2);}
+  .stay-amt{font-weight:600;color:var(--teal);}
+  .stay-nights{font-size:10px;color:var(--text3);margin-top:1px;}
+  .add-stay-btn{font-size:11px;color:var(--accent);background:none;border:none;cursor:pointer;padding:4px 0;margin-top:4px;display:block;}
+  .guest-note{font-size:11px;color:var(--text3);font-style:italic;margin-top:4px;}
+
+  /* WEATHER */
+  .weather-strip{display:flex;gap:8px;padding:0 16px 14px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .weather-strip::-webkit-scrollbar{display:none;}
+  .wx-card{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:10px 12px;flex-shrink:0;min-width:130px;display:flex;flex-direction:column;gap:3px;}
+  .wx-prop{font-size:11px;font-weight:600;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .wx-main{display:flex;align-items:center;gap:6px;margin-top:2px;}
+  .wx-icon{font-size:22px;line-height:1;}
+  .wx-temp{font-size:22px;font-weight:700;letter-spacing:-0.5px;}
+  .wx-desc{font-size:10px;color:var(--text2);margin-top:1px;}
+  .wx-detail{font-size:10px;color:var(--text3);}
+  .wx-loading{color:var(--text3);font-size:11px;font-style:italic;}
+  /* CHARTS */
+  .chart-wrap{background:var(--card);border-radius:var(--r);border:0.5px solid var(--border);padding:14px;margin-bottom:14px;}
+  .chart-title{font-size:13px;font-weight:600;margin-bottom:4px;}
+  .chart-sub{font-size:11px;color:var(--text2);margin-bottom:12px;}
+  .chart-legend{display:flex;gap:14px;margin-bottom:10px;flex-wrap:wrap;}
+  .chart-leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);}
+  .chart-leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -190,7 +227,7 @@
   <div class="topbar-left">
     <h1>Caldwell Rentals</h1>
     <div class="sub">5 properties · May 2026</div>
-    <div style="font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:0.4px;">v3.0.0</div>
+    <div style="font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:0.4px;">v5.3.0</div>
   </div>
   <div class="topbar-icon" onclick="openAddTask()">＋</div>
 </div>
@@ -203,6 +240,45 @@
     <div class="metric"><div class="metric-label">Check-ins</div><div class="metric-val" style="color:var(--purple)">3</div><div class="metric-sub">This week</div></div>
   </div>
 
+
+  <!-- WEATHER STRIP -->
+  <div class="weather-strip" id="weatherStrip">
+    <div class="wx-card"><div class="wx-prop">Loading weather...</div></div>
+  </div>
+
+  <!-- CHARTS VIEW -->
+  <div id="view-charts" class="view">
+    <div class="section">
+      <div class="section-head"><h2>Month-over-month</h2></div>
+      <div class="chart-wrap">
+        <div class="chart-title">Portfolio revenue vs expenses</div>
+        <div class="chart-sub">6-month trend · all properties</div>
+        <div class="chart-legend">
+          <div class="chart-leg-item"><div class="chart-leg-dot" style="background:#14B8A6"></div>Income</div>
+          <div class="chart-leg-item"><div class="chart-leg-dot" style="background:#EF4444"></div>Expenses</div>
+          <div class="chart-leg-item"><div class="chart-leg-dot" style="background:#22C55E"></div>Net profit</div>
+        </div>
+        <div style="position:relative;height:200px;"><canvas id="chartMoM" role="img" aria-label="Monthly income, expenses and net profit bar chart">Monthly revenue chart</canvas></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Revenue by property</div>
+        <div class="chart-sub">Last 6 months · tap a bar to see details</div>
+        <div class="chart-legend" id="propChartLegend"></div>
+        <div style="position:relative;height:220px;"><canvas id="chartByProp" role="img" aria-label="Revenue by property bar chart">Revenue by property chart</canvas></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Expense breakdown by category</div>
+        <div class="chart-sub">This month · all properties</div>
+        <div style="position:relative;height:200px;"><canvas id="chartExpCat" role="img" aria-label="Expense category donut chart">Expense category chart</canvas></div>
+        <div id="expCatLegend" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;"></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Occupancy rate</div>
+        <div class="chart-sub">By property this month</div>
+        <div style="position:relative;height:160px;"><canvas id="chartOcc" role="img" aria-label="Occupancy rate bar chart">Occupancy chart</canvas></div>
+      </div>
+    </div>
+  </div>
   <div id="view-properties" class="view active">
     <div class="section"><div class="section-head"><h2>All properties</h2><button class="sec-action" onclick="switchView('calendar')">Calendar →</button></div><div id="propList"></div></div>
   </div>
@@ -252,7 +328,7 @@
   <button class="nav-item" onclick="switchView('tasks')" id="nav-tasks"><div class="nav-icon">✅</div><div class="nav-lbl">Tasks</div><span class="nav-badge" id="taskBadge">4</span></button>
   <button class="nav-item" onclick="switchView('calendar')" id="nav-calendar"><div class="nav-icon">📅</div><div class="nav-lbl">Calendar</div></button>
   <button class="nav-item" onclick="switchView('finance')" id="nav-finance"><div class="nav-icon">💰</div><div class="nav-lbl">Finances</div></button>
-  <button class="nav-item" onclick="switchView('overall')" id="nav-overall"><div class="nav-icon">📊</div><div class="nav-lbl">Overview</div></button>
+  <button class="nav-item" onclick="switchView('charts')" id="nav-charts"><div class="nav-icon">📈</div><div class="nav-lbl">Charts</div></button><button class="nav-item" onclick="switchView('overall')" id="nav-overall"><div class="nav-icon">📊</div><div class="nav-lbl">Overview</div></button>
 </div>
 
 <!-- BOOK MODAL -->
@@ -430,6 +506,7 @@ function switchView(v){
   if(v==='properties')renderProperties();
   if(v==='finance')renderFinance();
   if(v==='overall')renderOverall();
+  if(v==='charts'){if(typeof Chart!=='undefined')renderCharts();}
 }
 
 function renderProperties(){
@@ -452,6 +529,7 @@ function renderProperties(){
         <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;"><span class="badge ${s2b[p.status]}">${s2t[p.status]}</span><button class="book-btn" onclick="event.stopPropagation();openBookModal(${p.id})">+ Book</button></div>
       </div>
       <div class="renter-row"><div class="renter-dot" style="background:${s2dc[p.status]}"></div><div><span class="renter-name">${p.nextRenter.name}</span><span style="color:var(--text3);font-size:11px;"> · ${p.rate==='Monthly'?'30 days':p.nextRenter.nights+' nights'} · ${p.nextRenter.checkin} → ${p.nextRenter.checkout}</span></div></div>
+      ${buildGuestSection(p.nextRenter.name, p.id)}
       ${pb.length>0?`<div class="booking-list">${chips}</div>`:''}
       <div class="prop-stats">
         <div class="prop-stat"><div class="stat-val" style="color:var(--teal)">${fmt$(p.revenue)}</div><div class="stat-lbl">Income</div></div>
@@ -518,13 +596,13 @@ function renderUpcoming(){
     :items.map(i=>`<div class="upcoming-item"><div class="up-date"><div class="up-day">${i.day}</div><div class="up-mon">${i.mon}</div></div><div class="up-info"><div class="up-name">${i.name}</div><div class="up-detail">${i.detail}</div></div><span class="badge" style="background:${i.tc};color:${i.tt};white-space:nowrap">${i.type}</span></div>`).join('');
 }
 
-// ── EXPENSE MODAL ──
+// -- EXPENSE MODAL --
 function openExpenseModal(pid){expensePropId=pid;$('expenseModalTitle').textContent='Add expense · '+properties[pid].name;$('expDesc').value='';$('expAmt').value='';$('expDate').value=new Date().toISOString().slice(0,10);$('expenseModalOverlay').classList.add('open');}
 function closeExpenseModal(e){if(e.target===$('expenseModalOverlay'))$('expenseModalOverlay').classList.remove('open');}
 function saveExpense(){const amt=parseFloat($('expAmt').value);if(!amt||amt<=0){alert('Enter a valid amount.');return;}expenses.push({propId:expensePropId,cat:$('expCat').value,desc:$('expDesc').value.trim()||CAT_META[$('expCat').value].label,amt,date:$('expDate').value});$('expenseModalOverlay').classList.remove('open');renderFinance();renderOverall();renderProperties();updateTaskCount();}
 function deleteExpense(idx){if(!confirm('Remove this expense?'))return;expenses.splice(idx,1);renderFinance();renderOverall();renderProperties();updateTaskCount();}
 
-// ── FINANCE PER PROPERTY ──
+// -- FINANCE PER PROPERTY --
 function setFinProp(id){finPropId=id;renderFinance();}
 
 function renderFinance(){
@@ -572,7 +650,7 @@ function renderFinance(){
   const btn=document.createElement('div');btn.className='fin-add-btn';btn.innerHTML='+ Add expense';btn.onclick=()=>openExpenseModal(finPropId);$('finContent').appendChild(btn);
 }
 
-// ── OVERALL ──
+// -- OVERALL --
 function renderOverall(){
   const ti=properties.reduce((s,p)=>s+propIncome(p.id),0);
   const te=properties.reduce((s,p)=>s+propExpenses(p.id),0);
@@ -616,7 +694,361 @@ function renderOverall(){
   $('overallContent').innerHTML=h;
 }
 
-updateTaskCount();renderProperties();renderCalendar();
+
+// -- WEATHER --
+const PROP_COORDS = [
+  {lat:34.8951, lon:-84.3207, name:'Lakeside Cabin'},
+  {lat:33.7490, lon:-84.3880, name:'Downtown Loft'},
+  {lat:31.9989, lon:-80.8445, name:'Beach Bungalow'},
+  {lat:34.6887, lon:-84.4655, name:'Mountain Chalet'},
+  {lat:32.0835, lon:-81.0998, name:'Garden Cottage'},
+];
+const WX_CODE = {
+  0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',
+  51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',
+  71:'🌨️',73:'🌨️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',
+  95:'⛈️',96:'⛈️',99:'⛈️'
+};
+const WX_DESC = {
+  0:'Clear',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Foggy',
+  51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',
+  71:'Light snow',73:'Snow',75:'Heavy snow',80:'Showers',81:'Showers',82:'Thunderstorm',
+  95:'Thunderstorm',96:'Thunderstorm',99:'Thunderstorm'
+};
+
+async function fetchWeather() {
+  const strip = $('weatherStrip');
+  strip.innerHTML = PROP_COORDS.map((_,i) => `<div class="wx-card" id="wx${i}"><div class="wx-prop">${properties[i].name.split(' ')[0]}</div><div class="wx-loading">Loading...</div></div>`).join('');
+
+  PROP_COORDS.forEach(async (c, i) => {
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weathercode,windspeed_10m,relative_humidity_2m&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=America%2FNew_York`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const cur = data.current;
+      const code = cur.weathercode;
+      const icon = WX_CODE[code] || '🌡️';
+      const desc = WX_DESC[code] || 'Unknown';
+      const temp = Math.round(cur.temperature_2m);
+      const wind = Math.round(cur.windspeed_10m);
+      const hum = cur.relative_humidity_2m;
+      $('wx'+i).innerHTML = `
+        <div class="wx-prop">${properties[i].name.split(' ')[0]}</div>
+        <div class="wx-main"><div class="wx-icon">${icon}</div><div class="wx-temp">${temp}°F</div></div>
+        <div class="wx-desc">${desc}</div>
+        <div class="wx-detail">💨 ${wind} mph · 💧 ${hum}%</div>`;
+    } catch(e) {
+      $('wx'+i).innerHTML = `<div class="wx-prop">${properties[i].name.split(' ')[0]}</div><div class="wx-loading">Unavailable</div>`;
+    }
+  });
+}
+
+// -- CHARTS --
+const CHART_MONTHS = ['Dec','Jan','Feb','Mar','Apr','May'];
+// Simulated 6-month historical data
+const MONTHLY_INCOME = [
+  [1600,1750,1800,1700,1900,1950], // Lakeside
+  [2400,2600,2500,2700,2750,2800], // Downtown
+  [1100,1200,1350,1400,1450,1490], // Beach
+  [1400,1500,1550,1600,1700,1750], // Chalet
+  [1000,1100,1150,1200,1300,1380], // Cottage
+];
+const MONTHLY_EXP = [
+  [1100,1050,1000,980,1100,1555],
+  [1900,1800,1850,2000,2050,2130],
+  [900,950,1000,1050,1100,1315],
+  [1300,1400,1350,1500,1450,1605],
+  [1000,1100,1050,1150,1200,1335],
+];
+
+const PROP_COLORS = ['#14B8A6','#3B82F6','#F59E0B','#A78BFA','#22C55E'];
+let momChart, propChart, catChart, occChart;
+
+function destroyCharts() {
+  [momChart, propChart, catChart, occChart].forEach(c => { if(c) c.destroy(); });
+}
+
+function renderCharts() {
+  destroyCharts();
+
+  // 1. Month-over-month portfolio
+  const totalIncome = CHART_MONTHS.map((_,mi) => MONTHLY_INCOME.reduce((s,p)=>s+p[mi],0));
+  const totalExp    = CHART_MONTHS.map((_,mi) => MONTHLY_EXP.reduce((s,p)=>s+p[mi],0));
+  const totalNet    = totalIncome.map((v,i)=>v-totalExp[i]);
+
+  momChart = new Chart($('chartMoM'), {
+    type:'bar',
+    data:{
+      labels: CHART_MONTHS,
+      datasets:[
+        {label:'Income',  data:totalIncome, backgroundColor:'rgba(20,184,166,0.8)', borderRadius:4},
+        {label:'Expenses',data:totalExp,    backgroundColor:'rgba(239,68,68,0.7)',  borderRadius:4},
+        {label:'Net',     data:totalNet,    backgroundColor:'rgba(34,197,94,0.85)', borderRadius:4, type:'line', borderColor:'#22C55E', pointBackgroundColor:'#22C55E', pointRadius:4, fill:false, tension:0.3},
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:'#64748B',font:{size:11}}, grid:{color:'rgba(255,255,255,0.04)'}},
+        y:{ticks:{color:'#64748B',font:{size:10},callback:v=>'$'+Math.round(v/1000)+'k'}, grid:{color:'rgba(255,255,255,0.06)'}},
+      }
+    }
+  });
+
+  // 2. Revenue by property (grouped bar)
+  const propLegend = $('propChartLegend');
+  propLegend.innerHTML = properties.map((p,i)=>`<div class="chart-leg-item"><div class="chart-leg-dot" style="background:${PROP_COLORS[i]}"></div>${p.name.split(' ')[0]}</div>`).join('');
+
+  propChart = new Chart($('chartByProp'), {
+    type:'bar',
+    data:{
+      labels: CHART_MONTHS,
+      datasets: properties.map((p,i)=>({
+        label:p.name.split(' ')[0],
+        data:MONTHLY_INCOME[i],
+        backgroundColor:PROP_COLORS[i]+'CC',
+        borderRadius:3,
+      }))
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:'#64748B',font:{size:11}}, grid:{color:'rgba(255,255,255,0.04)'}},
+        y:{ticks:{color:'#64748B',font:{size:10},callback:v=>'$'+Math.round(v/1000)+'k'}, grid:{color:'rgba(255,255,255,0.06)'}},
+      }
+    }
+  });
+
+  // 3. Expense category donut
+  const allCat={};expenses.forEach(e=>{allCat[e.cat]=(allCat[e.cat]||0)+e.amt;});
+  const catKeys=Object.keys(allCat).sort((a,b)=>allCat[b]-allCat[a]);
+  const catColors=['#EF4444','#3B82F6','#F59E0B','#14B8A6','#A78BFA','#22C55E','#FB7185','#60A5FA','#84CC16','#F97316','#8B5CF6','#EC4899','#94A3B8','#64748B'];
+
+  catChart = new Chart($('chartExpCat'), {
+    type:'doughnut',
+    data:{
+      labels: catKeys.map(k=>(CAT_META[k]||CAT_META.other).icon+' '+(CAT_META[k]||CAT_META.other).label),
+      datasets:[{data:catKeys.map(k=>allCat[k]), backgroundColor:catColors.slice(0,catKeys.length), borderWidth:0, hoverOffset:6}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      cutout:'60%',
+      plugins:{legend:{display:false}},
+    }
+  });
+
+  const totalExp2 = catKeys.reduce((s,k)=>s+allCat[k],0);
+  $('expCatLegend').innerHTML = catKeys.map((k,i)=>{
+    const m=CAT_META[k]||CAT_META.other;
+    const pct=Math.round(allCat[k]/totalExp2*100);
+    return `<div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#94A3B8"><div style="width:8px;height:8px;border-radius:2px;background:${catColors[i]};flex-shrink:0"></div>${m.label} ${pct}%</div>`;
+  }).join('');
+
+  // 4. Occupancy bar
+  occChart = new Chart($('chartOcc'), {
+    type:'bar',
+    data:{
+      labels: properties.map(p=>p.name.split(' ')[0]),
+      datasets:[{
+        label:'Occupancy %',
+        data: properties.map(p=>p.occ),
+        backgroundColor: PROP_COLORS,
+        borderRadius:6,
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{min:0,max:100,ticks:{color:'#64748B',font:{size:11},callback:v=>v+'%'}, grid:{color:'rgba(255,255,255,0.06)'}},
+        y:{ticks:{color:'#94A3B8',font:{size:11}}, grid:{display:false}},
+      }
+    }
+  });
+}
+
+
+// -- GUEST HISTORY DATA --
+// guestHistory[guestName] = { repeat: bool, stays: [{propId, checkin, checkout, amt, note}] }
+let guestHistory = {
+  'Augustine': {
+    repeat: true,
+    stays: [
+      {propId:0, checkin:'2026-02-10', checkout:'2026-02-13', amt:720, note:'Great guests, very clean'},
+      {propId:4, checkin:'2026-03-21', checkout:'2026-03-25', amt:640, note:'Requested late checkout'},
+      {propId:0, checkin:'2026-04-14', checkout:'2026-04-17', amt:750, note:''},
+    ]
+  },
+  'Walter': {
+    repeat: true,
+    stays: [
+      {propId:1, checkin:'2026-01-08', checkout:'2026-02-08', amt:2700, note:'Long-term, very reliable'},
+      {propId:1, checkin:'2025-10-01', checkout:'2025-11-01', amt:2650, note:''},
+    ]
+  },
+  'McGuire': {
+    repeat: false,
+    stays: []
+  },
+  'McCammon': {
+    repeat: true,
+    stays: [
+      {propId:3, checkin:'2026-02-28', checkout:'2026-03-03', amt:580, note:'Family of 4, loved the chalet'},
+    ]
+  },
+};
+
+let guestModalTarget = {name:'', propId:0};
+
+function getGuest(name) {
+  if (!guestHistory[name]) guestHistory[name] = {repeat:false, stays:[]};
+  return guestHistory[name];
+}
+
+function toggleRepeat(name, propId) {
+  const g = getGuest(name);
+  g.repeat = !g.repeat;
+  renderProperties();
+}
+
+function openGuestModal(name, propId) {
+  guestModalTarget = {name, propId};
+  document.getElementById('guestModalTitle').textContent = 'Add stay · ' + name;
+  document.getElementById('guestAmt').value = '';
+  document.getElementById('guestNote').value = '';
+  const d = new Date(); d.setMonth(d.getMonth()-1);
+  const d2 = new Date(d); d2.setDate(d2.getDate()+3);
+  document.getElementById('guestCheckin').value = d.toISOString().slice(0,10);
+  document.getElementById('guestCheckout').value = d2.toISOString().slice(0,10);
+  document.getElementById('guestModalOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('guestAmt').focus(), 300);
+}
+
+function closeGuestModal(e) {
+  if (e.target === document.getElementById('guestModalOverlay'))
+    document.getElementById('guestModalOverlay').classList.remove('open');
+}
+
+function saveGuestStay() {
+  const amt = parseFloat(document.getElementById('guestAmt').value);
+  const ci = document.getElementById('guestCheckin').value;
+  const co = document.getElementById('guestCheckout').value;
+  if (!amt || !ci || !co) { alert('Please fill in amount, check-in and check-out.'); return; }
+  const g = getGuest(guestModalTarget.name);
+  g.stays.unshift({propId: guestModalTarget.propId, checkin: ci, checkout: co, amt, note: document.getElementById('guestNote').value.trim()});
+  document.getElementById('guestModalOverlay').classList.remove('open');
+  renderProperties();
+}
+
+function deleteGuestStay(name, idx) {
+  if (!confirm('Remove this stay?')) return;
+  guestHistory[name].stays.splice(idx, 1);
+  renderProperties();
+}
+function deleteGuestStayEl(btn) {
+  const name = decodeURIComponent(btn.getAttribute('data-gname'));
+  const idx = parseInt(btn.getAttribute('data-gidx'));
+  deleteGuestStay(name, idx);
+}
+function toggleRepeatEl(el) {
+  const name = decodeURIComponent(el.getAttribute('data-gname'));
+  const propId = parseInt(el.getAttribute('data-gprop'));
+  toggleRepeat(name, propId);
+}
+function openGuestModalEl(btn) {
+  const name = decodeURIComponent(btn.getAttribute('data-gname'));
+  const propId = parseInt(btn.getAttribute('data-gprop'));
+  openGuestModal(name, propId);
+}
+
+function fmtStayDate(d) {
+  if (!d) return '';
+  const dt = new Date(d + 'T00:00:00');
+  return MONTHS_S[dt.getMonth()] + ' ' + dt.getDate() + ' '' + String(dt.getFullYear()).slice(2);
+}
+
+function buildGuestSection(renterName, propId) {
+  const g = getGuest(renterName);
+  const isRepeat = g.repeat;
+  const stays = g.stays;
+  const totalSpent = stays.reduce((s,st)=>s+st.amt,0);
+  const stayCount = stays.length;
+
+  const stayRows = stays.slice(0,3).map((st,i) => {
+    const nights = Math.round((new Date(st.checkout+'T00:00:00') - new Date(st.checkin+'T00:00:00')) / 86400000);
+    const propName = properties[st.propId] ? properties[st.propId].name.split(' ')[0] : '';
+    const safeNote = (st.note||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return '<div class="stay-row">'
+      + '<div>'
+      + '<div class="stay-dates">' + fmtStayDate(st.checkin) + ' to ' + fmtStayDate(st.checkout) + '</div>'
+      + '<div class="stay-nights">' + nights + ' nights' + (propName?' · '+propName:'') + (safeNote?' · '+safeNote:'') + '</div>'
+      + '</div>'
+      + '<div style="text-align:right;flex-shrink:0">'
+      + '<div class="stay-amt">$' + st.amt.toLocaleString() + '</div>'
+      + '<button data-gname="' + encodeURIComponent(renterName) + '" data-gidx="' + i + '" onclick="event.stopPropagation();deleteGuestStayEl(this)" style="background:none;border:none;color:var(--text3);font-size:13px;cursor:pointer;line-height:1">x</button>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+
+  const summaryLine = stayCount > 0
+    ? '<div class="guest-note">' + stayCount + ' prev. stay' + (stayCount!==1?'s':'') + ' · $' + totalSpent.toLocaleString() + ' total spent</div>'
+    : '<div class="guest-note">No previous stays logged</div>';
+
+  const repeatChecked = isRepeat ? 'checked' : '';
+  const repeatCheck = isRepeat ? '&#10003;' : '';
+  const repeatBadge = isRepeat ? '<span class="repeat-badge">Repeat</span>' : '';
+
+  const encodedName = encodeURIComponent(renterName);
+
+  return '<div class="guest-section" onclick="event.stopPropagation()">'
+    + '<div class="guest-top">'
+    + '<div class="guest-top-label">Guest: ' + renterName + ' ' + repeatBadge + '</div>'
+    + '<div class="repeat-toggle" data-gname="' + encodedName + '" data-gprop="' + propId + '" onclick="event.stopPropagation();toggleRepeatEl(this)">'
+    + '<div class="repeat-checkbox ' + repeatChecked + '">' + repeatCheck + '</div>'
+    + '<div class="repeat-label">Repeat guest</div>'
+    + '</div>'
+    + '</div>'
+    + summaryLine
+    + (stays.length > 0 ? '<div class="stay-history">' + stayRows + '</div>' : '')
+    + '<button data-gname="' + encodedName + '" data-gprop="' + propId + '" onclick="event.stopPropagation();openGuestModalEl(this)" class="add-stay-btn">+ Add previous stay</button>'
+    + '</div>';
+}
+
+
+updateTaskCount();renderProperties();renderCalendar();fetchWeather();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+<!-- GUEST HISTORY MODAL -->
+<div class="modal-overlay" id="guestModalOverlay" onclick="closeGuestModal(event)">
+  <div class="modal">
+    <div class="pull-chip"></div>
+    <h3 id="guestModalTitle">Add stay</h3>
+    <div class="modal-field">
+      <div class="modal-label">Amount paid ($)</div>
+      <input class="modal-input" id="guestAmt" type="number" placeholder="e.g. 750">
+    </div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <div class="modal-label">Check-in</div>
+        <input class="modal-input" id="guestCheckin" type="date">
+      </div>
+      <div class="modal-field">
+        <div class="modal-label">Check-out</div>
+        <input class="modal-input" id="guestCheckout" type="date">
+      </div>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Notes (optional)</div>
+      <input class="modal-input" id="guestNote" type="text" placeholder="e.g. Great guest, quiet stay...">
+    </div>
+    <button class="modal-btn" onclick="saveGuestStay()">Save stay</button>
+    <button class="modal-btn-cancel" onclick="document.getElementById('guestModalOverlay').classList.remove('open')">Cancel</button>
+  </div>
+</div>
+
 </body>
 </html>
