@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Properties">
+<meta name="theme-color" content="#0F172A">
+<title>Property Dashboard</title>
+<style>
+  :root {
+    --bg: #0F172A;
+    --bg2: #1E293B;
+    --bg3: #273448;
+    --surface: #1E293B;
+    --card: #243044;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #F1F5F9;
+    --text2: #94A3B8;
+    --text3: #64748B;
+    --accent: #3B82F6;
+    --accent2: #1D4ED8;
+    --teal: #14B8A6;
+    --teal-bg: rgba(20,184,166,0.12);
+    --amber: #F59E0B;
+    --amber-bg: rgba(245,158,11,0.12);
+    --red: #EF4444;
+    --red-bg: rgba(239,68,68,0.12);
+    --green: #22C55E;
+    --green-bg: rgba(34,197,94,0.12);
+    --purple: #A78BFA;
+    --purple-bg: rgba(167,139,250,0.12);
+    --coral: #FB7185;
+    --coral-bg: rgba(251,113,133,0.12);
+    --r: 12px;
+    --r-sm: 8px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    padding: calc(var(--safe-top) + 12px) 16px 12px;
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .topbar-left h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .topbar-left .sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
+  .topbar-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg3); display: flex; align-items: center;
+    justify-content: center; font-size: 16px; cursor: pointer;
+    border: 0.5px solid var(--border2);
+  }
+
+  /* ── SCROLL AREA ── */
+  .scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: calc(70px + var(--safe-bottom));
+  }
+  .scroll-area::-webkit-scrollbar { display: none; }
+
+  /* ── METRICS ── */
+  .metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+  .metric {
+    background: var(--card);
+    border-radius: var(--r);
+    padding: 14px;
+    border: 0.5px solid var(--border);
+  }
+  .metric-label { font-size: 11px; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .metric-val { font-size: 26px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; }
+  .metric-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+  /* ── SECTION ── */
+  .section { padding: 0 16px 20px; }
+  .section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px; padding-top: 4px;
+  }
+  .section-head h2 { font-size: 16px; font-weight: 600; }
+  .sec-action {
+    font-size: 13px; color: var(--accent); cursor: pointer;
+    background: none; border: none; padding: 4px 0;
+  }
+
+  /* ── PROPERTY CARD ── */
+  .prop-card {
+    background: var(--card);
+    border-radius: var(--r);
+    border: 0.5px solid var(--border);
+    padding: 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: transform 0.1s, border-color 0.15s;
+    -webkit-user-select: none;
+  }
+  .prop-card:active { transform: scale(0.98); }
+  .prop-card.selected { border-color: var(--accent); }
+  .prop-row1 { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+  .prop-left { display: flex; align-items: flex-start; gap: 10px; }
+  .prop-emoji {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .prop-name { font-size: 15px; font-weight: 600; line-height: 1.2; }
+  .prop-addr { font-size: 11px; color: var(--text2); margin-top: 2px; line-height: 1.3; }
+  .badge {
+    font-size: 11px; font-weight: 600; padding: 3px 9px;
+    border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-left: 6px;
+  }
+  .badge-booked { background: var(--teal-bg); color: var(--teal); }
+  .badge-vacant { background: var(--amber-bg); color: var(--amber); }
+  .badge-maint  { background: var(--red-bg); color: var(--red); }
+  .badge-prep   { background: var(--purple-bg); color: var(--purple); }
+
+  .renter-row {
+    background: var(--bg3);
+    border-radius: var(--r-sm);
+    padding: 9px 11px;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px;
+    font-size: 12px; color: var(--text2);
+  }
+  .renter-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .renter-name { font-size: 13px; font-weight: 600; color: var(--text); }
+
+  .prop-stats { display: flex; gap: 0; border-top: 0.5px solid var(--border); padding-top: 10px; }
+  .prop-stat { flex: 1; text-align: center; }
+  .prop-stat + .prop-stat { border-left: 0.5px solid var(--border); }
+  .stat-val { font-size: 14px; font-weight: 600; }
+  .stat-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.3px; margin-top: 1px; }
+
+  /* ── TASKS ── */
+  .task-item {
+    background: var(--card);
+    border-radius: var(--r);
+    border: 0.5px solid var(--border);
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .task-item:active { transform: scale(0.98); }
+  .task-check {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 1.5px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 12px; transition: all 0.15s;
+  }
+  .task-check.done { background: var(--teal); border-color: var(--teal); }
+  .task-body { flex: 1; min-width: 0; }
+  .task-text { font-size: 14px; line-height: 1.3; }
+  .task-text.done { text-decoration: line-through; color: var(--text3); }
+  .task-meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .task-due {
+    font-size: 11px; font-weight: 600; padding: 3px 8px;
+    border-radius: 20px; flex-shrink: 0;
+  }
+  .due-today { background: var(--red-bg); color: var(--red); }
+  .due-soon  { background: var(--amber-bg); color: var(--amber); }
+  .due-later { background: var(--green-bg); color: var(--green); }
+  .prio-bar { width: 3px; height: 36px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── CALENDAR ── */
+  .cal-wrap {
+    background: var(--card);
+    border-radius: var(--r);
+    border: 0.5px solid var(--border);
+    overflow: hidden;
+  }
+  .cal-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .cal-month-nav { display: flex; align-items: center; gap: 12px; }
+  .cal-btn {
+    background: var(--bg3); border: 0.5px solid var(--border2);
+    border-radius: 8px; width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; cursor: pointer; color: var(--text);
+  }
+  .cal-month-name { font-size: 15px; font-weight: 600; min-width: 110px; text-align: center; }
+  .cal-filter { display: flex; gap: 5px; flex-wrap: wrap; }
+  .cal-filter-btn {
+    font-size: 11px; padding: 4px 10px; border-radius: 20px;
+    border: 0.5px solid var(--border2); background: transparent;
+    color: var(--text2); cursor: pointer; transition: all 0.15s;
+  }
+  .cal-filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
+
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); }
+  .cal-dow { padding: 7px 2px; text-align: center; font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; background: var(--bg3); border-bottom: 0.5px solid var(--border); }
+  .cal-day {
+    min-height: 58px; border-right: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    padding: 4px 3px; cursor: pointer; position: relative;
+  }
+  .cal-day:nth-child(7n) { border-right: none; }
+  .cal-num {
+    font-size: 12px; width: 22px; height: 22px;
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; margin-bottom: 2px;
+  }
+  .cal-num.today { background: var(--accent); color: white; font-weight: 700; }
+  .cal-num.other { color: var(--text3); }
+  .cal-ev {
+    font-size: 9px; padding: 1px 3px; border-radius: 3px;
+    margin-top: 1px; line-height: 1.3; overflow: hidden;
+    white-space: nowrap; text-overflow: ellipsis;
+  }
+  .ev-in { background: var(--teal-bg); color: var(--teal); }
+  .ev-out { background: var(--amber-bg); color: var(--amber); }
+  .ev-stay { background: rgba(59,130,246,0.12); color: #93C5FD; }
+  .cal-legend {
+    display: flex; gap: 14px; padding: 10px 14px;
+    background: var(--bg3); flex-wrap: wrap;
+    border-top: 0.5px solid var(--border);
+  }
+  .leg { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text2); }
+  .leg-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── UPCOMING ── */
+  .upcoming-item {
+    background: var(--card);
+    border-radius: var(--r);
+    border: 0.5px solid var(--border);
+    padding: 12px 14px;
+    display: flex; align-items: flex-start; gap: 12px;
+    margin-bottom: 8px;
+  }
+  .up-date { text-align: center; min-width: 38px; flex-shrink: 0; }
+  .up-day { font-size: 22px; font-weight: 700; line-height: 1; letter-spacing: -0.5px; }
+  .up-mon { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
+  .up-info { flex: 1; min-width: 0; }
+  .up-name { font-size: 14px; font-weight: 600; }
+  .up-detail { font-size: 12px; color: var(--text2); margin-top: 2px; line-height: 1.4; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 430px;
+    background: rgba(15,23,42,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 0.5px solid var(--border2);
+    display: flex;
+    padding-bottom: var(--safe-bottom);
+    z-index: 20;
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 10px 4px 8px; cursor: pointer;
+    transition: all 0.15s; border: none; background: none;
+    -webkit-user-select: none;
+  }
+  .nav-icon { font-size: 20px; line-height: 1; margin-bottom: 3px; }
+  .nav-lbl { font-size: 10px; color: var(--text3); font-weight: 500; }
+  .nav-item.active .nav-lbl { color: var(--accent); }
+  .nav-item.active .nav-icon { transform: scale(1.1); }
+  .nav-badge {
+    position: absolute;
+    top: 6px; right: calc(50% - 14px);
+    background: var(--red); color: white;
+    font-size: 9px; font-weight: 700; border-radius: 10px;
+    padding: 1px 5px; min-width: 16px; text-align: center;
+  }
+  .nav-item { position: relative; }
+
+  /* ── VIEWS ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── ADD TASK MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(0,0,0,0.6);
+    display: none; align-items: flex-end;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg2);
+    border-radius: 20px 20px 0 0;
+    padding: 20px 20px calc(20px + var(--safe-bottom));
+    width: 100%;
+    border-top: 0.5px solid var(--border2);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal h3 { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
+  .modal-field { margin-bottom: 12px; }
+  .modal-label { font-size: 12px; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .modal-input {
+    width: 100%; background: var(--bg3); border: 0.5px solid var(--border2);
+    border-radius: var(--r-sm); padding: 11px 13px;
+    font-size: 15px; color: var(--text); outline: none;
+    font-family: inherit;
+  }
+  .modal-input:focus { border-color: var(--accent); }
+  .modal-select {
+    width: 100%; background: var(--bg3); border: 0.5px solid var(--border2);
+    border-radius: var(--r-sm); padding: 11px 13px;
+    font-size: 15px; color: var(--text); outline: none;
+    font-family: inherit; -webkit-appearance: none; appearance: none;
+  }
+  .modal-row { display: flex; gap: 10px; }
+  .modal-row .modal-field { flex: 1; }
+  .modal-btn {
+    width: 100%; padding: 14px;
+    background: var(--accent); color: white;
+    border: none; border-radius: var(--r); font-size: 16px;
+    font-weight: 700; cursor: pointer; margin-top: 4px;
+    font-family: inherit;
+  }
+  .modal-btn-cancel {
+    width: 100%; padding: 12px;
+    background: transparent; color: var(--text2);
+    border: none; font-size: 15px; cursor: pointer;
+    margin-top: 4px; font-family: inherit;
+  }
+
+  /* ── PULL CHIP ── */
+  .pull-chip { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 16px; }
+
+  /* ── EMPTY STATE ── */
+  .empty { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }
+  .empty .icon { font-size: 40px; margin-bottom: 10px; }
+
+  /* ── FILTER ROW ── */
+  .filter-row {
+    display: flex; gap: 6px; padding: 0 16px 12px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter-chip {
+    white-space: nowrap; font-size: 12px; padding: 6px 12px;
+    border-radius: 20px; border: 0.5px solid var(--border2);
+    background: transparent; color: var(--text2); cursor: pointer;
+    transition: all 0.15s; font-weight: 500;
+  }
+  .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
+
+  /* ── OCCUPANCY BAR ── */
+  .occ-bar { height: 4px; background: var(--bg3); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .occ-fill { height: 100%; border-radius: 2px; background: var(--teal); transition: width 0.5s ease; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <h1>My Properties</h1>
+    <div class="sub" id="topSub">5 properties · May 2026</div>
+  </div>
+  <div class="topbar-icon" onclick="openAddTask()">＋</div>
+</div>
+
+<div class="scroll-area" id="scrollArea">
+
+  <!-- METRICS -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Occupancy</div>
+      <div class="metric-val" style="color:var(--teal)">72%</div>
+      <div class="occ-bar"><div class="occ-fill" style="width:72%"></div></div>
+      <div class="metric-sub">This month</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Revenue</div>
+      <div class="metric-val" style="color:var(--green)">$9.4K</div>
+      <div class="metric-sub">May forecast</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Tasks due</div>
+      <div class="metric-val" id="metricTasks" style="color:var(--red)">4</div>
+      <div class="metric-sub">Today</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Check-ins</div>
+      <div class="metric-val" style="color:var(--purple)">3</div>
+      <div class="metric-sub">This week</div>
+    </div>
+  </div>
+
+  <!-- PROPERTIES VIEW -->
+  <div id="view-properties" class="view active">
+    <div class="section">
+      <div class="section-head">
+        <h2>All properties</h2>
+        <button class="sec-action" onclick="switchView('calendar')">Calendar →</button>
+      </div>
+      <div id="propList"></div>
+    </div>
+  </div>
+
+  <!-- TASKS VIEW -->
+  <div id="view-tasks" class="view">
+    <div class="filter-row" id="taskFilter">
+      <button class="filter-chip active" onclick="filterTasks('all', this)">All</button>
+      <button class="filter-chip" onclick="filterTasks('today', this)">Today</button>
+      <button class="filter-chip" onclick="filterTasks('upcoming', this)">Upcoming</button>
+      <button class="filter-chip" onclick="filterTasks('done', this)">Done</button>
+    </div>
+    <div class="section">
+      <div class="section-head">
+        <h2 id="tasksHeading">All tasks</h2>
+        <button class="sec-action" onclick="openAddTask()">+ Add</button>
+      </div>
+      <div id="taskList"></div>
+    </div>
+  </div>
+
+  <!-- CALENDAR VIEW -->
+  <div id="view-calendar" class="view">
+    <div class="section">
+      <div class="section-head"><h2>Booking calendar</h2></div>
+      <div class="cal-wrap">
+        <div class="cal-top">
+          <div class="cal-month-nav">
+            <button class="cal-btn" onclick="changeMonth(-1)">‹</button>
+            <span class="cal-month-name" id="calLabel"></span>
+            <button class="cal-btn" onclick="changeMonth(1)">›</button>
+          </div>
+        </div>
+        <div style="padding: 10px 14px 8px; border-bottom: 0.5px solid var(--border);">
+          <div class="cal-filter" id="calFilter">
+            <button class="cal-filter-btn active" onclick="setCalProp(-1,this)">All</button>
+          </div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <div class="leg"><div class="leg-dot" style="background:var(--teal)"></div>Check-in</div>
+          <div class="leg"><div class="leg-dot" style="background:var(--amber)"></div>Check-out</div>
+          <div class="leg"><div class="leg-dot" style="background:#3B82F6"></div>Staying</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPCOMING VIEW -->
+  <div id="view-upcoming" class="view">
+    <div class="section">
+      <div class="section-head"><h2>Upcoming activity</h2></div>
+      <div id="upcomingList"></div>
+    </div>
+  </div>
+
+</div><!-- end scroll-area -->
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-item active" onclick="switchView('properties')" id="nav-properties">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-lbl">Properties</div>
+  </button>
+  <button class="nav-item" onclick="switchView('tasks')" id="nav-tasks">
+    <div class="nav-icon">✅</div>
+    <div class="nav-lbl">Tasks</div>
+    <span class="nav-badge" id="taskBadge">4</span>
+  </button>
+  <button class="nav-item" onclick="switchView('calendar')" id="nav-calendar">
+    <div class="nav-icon">📅</div>
+    <div class="nav-lbl">Calendar</div>
+  </button>
+  <button class="nav-item" onclick="switchView('upcoming')" id="nav-upcoming">
+    <div class="nav-icon">🔔</div>
+    <div class="nav-lbl">Upcoming</div>
+  </button>
+</div>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="pull-chip"></div>
+    <h3>New task</h3>
+    <div class="modal-field">
+      <div class="modal-label">Task description</div>
+      <input class="modal-input" id="newTaskText" type="text" placeholder="e.g. Replace light bulbs...">
+    </div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <div class="modal-label">Property</div>
+        <select class="modal-select" id="newTaskProp"></select>
+      </div>
+      <div class="modal-field">
+        <div class="modal-label">Priority</div>
+        <select class="modal-select" id="newTaskPrio">
+          <option value="urgent">Urgent</option>
+          <option value="high">High</option>
+          <option value="med" selected>Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Due date</div>
+      <input class="modal-input" id="newTaskDue" type="text" placeholder="e.g. today, May 10...">
+    </div>
+    <button class="modal-btn" onclick="saveTask()">Add task</button>
+    <button class="modal-btn-cancel" onclick="document.getElementById('modalOverlay').classList.remove('open')">Cancel</button>
+  </div>
+</div>
+
+<script>
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DOWS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const now = new Date();
+const TY = now.getFullYear(), TM = now.getMonth(), TD = now.getDate();
+
+const properties = [
+  {
+    id:0, name:'Lakeside Cabin', addr:'12 Pine Ridge Dr, Blue Ridge, GA',
+    icon:'🏕️', iconBg:'rgba(20,184,166,0.15)', status:'booked', rate:'Daily',
+    nextRenter:{ name:'The Chen Family', checkin:'May 3', checkout:'May 6', nights:3 },
+    revenue:'$1,950', tasks:0, occ:82
+  },
+  {
+    id:1, name:'Downtown Loft', addr:'88 Peachtree St NW, Atlanta, GA',
+    icon:'🏙️', iconBg:'rgba(59,130,246,0.15)', status:'vacant', rate:'Monthly',
+    nextRenter:{ name:'Sarah Mitchell', checkin:'May 8', checkout:'Jun 8', nights:30 },
+    revenue:'$2,800', tasks:0, occ:65
+  },
+  {
+    id:2, name:'Beach Bungalow', addr:'4 Dune Rd, Tybee Island, GA',
+    icon:'🏖️', iconBg:'rgba(245,158,11,0.15)', status:'maint', rate:'Daily',
+    nextRenter:{ name:'Patel Group', checkin:'May 10', checkout:'May 14', nights:4 },
+    revenue:'$1,490', tasks:0, occ:71
+  },
+  {
+    id:3, name:'Mountain Chalet', addr:'77 Summit Pass, Ellijay, GA',
+    icon:'⛰️', iconBg:'rgba(167,139,250,0.15)', status:'booked', rate:'Daily',
+    nextRenter:{ name:'Williams Family', checkin:'May 2', checkout:'May 5', nights:3 },
+    revenue:'$1,750', tasks:0, occ:78
+  },
+  {
+    id:4, name:'Garden Cottage', addr:'32 Magnolia Ln, Savannah, GA',
+    icon:'🌿', iconBg:'rgba(34,197,94,0.15)', status:'prep', rate:'Daily',
+    nextRenter:{ name:'Torres Couple', checkin:'May 7', checkout:'May 11', nights:4 },
+    revenue:'$1,380', tasks:0, occ:60
+  }
+];
+
+let tasks = [
+  { id:0, text:'Replace AC filter', propId:0, prio:'high', due:'today', done:false },
+  { id:1, text:'Restock kitchen supplies before Chen arrival', propId:0, prio:'high', due:'today', done:false },
+  { id:2, text:'Fix bathroom faucet leak', propId:2, prio:'urgent', due:'today', done:false },
+  { id:3, text:'Repair deck railing', propId:3, prio:'high', due:'today', done:false },
+  { id:4, text:'Deep clean before check-in May 3', propId:0, prio:'med', due:'May 2', done:false },
+  { id:5, text:'Inspect smoke detectors', propId:1, prio:'med', due:'May 5', done:false },
+  { id:6, text:'Restock welcome basket', propId:4, prio:'med', due:'May 6', done:false },
+  { id:7, text:'Arrange airport pickup note', propId:3, prio:'low', due:'May 7', done:false },
+  { id:8, text:'Update welcome guide', propId:2, prio:'low', due:'May 8', done:true },
+  { id:9, text:'Schedule HVAC service', propId:1, prio:'low', due:'May 12', done:false },
+  { id:10, text:'Pool cleaning service', propId:2, prio:'med', due:'May 9', done:false },
+  { id:11, text:'New bath towels for Chalet', propId:3, prio:'low', due:'May 15', done:false },
+];
+
+const bookings = [
+  { propId:0, guest:'Chen Family',    si: new Date(TY,TM,3),  ei: new Date(TY,TM,6) },
+  { propId:0, guest:'Johnson',        si: new Date(TY,TM,18), ei: new Date(TY,TM,21) },
+  { propId:1, guest:'S. Mitchell',    si: new Date(TY,TM,8),  ei: new Date(TY,TM+1,8) },
+  { propId:2, guest:'Patel Group',    si: new Date(TY,TM,10), ei: new Date(TY,TM,14) },
+  { propId:2, guest:'Williams',       si: new Date(TY,TM,22), ei: new Date(TY,TM,25) },
+  { propId:3, guest:'Williams Fam',   si: new Date(TY,TM,2),  ei: new Date(TY,TM,5) },
+  { propId:3, guest:'Anderson',       si: new Date(TY,TM,20), ei: new Date(TY,TM,24) },
+  { propId:4, guest:'Torres Couple',  si: new Date(TY,TM,7),  ei: new Date(TY,TM,11) },
+  { propId:4, guest:'Park Family',    si: new Date(TY,TM,17), ei: new Date(TY,TM,20) },
+];
+
+let calMonth = TM, calYear = TY, calPropFilter = -1;
+let taskFilter = 'all';
+let currentView = 'properties';
+
+// ── COUNTS ──
+function updateTaskCount() {
+  const dueToday = tasks.filter(t => t.due === 'today' && !t.done).length;
+  document.getElementById('metricTasks').textContent = dueToday;
+  const badge = document.getElementById('taskBadge');
+  const total = tasks.filter(t => !t.done).length;
+  badge.textContent = total;
+  badge.style.display = total > 0 ? '' : 'none';
+  // update prop task counts
+  properties.forEach(p => { p.tasks = tasks.filter(t => t.propId === p.id && !t.done).length; });
+}
+
+// ── VIEWS ──
+function switchView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  document.getElementById('nav-' + v).classList.add('active');
+  document.getElementById('scrollArea').scrollTop = 0;
+  currentView = v;
+  if (v === 'calendar') renderCalendar();
+  if (v === 'upcoming') renderUpcoming();
+  if (v === 'tasks') renderTasks();
+  if (v === 'properties') renderProperties();
+}
+
+// ── PROPERTIES ──
+function renderProperties() {
+  updateTaskCount();
+  const s2b = { booked:'badge-booked', vacant:'badge-vacant', maint:'badge-maint', prep:'badge-prep' };
+  const s2t = { booked:'Booked', vacant:'Vacant', maint:'Maintenance', prep:'Preparing' };
+  const s2dc = { booked:'var(--teal)', vacant:'var(--amber)', maint:'var(--red)', prep:'var(--purple)' };
+  document.getElementById('propList').innerHTML = properties.map(p => `
+    <div class="prop-card" onclick="goTasks(${p.id})">
+      <div class="prop-row1">
+        <div class="prop-left">
+          <div class="prop-emoji" style="background:${p.iconBg}">${p.icon}</div>
+          <div>
+            <div class="prop-name">${p.name}</div>
+            <div class="prop-addr">${p.addr}</div>
+          </div>
+        </div>
+        <span class="badge ${s2b[p.status]}">${s2t[p.status]}</span>
+      </div>
+      <div class="renter-row">
+        <div class="renter-dot" style="background:${s2dc[p.status]}"></div>
+        <div>
+          <span class="renter-name">${p.nextRenter.name}</span>
+          <span style="color:var(--text3);font-size:11px;"> · ${p.rate === 'Monthly' ? '30 days' : p.nextRenter.nights + ' nights'} · ${p.nextRenter.checkin} → ${p.nextRenter.checkout}</span>
+        </div>
+      </div>
+      <div class="prop-stats">
+        <div class="prop-stat"><div class="stat-val">${p.revenue}</div><div class="stat-lbl">Revenue</div></div>
+        <div class="prop-stat"><div class="stat-val" style="color:${p.tasks > 0 ? 'var(--amber)' : 'var(--text)'}">${p.tasks}</div><div class="stat-lbl">Tasks</div></div>
+        <div class="prop-stat"><div class="stat-val">${p.occ}%</div><div class="stat-lbl">Occupancy</div></div>
+        <div class="prop-stat"><div class="stat-val" style="font-size:11px;color:var(--text2)">${p.rate}</div><div class="stat-lbl">Type</div></div>
+      </div>
+    </div>`).join('');
+}
+
+function goTasks(propId) {
+  switchView('tasks');
+  // filter by prop — find chip or just filter
+  taskFilter = 'prop:' + propId;
+  document.querySelectorAll('.filter-chip').forEach(el => el.classList.remove('active'));
+  renderTasks();
+}
+
+// ── TASKS ──
+function filterTasks(f, el) {
+  taskFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderTasks();
+}
+
+function renderTasks(propId) {
+  if (propId !== undefined) taskFilter = 'prop:' + propId;
+  let filtered = [...tasks];
+  const dueOrder = { today: 0, 'May 2':1,'May 5':2,'May 6':3,'May 7':4,'May 8':5,'May 9':6,'May 10':7,'May 12':8,'May 15':9 };
+  if (taskFilter === 'today') {
+    filtered = filtered.filter(t => t.due === 'today' && !t.done);
+    document.getElementById('tasksHeading').textContent = 'Due today';
+  } else if (taskFilter === 'upcoming') {
+    filtered = filtered.filter(t => t.due !== 'today' && !t.done);
+    document.getElementById('tasksHeading').textContent = 'Upcoming tasks';
+  } else if (taskFilter === 'done') {
+    filtered = filtered.filter(t => t.done);
+    document.getElementById('tasksHeading').textContent = 'Completed';
+  } else if (taskFilter.startsWith('prop:')) {
+    const pid = parseInt(taskFilter.split(':')[1]);
+    filtered = filtered.filter(t => t.propId === pid);
+    document.getElementById('tasksHeading').textContent = properties[pid].name;
+  } else {
+    document.getElementById('tasksHeading').textContent = 'All tasks';
+  }
+  filtered.sort((a, b) => {
+    if (a.done !== b.done) return a.done ? 1 : -1;
+    return (dueOrder[a.due] ?? 99) - (dueOrder[b.due] ?? 99);
+  });
+  const prioColor = { urgent:'var(--red)', high:'var(--amber)', med:'var(--accent)', low:'var(--text3)' };
+  const dueCls = due => due === 'today' ? 'due-today' : ['May 2','May 5','May 6','May 7'].includes(due) ? 'due-soon' : 'due-later';
+
+  document.getElementById('taskList').innerHTML = filtered.length === 0
+    ? '<div class="empty"><div class="icon">✨</div>No tasks here!</div>'
+    : filtered.map(t => `
+    <div class="task-item" onclick="toggleTask(${t.id})">
+      <div class="prio-bar" style="background:${prioColor[t.prio]}"></div>
+      <div class="task-check ${t.done ? 'done' : ''}">${t.done ? '✓' : ''}</div>
+      <div class="task-body">
+        <div class="task-text ${t.done ? 'done' : ''}">${t.text}</div>
+        <div class="task-meta">${properties[t.propId] ? properties[t.propId].name : ''}</div>
+      </div>
+      <span class="task-due ${dueCls(t.due)}">${t.due}</span>
+    </div>`).join('');
+  updateTaskCount();
+}
+
+function toggleTask(id) {
+  const t = tasks.find(t => t.id === id);
+  if (t) t.done = !t.done;
+  renderTasks();
+  renderProperties();
+}
+
+// ── ADD TASK MODAL ──
+function openAddTask() {
+  const sel = document.getElementById('newTaskProp');
+  sel.innerHTML = properties.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  document.getElementById('newTaskText').value = '';
+  document.getElementById('newTaskDue').value = '';
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('newTaskText').focus(), 300);
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay'))
+    document.getElementById('modalOverlay').classList.remove('open');
+}
+
+function saveTask() {
+  const text = document.getElementById('newTaskText').value.trim();
+  if (!text) return;
+  const propId = parseInt(document.getElementById('newTaskProp').value);
+  const prio = document.getElementById('newTaskPrio').value;
+  const due = document.getElementById('newTaskDue').value.trim() || 'today';
+  tasks.push({ id: tasks.length, text, propId, prio, due, done: false });
+  document.getElementById('modalOverlay').classList.remove('open');
+  renderTasks();
+  renderProperties();
+}
+
+// ── CALENDAR ──
+function renderCalendar() {
+  document.getElementById('calLabel').textContent = MONTHS[calMonth] + ' ' + calYear;
+  const filter = document.getElementById('calFilter');
+  filter.innerHTML = `<button class="cal-filter-btn ${calPropFilter===-1?'active':''}" onclick="setCalProp(-1,this)">All</button>` +
+    properties.map(p => `<button class="cal-filter-btn ${calPropFilter===p.id?'active':''}" onclick="setCalProp(${p.id},this)">${p.name.split(' ')[0]}</button>`).join('');
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const prevDays = new Date(calYear, calMonth, 0).getDate();
+  const active = calPropFilter === -1 ? bookings : bookings.filter(b => b.propId === calPropFilter);
+
+  function getBooking(y,m,d) {
+    const date = new Date(y,m,d);
+    return active.find(b => date >= b.si && date <= b.ei);
+  }
+
+  let html = DOWS.map(d => `<div class="cal-dow">${d}</div>`).join('');
+  for (let i=0;i<firstDay;i++) {
+    const d = prevDays - firstDay + 1 + i;
+    html += `<div class="cal-day"><div class="cal-num other">${d}</div></div>`;
+  }
+  for (let d=1;d<=daysInMonth;d++) {
+    const isToday = d===TD && calMonth===TM && calYear===TY;
+    const bk = getBooking(calYear, calMonth, d);
+    let ev = '';
+    if (bk) {
+      const dt = new Date(calYear, calMonth, d);
+      const label = bk.guest.split(' ')[0];
+      if (+dt === +bk.si) ev = `<div class="cal-ev ev-in">↓ ${label}</div>`;
+      else if (+dt === +bk.ei) ev = `<div class="cal-ev ev-out">↑ ${label}</div>`;
+      else ev = `<div class="cal-ev ev-stay">${label}</div>`;
+    }
+    html += `<div class="cal-day"><div class="cal-num${isToday?' today':''}">${d}</div>${ev}</div>`;
+  }
+  const rem = 42 - firstDay - daysInMonth;
+  for (let d=1;d<=rem;d++) html += `<div class="cal-day"><div class="cal-num other">${d}</div></div>`;
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+function setCalProp(id, el) {
+  calPropFilter = id;
+  renderCalendar();
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth=0; calYear++; }
+  if (calMonth < 0)  { calMonth=11; calYear--; }
+  renderCalendar();
+}
+
+// ── UPCOMING ──
+function renderUpcoming() {
+  const items = [
+    { day:2,  mon:'May', name:'Deep clean — Lakeside Cabin', detail:'Before Chen Family check-in · urgent task', type:'task',     tc:'var(--red-bg)',    tt:'var(--red)' },
+    { day:2,  mon:'May', name:'Williams Family check-in',   detail:'Mountain Chalet · 3 nights',               type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
+    { day:3,  mon:'May', name:'Chen Family check-in',       detail:'Lakeside Cabin · 3 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
+    { day:5,  mon:'May', name:'Williams Family check-out',  detail:'Mountain Chalet · clean + review',         type:'check-out', tc:'var(--amber-bg)',  tt:'var(--amber)' },
+    { day:6,  mon:'May', name:'Chen Family check-out',      detail:'Lakeside Cabin · clean + review',          type:'check-out', tc:'var(--amber-bg)',  tt:'var(--amber)' },
+    { day:7,  mon:'May', name:'Torres Couple check-in',     detail:'Garden Cottage · 4 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
+    { day:8,  mon:'May', name:'Sarah Mitchell moves in',    detail:'Downtown Loft · 30-day stay',              type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
+    { day:10, mon:'May', name:'Patel Group check-in',       detail:'Beach Bungalow · 4 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
+    { day:11, mon:'May', name:'Torres Couple check-out',    detail:'Garden Cottage · clean + review',          type:'check-out', tc:'var(--amber-bg)',  tt:'var(--amber)' },
+    { day:14, mon:'May', name:'Patel Group check-out',      detail:'Beach Bungalow · clean + review',          type:'check-out', tc:'var(--amber-bg)',  tt:'var(--amber)' },
+    { day:17, mon:'May', name:'Park Family check-in',       detail:'Garden Cottage · 3 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
+    { day:18, mon:'May', name:'Johnson check-in',           detail:'Lakeside Cabin · 3 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
+    { day:20, mon:'May', name:'Anderson check-in',          detail:'Mountain Chalet · 4 nights',               type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
+    { day:22, mon:'May', name:'Williams check-in',          detail:'Beach Bungalow · 3 nights',                type:'check-in',  tc:'var(--teal-bg)',   tt:'var(--teal)' },
+  ];
+  document.getElementById('upcomingList').innerHTML = items.map(i => `
+    <div class="upcoming-item">
+      <div class="up-date"><div class="up-day">${i.day}</div><div class="up-mon">${i.mon}</div></div>
+      <div class="up-info"><div class="up-name">${i.name}</div><div class="up-detail">${i.detail}</div></div>
+      <span class="badge" style="background:${i.tc};color:${i.tt};white-space:nowrap">${i.type}</span>
+    </div>`).join('');
+}
+
+// ── INIT ──
+renderProperties();
+renderCalendar();
+</script>
+</body>
+</html>
