@@ -21,22 +21,18 @@
   --green:#22C55E;--green-bg:rgba(34,197,94,0.12);
   --purple:#A78BFA;--purple-bg:rgba(167,139,250,0.12);
   --r:12px;--rs:8px;
-  --sat:env(safe-area-inset-top,0px);
-  --sab:env(safe-area-inset-bottom,0px);
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;background:var(--bg);}
 body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex;flex-direction:column;max-width:430px;margin:0 auto;}
-/* TOPBAR */
 .tb{padding:calc(var(--sat)+12px) 16px 12px;background:var(--bg);border-bottom:0.5px solid var(--b1);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;}
 .tb h1{font-size:21px;font-weight:700;letter-spacing:-.5px;}
 .tb .sub{font-size:12px;color:var(--t2);margin-top:1px;}
 .tb .ver{font-size:10px;color:var(--t3);margin-top:1px;}
 .tb-plus{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;}
-/* SCROLL */
 .scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(76px + var(--sab));}
 .scroll::-webkit-scrollbar{display:none;}
-/* METRICS */
 .metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px 0;}
 .metric{background:var(--card);border-radius:var(--r);padding:13px;border:0.5px solid var(--b1);}
 .mlbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
@@ -44,10 +40,8 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .msub{font-size:11px;color:var(--t3);margin-top:3px;}
 .occbar{height:4px;background:var(--bg3);border-radius:2px;margin-top:5px;overflow:hidden;}
 .occfill{height:100%;border-radius:2px;background:var(--teal);}
-/* VIEWS */
 .view{display:none;}
 .view.active{display:block;}
-/* SECTION */
 .sec{padding:14px 16px 20px;}
 .shead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .shead h2{font-size:16px;font-weight:600;}
@@ -62,27 +56,24 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .wxdesc{font-size:10px;color:var(--t2);margin-top:2px;}
 .wxdetail{font-size:10px;color:var(--t3);margin-top:1px;}
 /* PROPERTY CARD */
-.pcard{background:var(--card);border-radius:var(--r);border:0.5px solid var(--b1);padding:14px;margin-bottom:10px;cursor:pointer;}
-.pcard:active{opacity:.85;}
-.prow1{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.pcard{background:var(--card);border-radius:var(--r);border:0.5px solid var(--b1);padding:14px;margin-bottom:10px;}
+.pcard-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
 .pleft{display:flex;align-items:flex-start;gap:10px;}
-.pemoji{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.pemoji{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;cursor:pointer;}
+.pname-wrap{display:flex;align-items:center;gap:6px;margin-bottom:2px;}
 .pname{font-size:15px;font-weight:600;line-height:1.2;}
+.pedit-btn{font-size:12px;color:var(--t3);background:none;border:none;cursor:pointer;padding:0;}
 .paddr{font-size:11px;color:var(--t2);margin-top:2px;line-height:1.3;}
 .pactions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
-/* BADGES */
 .badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap;}
 .bb{background:var(--teal-bg);color:var(--teal);}
 .bv{background:var(--amber-bg);color:var(--amber);}
 .bm{background:var(--red-bg);color:var(--red);}
 .bp{background:var(--purple-bg);color:var(--purple);}
-/* BOOK BTN */
 .bookbtn{background:var(--accent);color:#fff;border:none;border-radius:20px;font-size:12px;font-weight:700;padding:5px 11px;cursor:pointer;}
-/* RENTER ROW */
 .rrow{background:var(--bg3);border-radius:var(--rs);padding:8px 11px;display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;color:var(--t2);}
 .rdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .rname{font-size:13px;font-weight:600;color:var(--t1);}
-/* BOOKING CHIPS */
 .bklist{margin-bottom:6px;}
 .bkchip{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border-radius:var(--rs);padding:7px 10px;margin-bottom:5px;font-size:12px;}
 .bkname{font-weight:600;color:var(--t1);}
@@ -102,14 +93,18 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .sdates{font-size:12px;color:var(--t2);}
 .snights{font-size:10px;color:var(--t3);margin-top:1px;}
 .samt{font-size:13px;font-weight:600;color:var(--teal);}
-.snote{font-size:10px;color:var(--t3);margin-top:1px;}
 .addstaybtn{font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;padding:2px 0;display:block;}
-/* PROP STATS */
-.pstats{display:flex;border-top:0.5px solid var(--b1);padding-top:10px;}
+.pstats{display:flex;border-top:0.5px solid var(--b1);padding-top:10px;margin-top:2px;}
 .pstat{flex:1;text-align:center;}
 .pstat+.pstat{border-left:0.5px solid var(--b1);}
 .psval{font-size:13px;font-weight:600;}
 .pslbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin-top:1px;}
+/* EMPTY STATE */
+.empty-card{background:var(--card);border-radius:var(--r);border:0.5px dashed var(--b2);padding:30px 20px;text-align:center;margin-bottom:10px;cursor:pointer;}
+.empty-card:active{opacity:.8;}
+.empty-card .ei{font-size:36px;margin-bottom:10px;}
+.empty-card p{font-size:14px;color:var(--t2);margin-bottom:4px;}
+.empty-card small{font-size:12px;color:var(--t3);}
 /* FILTER ROW */
 .frow{display:flex;gap:6px;padding:14px 16px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;}
 .frow::-webkit-scrollbar{display:none;}
@@ -143,7 +138,7 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .cff.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
 .calgrid{display:grid;grid-template-columns:repeat(7,1fr);}
 .cdow{padding:7px 2px;text-align:center;font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;background:var(--bg3);border-bottom:0.5px solid var(--b1);}
-.cday{min-height:56px;border-right:0.5px solid var(--b1);border-bottom:0.5px solid var(--b1);padding:4px 3px;}
+.cday{min-height:52px;border-right:0.5px solid var(--b1);border-bottom:0.5px solid var(--b1);padding:4px 3px;}
 .cday:nth-child(7n){border-right:none;}
 .cnum{font-size:12px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:2px;}
 .cnum.today{background:var(--accent);color:#fff;font-weight:700;}
@@ -231,7 +226,7 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .tdtitle{font-size:17px;font-weight:700;flex:1;line-height:1.3;}
 .tdprop{font-size:12px;color:var(--t2);margin-top:2px;}
 .tdlabel{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;margin-top:14px;font-weight:600;}
-.tdstatrow{display:flex;gap:8px;margin-top:4px;}
+.tdstatrow{display:flex;gap:8px;}
 .tdsb{flex:1;padding:10px;border-radius:var(--rs);border:0.5px solid var(--b2);background:var(--bg3);color:var(--t2);font-size:13px;cursor:pointer;font-family:inherit;font-weight:500;text-align:center;}
 .tdsb.todo.on{background:var(--amber-bg);border-color:var(--amber);color:var(--amber);font-weight:700;}
 .tdsb.done.on{background:var(--teal-bg);border-color:var(--teal);color:var(--teal);font-weight:700;}
@@ -267,12 +262,15 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .mrow{display:flex;gap:10px;}
 .mrow .mf{flex:1;}
 .mbtn{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;margin-top:6px;font-family:inherit;}
+.mbtn-red{width:100%;padding:12px;background:var(--red-bg);color:var(--red);border:0.5px solid var(--red);border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;font-family:inherit;}
 .mcancel{width:100%;padding:12px;background:transparent;color:var(--t2);border:none;font-size:15px;cursor:pointer;margin-top:4px;font-family:inherit;}
-/* DEL BTN */
 .xbtn{background:none;border:none;color:var(--t3);font-size:18px;cursor:pointer;line-height:1;padding:0 2px;flex-shrink:0;}
-/* EMPTY */
 .empty{text-align:center;padding:40px 20px;color:var(--t3);font-size:14px;}
 .eicon{font-size:40px;margin-bottom:10px;}
+/* EMOJI PICKER */
+.emoji-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px;}
+.epick{font-size:24px;padding:6px;border-radius:8px;border:none;background:var(--bg3);cursor:pointer;text-align:center;}
+.epick:active{background:var(--b2);}
 </style>
 </head>
 <body>
@@ -280,52 +278,49 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 <div class="tb">
   <div>
     <h1>Caldwell Rentals</h1>
-    <div class="sub">5 properties &middot; May 2026</div>
-    <div class="ver">v8.0.0</div>
+    <div class="sub" id="propCount">0 properties</div>
+    <div class="ver">v9.0.0</div>
   </div>
   <div class="tb-plus" id="btnAddTask">&#xFF0B;</div>
 </div>
 
 <div class="scroll" id="scrollArea">
-  <!-- METRICS -->
   <div class="metrics">
     <div class="metric">
-      <div class="mlbl">Occupancy</div>
-      <div class="mval" style="color:var(--teal)">72%</div>
-      <div class="occbar"><div class="occfill" style="width:72%"></div></div>
-      <div class="msub">This month</div>
-    </div>
-    <div class="metric">
       <div class="mlbl">Net income</div>
-      <div class="mval" id="mNet" style="color:var(--green)">--</div>
+      <div class="mval" id="mNet" style="color:var(--green)">$0</div>
       <div class="msub">After expenses</div>
     </div>
     <div class="metric">
       <div class="mlbl">Tasks due</div>
-      <div class="mval" id="mTasks" style="color:var(--red)">--</div>
+      <div class="mval" id="mTasks" style="color:var(--red)">0</div>
       <div class="msub">Today</div>
     </div>
     <div class="metric">
-      <div class="mlbl">Check-ins</div>
-      <div class="mval" style="color:var(--purple)">3</div>
-      <div class="msub">This week</div>
+      <div class="mlbl">Total bookings</div>
+      <div class="mval" id="mBookings" style="color:var(--purple)">0</div>
+      <div class="msub">All properties</div>
+    </div>
+    <div class="metric">
+      <div class="mlbl">Total guests</div>
+      <div class="mval" id="mGuests" style="color:var(--teal)">0</div>
+      <div class="msub">All time</div>
     </div>
   </div>
 
-  <!-- WEATHER -->
   <div class="wxstrip" id="wxStrip"></div>
 
   <!-- PROPERTIES -->
   <div id="view-properties" class="view active">
     <div class="sec">
-      <div class="shead"><h2>All properties</h2><button class="sbtn" id="btnGoCal">Calendar &rarr;</button></div>
+      <div class="shead"><h2>Properties</h2><button class="sbtn" id="btnAddProp">+ Add property</button></div>
       <div id="propList"></div>
     </div>
   </div>
 
   <!-- TASKS -->
   <div id="view-tasks" class="view">
-    <div class="frow" id="taskFilters">
+    <div class="frow">
       <button class="fchip on" data-tf="all">All</button>
       <button class="fchip" data-tf="today">Today</button>
       <button class="fchip" data-tf="upcoming">Upcoming</button>
@@ -371,14 +366,9 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
     <div class="sec" id="finContent"></div>
   </div>
 
-  <!-- OVERALL -->
-  <div id="view-overall" class="view">
-    <div class="sec"><div class="shead"><h2>Portfolio overview</h2></div><div id="overallContent"></div></div>
-  </div>
-
   <!-- RENTERS -->
   <div id="view-renters" class="view">
-    <div class="frow" id="renterFilters">
+    <div class="frow">
       <button class="fchip on" data-rf="all">All Guests</button>
       <button class="fchip" data-rf="repeat">Repeat</button>
       <button class="fchip" data-rf="new">New</button>
@@ -389,33 +379,22 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
   <!-- CHARTS -->
   <div id="view-charts" class="view">
     <div class="sec">
-      <div class="shead"><h2>Month-over-month</h2></div>
+      <div class="shead"><h2>Financials</h2></div>
       <div class="chartwrap">
-        <div class="charttitle">Portfolio revenue vs expenses</div>
-        <div class="chartsub">6-month trend</div>
-        <div class="chartleg">
-          <div class="clegitem"><div class="clegdot" style="background:#14B8A6"></div>Income</div>
-          <div class="clegitem"><div class="clegdot" style="background:#EF4444"></div>Expenses</div>
-          <div class="clegitem"><div class="clegdot" style="background:#22C55E"></div>Net</div>
-        </div>
-        <div style="position:relative;height:200px"><canvas id="cMoM"></canvas></div>
-      </div>
-      <div class="chartwrap">
-        <div class="charttitle">Revenue by property</div>
-        <div class="chartsub">Last 6 months</div>
-        <div class="chartleg" id="propChartLeg"></div>
-        <div style="position:relative;height:220px"><canvas id="cProp"></canvas></div>
+        <div class="charttitle">Income vs Expenses</div>
+        <div class="chartsub">All properties this month</div>
+        <div style="position:relative;height:200px"><canvas id="cSummary"></canvas></div>
       </div>
       <div class="chartwrap">
         <div class="charttitle">Expenses by category</div>
-        <div class="chartsub">This month &middot; all properties</div>
+        <div class="chartsub">All properties</div>
         <div style="position:relative;height:200px"><canvas id="cCat"></canvas></div>
         <div id="catLegend" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;"></div>
       </div>
       <div class="chartwrap">
         <div class="charttitle">Occupancy rate</div>
-        <div class="chartsub">By property this month</div>
-        <div style="position:relative;height:160px"><canvas id="cOcc"></canvas></div>
+        <div class="chartsub">By property</div>
+        <div style="position:relative;height:180px"><canvas id="cOcc"></canvas></div>
       </div>
     </div>
   </div>
@@ -424,11 +403,42 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 <!-- BOTTOM NAV -->
 <div class="bnav">
   <button class="nbtn on" data-view="properties"><div class="nicon">&#127968;</div><div class="nlbl">Properties</div></button>
-  <button class="nbtn" data-view="tasks"><div class="nicon">&#9989;</div><div class="nlbl">Tasks</div><span class="nbadge" id="taskBadge">0</span></button>
+  <button class="nbtn" data-view="tasks"><div class="nicon">&#9989;</div><div class="nlbl">Tasks</div><span class="nbadge" id="taskBadge" style="display:none">0</span></button>
   <button class="nbtn" data-view="calendar"><div class="nicon">&#128197;</div><div class="nlbl">Calendar</div></button>
   <button class="nbtn" data-view="renters"><div class="nicon">&#128101;</div><div class="nlbl">Renters</div></button>
   <button class="nbtn" data-view="finance"><div class="nicon">&#128176;</div><div class="nlbl">Finances</div></button>
-  <button class="nbtn" data-view="overall"><div class="nicon">&#128202;</div><div class="nlbl">Overview</div></button>
+  <button class="nbtn" data-view="charts"><div class="nicon">&#128202;</div><div class="nlbl">Charts</div></button>
+</div>
+
+<!-- ADD / EDIT PROPERTY MODAL -->
+<div class="moverlay" id="propModal">
+  <div class="modal">
+    <div class="pulltab"></div><h3 id="propModalTitle">Add property</h3>
+    <div class="mf"><div class="ml">Property name</div><input class="mi" id="pmName" type="text" placeholder="e.g. Lakeside Cabin"></div>
+    <div class="mf"><div class="ml">Address</div><input class="mi" id="pmAddr" type="text" placeholder="e.g. 12 Pine Ridge Dr, Blue Ridge, GA"></div>
+    <div class="mf"><div class="ml">Icon (tap to choose)</div>
+      <div class="emoji-grid" id="emojiGrid"></div>
+    </div>
+    <div class="mf"><div class="ml">Rental type</div>
+      <select class="msel" id="pmRate">
+        <option value="Daily">Daily</option>
+        <option value="Weekly">Weekly</option>
+        <option value="Monthly">Monthly</option>
+      </select>
+    </div>
+    <div class="mf"><div class="ml">Monthly income ($)</div><input class="mi" id="pmRev" type="number" placeholder="e.g. 2000"></div>
+    <div class="mf"><div class="ml">Status</div>
+      <select class="msel" id="pmStatus">
+        <option value="vacant">Vacant</option>
+        <option value="booked">Booked</option>
+        <option value="maint">Maintenance</option>
+        <option value="prep">Preparing</option>
+      </select>
+    </div>
+    <button class="mbtn" id="pmSave">Save property</button>
+    <button class="mbtn-red" id="pmDelete" style="display:none">Delete property</button>
+    <button class="mcancel" id="pmCancel">Cancel</button>
+  </div>
 </div>
 
 <!-- BOOK MODAL -->
@@ -513,10 +523,7 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 <div class="moverlay" id="tdModal">
   <div class="modal">
     <div class="pulltab"></div>
-    <div class="tdhead">
-      <div class="tdpbar" id="tdPbar"></div>
-      <div><div class="tdtitle" id="tdTitle"></div><div class="tdprop" id="tdProp"></div></div>
-    </div>
+    <div class="tdhead"><div class="tdpbar" id="tdPbar"></div><div><div class="tdtitle" id="tdTitle"></div><div class="tdprop" id="tdPropLbl"></div></div></div>
     <div class="tdlabel">Status</div>
     <div class="tdstatrow">
       <button class="tdsb todo" id="tdTodo">&#9898; To Do</button>
@@ -542,141 +549,53 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 (function(){
 'use strict';
 
-// ============ DATA ============
 var MS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 var MSS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var DOWS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 var now=new Date(),TY=now.getFullYear(),TM=now.getMonth(),TD=now.getDate();
 
 var CATS={
-  landscaping:{l:'Landscaping',c:'#22C55E'},
-  plumbing:{l:'Plumbing',c:'#3B82F6'},
-  electrical:{l:'Electrical',c:'#F59E0B'},
-  cleaning:{l:'Cleaning',c:'#14B8A6'},
-  hvac:{l:'HVAC / AC',c:'#60A5FA'},
-  appliances:{l:'Appliances',c:'#A78BFA'},
-  painting:{l:'Painting',c:'#FB7185'},
-  roofing:{l:'Roofing',c:'#94A3B8'},
-  pest:{l:'Pest Control',c:'#84CC16'},
-  supplies:{l:'Supplies',c:'#F97316'},
-  insurance:{l:'Insurance',c:'#8B5CF6'},
-  mortgage:{l:'Mortgage',c:'#EF4444'},
-  taxes:{l:'Property Tax',c:'#EC4899'},
-  other:{l:'Other',c:'#64748B'}
+  landscaping:{l:'Landscaping',c:'#22C55E'},plumbing:{l:'Plumbing',c:'#3B82F6'},
+  electrical:{l:'Electrical',c:'#F59E0B'},cleaning:{l:'Cleaning',c:'#14B8A6'},
+  hvac:{l:'HVAC/AC',c:'#60A5FA'},appliances:{l:'Appliances',c:'#A78BFA'},
+  painting:{l:'Painting',c:'#FB7185'},roofing:{l:'Roofing',c:'#94A3B8'},
+  pest:{l:'Pest Control',c:'#84CC16'},supplies:{l:'Supplies',c:'#F97316'},
+  insurance:{l:'Insurance',c:'#8B5CF6'},mortgage:{l:'Mortgage',c:'#EF4444'},
+  taxes:{l:'Property Tax',c:'#EC4899'},other:{l:'Other',c:'#64748B'}
 };
 
-var PCOLORS=['#14B8A6','#3B82F6','#F59E0B','#A78BFA','#22C55E'];
+var PCOLORS=['#14B8A6','#3B82F6','#F59E0B','#A78BFA','#22C55E','#FB7185','#60A5FA','#F97316'];
 var ASSIGNEES=['Justin','Jay','Plumber','Landscaper','Cleaner','Electrician'];
+var EMOJIS=['\uD83C\uDFD5\uFE0F','\uD83C\uDFD9\uFE0F','\uD83C\uDFC6\uFE0F','\u26F0\uFE0F','\uD83C\uDF3F','\uD83C\uDFE1','\uD83C\uDFE0','\uD83C\uDFE2','\uD83C\uDFD8\uFE0F','\uD83C\uDFA1','\uD83C\uDF04','\uD83C\uDF05','\uD83C\uDF06','\uD83C\uDF07','\uD83C\uDFDD\uFE0F','\uD83C\uDFDE\uFE0F','\uD83C\uDFDF\uFE0F','\u26FA\uFE0F','\uD83D\uDEF6','\uD83C\uDFCA','\uD83C\uDF34'];
+var PROP_BG_COLORS=['rgba(20,184,166,.15)','rgba(59,130,246,.15)','rgba(245,158,11,.15)','rgba(167,139,250,.15)','rgba(34,197,94,.15)','rgba(251,113,133,.15)','rgba(96,165,250,.15)','rgba(249,115,22,.15)'];
 
-var props=[
-  {id:0,name:'Lakeside Cabin', addr:'12 Pine Ridge Dr, Blue Ridge, GA',    emoji:'\uD83C\uDFD5\uFE0F',bg:'rgba(20,184,166,.15)', status:'booked', rate:'Daily',   nr:{name:'Augustine',ci:'May 3', co:'May 6', n:3}, rev:1950,occ:82},
-  {id:1,name:'Downtown Loft',  addr:'88 Peachtree St NW, Atlanta, GA',     emoji:'\uD83C\uDFD9\uFE0F',bg:'rgba(59,130,246,.15)',  status:'vacant', rate:'Monthly', nr:{name:'Walter',   ci:'May 8', co:'Jun 8', n:30},rev:2800,occ:65},
-  {id:2,name:'Beach Bungalow', addr:'4 Dune Rd, Tybee Island, GA',         emoji:'\uD83C\uDFC6\uFE0F',bg:'rgba(245,158,11,.15)', status:'maint',  rate:'Daily',   nr:{name:'McGuire',  ci:'May 10',co:'May 14',n:4}, rev:1490,occ:71},
-  {id:3,name:'Mountain Chalet',addr:'77 Summit Pass, Ellijay, GA',         emoji:'\u26F0\uFE0F',      bg:'rgba(167,139,250,.15)',status:'booked', rate:'Daily',   nr:{name:'McCammon', ci:'May 2', co:'May 5', n:3}, rev:1750,occ:78},
-  {id:4,name:'Garden Cottage', addr:'32 Magnolia Ln, Savannah, GA',        emoji:'\uD83C\uDF3F',      bg:'rgba(34,197,94,.15)',  status:'prep',   rate:'Daily',   nr:{name:'Augustine',ci:'May 7', co:'May 11',n:4}, rev:1380,occ:60}
-];
+// ALL DATA - starts empty
+var props=[];
+var tasks=[];
+var bookings=[];
+var expenses=[];
+var guests={};
 
-var tasks=[
-  {id:0, text:'Replace AC filter',                         pid:0,prio:'high',  due:'today', done:false,notes:'Check MERV rating - need MERV 11',                  assignedTo:'Justin', completedAt:null},
-  {id:1, text:'Restock kitchen supplies',                  pid:0,prio:'high',  due:'today', done:false,notes:'Coffee pods, dish soap, paper towels, trash bags',  assignedTo:'Jay',    completedAt:null},
-  {id:2, text:'Fix bathroom faucet leak',                  pid:2,prio:'urgent',due:'today', done:false,notes:'Dripping from handle, may need new cartridge',      assignedTo:'Plumber',completedAt:null},
-  {id:3, text:'Repair deck railing',                       pid:3,prio:'high',  due:'today', done:false,notes:'Third post from the left is loose',                  assignedTo:'Justin', completedAt:null},
-  {id:4, text:'Deep clean before check-in May 3',          pid:0,prio:'med',   due:'May 2', done:false,notes:'Full deep clean including oven and windows',         assignedTo:'Jay',    completedAt:null},
-  {id:5, text:'Inspect smoke detectors',                   pid:1,prio:'med',   due:'May 5', done:false,notes:'Replace batteries if older than 6 months',           assignedTo:'Justin', completedAt:null},
-  {id:6, text:'Restock welcome basket',                    pid:4,prio:'med',   due:'May 6', done:false,notes:'Wine, snacks, local map, welcome card',              assignedTo:'Jay',    completedAt:null},
-  {id:7, text:'Arrange airport pickup note',               pid:3,prio:'low',   due:'May 7', done:false,notes:'Leave directions on counter',                        assignedTo:'',       completedAt:null},
-  {id:8, text:'Update welcome guide',                      pid:2,prio:'low',   due:'May 8', done:true, notes:'Added beach parking and updated WiFi password',      assignedTo:'Jay',    completedAt:'2026-04-30T14:22:00'},
-  {id:9, text:'Schedule HVAC service',                     pid:1,prio:'low',   due:'May 12',done:false,notes:'Annual service due - call Comfort Pro 404-555-0182', assignedTo:'Justin', completedAt:null},
-  {id:10,text:'Pool cleaning service',                     pid:2,prio:'med',   due:'May 9', done:false,notes:'Chlorine levels were low last check',                assignedTo:'',       completedAt:null},
-  {id:11,text:'New bath towels for Chalet',                pid:3,prio:'low',   due:'May 15',done:false,notes:'Order 6 bath towels and 6 hand towels',              assignedTo:'Jay',    completedAt:null}
-];
+// STATE
+var curView='properties',calMonth=TM,calYear=TY,calPF=-1;
+var taskFilter='all',finPid=-1,bkPid=-1,expPid=-1,stayGuest='',activeTid=-1;
+var renterFilter='all',editPropId=-1,selectedEmoji=EMOJIS[0],charts={};
 
-var bookings=[
-  {pid:0,guest:'Augustine',si:new Date(TY,TM,3), ei:new Date(TY,TM,6)},
-  {pid:0,guest:'McGuire',  si:new Date(TY,TM,18),ei:new Date(TY,TM,21)},
-  {pid:1,guest:'Walter',   si:new Date(TY,TM,8), ei:new Date(TY,TM+1,8)},
-  {pid:2,guest:'McGuire',  si:new Date(TY,TM,10),ei:new Date(TY,TM,14)},
-  {pid:2,guest:'McCammon', si:new Date(TY,TM,22),ei:new Date(TY,TM,25)},
-  {pid:3,guest:'McCammon', si:new Date(TY,TM,2), ei:new Date(TY,TM,5)},
-  {pid:3,guest:'Augustine',si:new Date(TY,TM,20),ei:new Date(TY,TM,24)},
-  {pid:4,guest:'Augustine',si:new Date(TY,TM,7), ei:new Date(TY,TM,11)},
-  {pid:4,guest:'Walter',   si:new Date(TY,TM,17),ei:new Date(TY,TM,20)}
-];
-
-var expenses=[
-  {pid:0,cat:'landscaping',desc:'Monthly lawn service',     amt:180,date:'2026-05-01'},
-  {pid:0,cat:'cleaning',   desc:'Post-checkout deep clean', amt:150,date:'2026-05-06'},
-  {pid:0,cat:'hvac',       desc:'AC filter and tune-up',    amt:220,date:'2026-05-01'},
-  {pid:0,cat:'supplies',   desc:'Welcome basket restock',   amt:85, date:'2026-05-02'},
-  {pid:0,cat:'mortgage',   desc:'Monthly mortgage',         amt:920,date:'2026-05-01'},
-  {pid:1,cat:'plumbing',   desc:'Bathroom faucet repair',   amt:310,date:'2026-05-03'},
-  {pid:1,cat:'electrical', desc:'Outlet replacement x3',    amt:240,date:'2026-05-05'},
-  {pid:1,cat:'mortgage',   desc:'Monthly mortgage',         amt:1400,date:'2026-05-01'},
-  {pid:1,cat:'insurance',  desc:'Monthly insurance',        amt:180,date:'2026-05-01'},
-  {pid:2,cat:'plumbing',   desc:'Faucet leak fix',          amt:275,date:'2026-05-01'},
-  {pid:2,cat:'pest',       desc:'Quarterly pest control',   amt:120,date:'2026-05-02'},
-  {pid:2,cat:'cleaning',   desc:'Pre-arrival clean',        amt:140,date:'2026-05-09'},
-  {pid:2,cat:'mortgage',   desc:'Monthly mortgage',         amt:780,date:'2026-05-01'},
-  {pid:3,cat:'roofing',    desc:'Shingle patch repair',     amt:450,date:'2026-05-03'},
-  {pid:3,cat:'landscaping',desc:'Tree trimming',            amt:200,date:'2026-05-04'},
-  {pid:3,cat:'mortgage',   desc:'Monthly mortgage',         amt:860,date:'2026-05-01'},
-  {pid:3,cat:'supplies',   desc:'Bath towels and amenities',amt:95, date:'2026-05-07'},
-  {pid:4,cat:'painting',   desc:'Touch-up interior paint',  amt:320,date:'2026-05-02'},
-  {pid:4,cat:'landscaping',desc:'Garden maintenance',       amt:150,date:'2026-05-01'},
-  {pid:4,cat:'mortgage',   desc:'Monthly mortgage',         amt:680,date:'2026-05-01'},
-  {pid:4,cat:'appliances', desc:'Dishwasher repair',        amt:185,date:'2026-05-05'}
-];
-
-var guests={
-  'Augustine':{repeat:true,stays:[
-    {pid:0,ci:'2026-02-10',co:'2026-02-13',amt:720,note:'Great guests, very clean'},
-    {pid:4,ci:'2026-03-21',co:'2026-03-25',amt:640,note:'Requested late checkout'},
-    {pid:0,ci:'2026-04-14',co:'2026-04-17',amt:750,note:''}
-  ]},
-  'Walter':{repeat:true,stays:[
-    {pid:1,ci:'2026-01-08',co:'2026-02-08',amt:2700,note:'Long-term, very reliable'},
-    {pid:1,ci:'2025-10-01',co:'2025-11-01',amt:2650,note:''}
-  ]},
-  'McGuire':{repeat:false,stays:[]},
-  'McCammon':{repeat:true,stays:[
-    {pid:3,ci:'2026-02-28',co:'2026-03-03',amt:580,note:'Family of 4, loved the chalet'}
-  ]}
-};
-
-// ============ STATE ============
-var curView='properties';
-var calMonth=TM,calYear=TY,calPF=-1;
-var taskFilter='all';
-var finPid=0;
-var bkPid=-1,expPid=-1,stayGuest='',activeTid=-1;
-var renterFilter='all';
-var charts={};
-
-// ============ HELPERS ============
+// HELPERS
 function g(id){return document.getElementById(id);}
 function fmt(n){return '$'+Number(n).toLocaleString();}
-function pInc(id){return props[id].rev;}
+function pInc(id){var p=props.find(function(x){return x.id===id;});return p?p.rev:0;}
 function pExp(id){return expenses.filter(function(e){return e.pid===id;}).reduce(function(s,e){return s+e.amt;},0);}
 function pNet(id){return pInc(id)-pExp(id);}
 function getG(name){if(!guests[name])guests[name]={repeat:false,stays:[]};return guests[name];}
-function fmtD(d){
-  if(!d)return '';
-  var dt=new Date(d+'T00:00:00');
-  return MSS[dt.getMonth()]+' '+dt.getDate()+'\''+String(dt.getFullYear()).slice(2);
-}
-function fmtTS(iso){
-  if(!iso)return '';
-  var d=new Date(iso);
-  return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+' at '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-}
-function nights(si,ei){
-  var a=si instanceof Date?si:new Date(si+'T00:00:00');
-  var b=ei instanceof Date?ei:new Date(ei+'T00:00:00');
-  return Math.round((b-a)/86400000);
-}
+function fmtD(d){if(!d)return '';var dt=new Date(d+'T00:00:00');return MSS[dt.getMonth()]+' '+dt.getDate()+'\''+String(dt.getFullYear()).slice(2);}
+function fmtTS(iso){if(!iso)return '';var d=new Date(iso);return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+' at '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}
+function nts(si,ei){var a=si instanceof Date?si:new Date(si+'T00:00:00');var b=ei instanceof Date?ei:new Date(ei+'T00:00:00');return Math.round((b-a)/86400000);}
 function openM(id){g(id).classList.add('open');}
 function closeM(id){g(id).classList.remove('open');}
-function onOverlay(id){g(id).addEventListener('click',function(e){if(e.target===g(id))closeM(id);});}
+function onOv(id){g(id).addEventListener('click',function(e){if(e.target===g(id))closeM(id);});}
+function propColor(idx){return PROP_BG_COLORS[idx%PROP_BG_COLORS.length];}
+function propPColor(idx){return PCOLORS[idx%PCOLORS.length];}
 
 function counts(){
   var dt=tasks.filter(function(t){return t.due==='today'&&!t.done;}).length;
@@ -686,39 +605,61 @@ function counts(){
   g('taskBadge').style.display=tot>0?'':'none';
   var net=props.reduce(function(s,p){return s+pNet(p.id);},0);
   g('mNet').textContent=fmt(net);
+  g('mBookings').textContent=bookings.length;
+  var gnames=new Set();bookings.forEach(function(b){gnames.add(b.guest);});Object.keys(guests).forEach(function(n){gnames.add(n);});
+  g('mGuests').textContent=gnames.size;
+  g('propCount').textContent=props.length+' propert'+(props.length===1?'y':'ies');
 }
 
-// ============ VIEW SWITCH ============
+// VIEW
 function goView(v){
   document.querySelectorAll('.view').forEach(function(el){el.classList.remove('active');});
   document.querySelectorAll('.nbtn').forEach(function(el){el.classList.remove('on');});
   g('view-'+v).classList.add('active');
-  var nb=document.querySelector('.nbtn[data-view="'+v+'"]');
-  if(nb)nb.classList.add('on');
-  g('scrollArea').scrollTop=0;
-  curView=v;
+  var nb=document.querySelector('.nbtn[data-view="'+v+'"]');if(nb)nb.classList.add('on');
+  g('scrollArea').scrollTop=0;curView=v;
   if(v==='calendar')renderCal();
   if(v==='upcoming')renderUp();
   if(v==='tasks')renderTasks();
   if(v==='properties')renderProps();
-  if(v==='finance')renderFin();
-  if(v==='overall')renderOverall();
+  if(v==='finance'){if(props.length&&finPid===-1)finPid=props[0].id;renderFin();}
   if(v==='renters')renderRenters();
   if(v==='charts')renderCharts();
 }
 
-// ============ PROPERTIES ============
+// EMOJI GRID
+function buildEmojiGrid(selected){
+  var h='';
+  EMOJIS.forEach(function(e){
+    h+='<button class="epick" data-em="'+e+'" style="'+(e===selected?'background:var(--accent);':'')+'">'+e+'</button>';
+  });
+  g('emojiGrid').innerHTML=h;
+  document.querySelectorAll('.epick').forEach(function(b){
+    b.addEventListener('click',function(){
+      selectedEmoji=b.getAttribute('data-em');
+      document.querySelectorAll('.epick').forEach(function(x){x.style.background='';});
+      b.style.background='var(--accent)';
+    });
+  });
+}
+
+// PROPERTIES
 function statusBadge(s){
   var m={booked:'bb Booked',vacant:'bv Vacant',maint:'bm Maintenance',prep:'bp Preparing'};
   var x=(m[s]||'bv Vacant').split(' ');
   return '<span class="badge '+x[0]+'">'+x.slice(1).join(' ')+'</span>';
 }
-function statusColor(s){return {booked:'var(--teal)',vacant:'var(--amber)',maint:'var(--red)',prep:'var(--purple)'}[s]||'var(--amber)';}
+function statusColor(s){return{booked:'var(--teal)',vacant:'var(--amber)',maint:'var(--red)',prep:'var(--purple)'}[s]||'var(--amber)';}
 
 function renderProps(){
   counts();
+  if(!props.length){
+    g('propList').innerHTML='<div class="empty-card" id="emptyAddProp"><div class="ei">&#127968;</div><p>No properties yet</p><small>Tap to add your first property</small></div>';
+    var ec=g('emptyAddProp');if(ec)ec.addEventListener('click',openAddProp);
+    return;
+  }
   var html='';
-  props.forEach(function(p){
+  props.forEach(function(p,pi){
     var pb=bookings.filter(function(b){return b.pid===p.id;});
     var chips='';
     pb.forEach(function(b){
@@ -727,30 +668,31 @@ function renderProps(){
       var co=b.ei instanceof Date?fmtD(b.ei.toISOString().slice(0,10)):fmtD(b.co);
       chips+='<div class="bkchip"><div><div class="bkname">'+b.guest+'</div><div class="bkdates">'+ci+' to '+co+(b.notes?' &middot; '+b.notes:'')+'</div></div><button class="xbtn" data-bk="'+bi+'">&times;</button></div>';
     });
-    var gg=getG(p.nr.name);
+    var gg=getG(p.nextRenter||'');
     var spent=gg.stays.reduce(function(s,st){return s+st.amt;},0);
     var sc=gg.stays.length;
     var strows='';
     gg.stays.slice(0,3).forEach(function(st,si){
-      var n=nights(st.ci,st.co);
-      var pn=props[st.pid]?props[st.pid].name.split(' ')[0]:'';
-      strows+='<div class="srow"><div><div class="sdates">'+fmtD(st.ci)+' to '+fmtD(st.co)+'</div><div class="snights">'+n+' nights'+(pn?' &middot; '+pn:'')+(st.note?' &middot; '+st.note:'')+'</div></div><div style="text-align:right;flex-shrink:0"><div class="samt">'+fmt(st.amt)+'</div><button class="xbtn" data-gs="'+p.nr.name+'" data-gi="'+si+'">&times;</button></div></div>';
+      var n=nts(st.ci,st.co);var pn=props.find(function(x){return x.id===st.pid;});var pname=pn?pn.name:'';
+      strows+='<div class="srow"><div><div class="sdates">'+fmtD(st.ci)+' to '+fmtD(st.co)+'</div><div class="snights">'+n+' nights'+(pname?' &middot; '+pname:'')+(st.note?' &middot; '+st.note:'')+'</div></div><div style="text-align:right;flex-shrink:0"><div class="samt">'+fmt(st.amt)+'</div><button class="xbtn" data-gs="'+(p.nextRenter||'')+'" data-gi="'+si+'">&times;</button></div></div>';
     });
     var exp=pExp(p.id),net=pNet(p.id),ptasks=tasks.filter(function(t){return t.pid===p.id&&!t.done;}).length;
-    html+='<div class="pcard" data-pid="'+p.id+'">';
-    html+='<div class="prow1"><div class="pleft"><div class="pemoji" style="background:'+p.bg+'">'+p.emoji+'</div>';
-    html+='<div><div class="pname">'+p.name+'</div><div class="paddr">'+p.addr+'</div></div></div>';
+    html+='<div class="pcard">';
+    html+='<div class="pcard-top"><div class="pleft"><div class="pemoji" style="background:'+propColor(pi)+'" data-editp="'+p.id+'">'+p.emoji+'</div>';
+    html+='<div><div class="pname-wrap"><span class="pname">'+p.name+'</span><button class="pedit-btn" data-editp="'+p.id+'">&#9998;</button></div><div class="paddr">'+p.addr+'</div></div></div>';
     html+='<div class="pactions">'+statusBadge(p.status)+'<button class="bookbtn" data-bp="'+p.id+'">+ Book</button></div></div>';
-    html+='<div class="rrow"><div class="rdot" style="background:'+statusColor(p.status)+'"></div>';
-    html+='<div><span class="rname">'+p.nr.name+'</span><span style="color:var(--t3);font-size:11px"> &middot; '+(p.rate==='Monthly'?'30 days':p.nr.n+' nights')+' &middot; '+p.nr.ci+' to '+p.nr.co+'</span></div></div>';
+    if(p.nextRenter){
+      html+='<div class="rrow"><div class="rdot" style="background:'+statusColor(p.status)+'"></div>';
+      html+='<div><span class="rname">'+p.nextRenter+'</span></div></div>';
+    }
     if(pb.length)html+='<div class="bklist">'+chips+'</div>';
-    // Guest section
-    html+='<div class="gsec">';
-    html+='<div class="ghead"><div class="glabel">Guest: '+p.nr.name+(gg.repeat?'<span class="rpill">&#11088; Repeat</span>':'')+'</div>';
-    html+='<div class="rtoggle" data-rn="'+p.nr.name+'"><div class="rbox'+(gg.repeat?' on':'')+'">'+( gg.repeat?'&#10003;':'')+'</div><div class="rlbl">Repeat</div></div></div>';
-    html+='<div class="gsummary">'+(sc>0?sc+' prev. stay'+(sc!==1?'s':'')+' &middot; '+fmt(spent)+' total spent':'No previous stays logged')+'</div>';
-    if(sc>0)html+='<div class="slist">'+strows+'</div>';
-    html+='<button class="addstaybtn" data-sn="'+p.nr.name+'">+ Add previous stay</button></div>';
+    if(p.nextRenter){
+      html+='<div class="gsec"><div class="ghead"><div class="glabel">Guest: '+p.nextRenter+(gg.repeat?'<span class="rpill">&#11088; Repeat</span>':'')+'</div>';
+      html+='<div class="rtoggle" data-rn="'+p.nextRenter+'"><div class="rbox'+(gg.repeat?' on':'')+'">'+( gg.repeat?'&#10003;':'')+'</div><div class="rlbl">Repeat</div></div></div>';
+      html+='<div class="gsummary">'+(sc>0?sc+' prev. stay'+(sc!==1?'s':'')+' &middot; '+fmt(spent)+' total spent':'No previous stays logged')+'</div>';
+      if(sc>0)html+='<div class="slist">'+strows+'</div>';
+      html+='<button class="addstaybtn" data-sn="'+p.nextRenter+'">+ Add previous stay</button></div>';
+    }
     html+='<div class="pstats">';
     html+='<div class="pstat"><div class="psval" style="color:var(--teal)">'+fmt(p.rev)+'</div><div class="pslbl">Income</div></div>';
     html+='<div class="pstat"><div class="psval" style="color:var(--red)">'+fmt(exp)+'</div><div class="pslbl">Expenses</div></div>';
@@ -763,119 +705,129 @@ function renderProps(){
 }
 
 function bindProps(){
-  document.querySelectorAll('.pcard').forEach(function(c){
-    c.addEventListener('click',function(){taskFilter='prop:'+c.getAttribute('data-pid');goView('tasks');});
-  });
-  document.querySelectorAll('.bookbtn').forEach(function(b){
-    b.addEventListener('click',function(e){e.stopPropagation();openBook(parseInt(b.getAttribute('data-bp')));});
-  });
-  document.querySelectorAll('.xbtn[data-bk]').forEach(function(b){
-    b.addEventListener('click',function(e){e.stopPropagation();var i=parseInt(b.getAttribute('data-bk'));if(confirm('Remove booking?')){bookings.splice(i,1);renderProps();}});
-  });
-  document.querySelectorAll('.xbtn[data-gs]').forEach(function(b){
-    b.addEventListener('click',function(e){e.stopPropagation();var n=b.getAttribute('data-gs'),i=parseInt(b.getAttribute('data-gi'));if(confirm('Remove stay?')){getG(n).stays.splice(i,1);renderProps();}});
-  });
-  document.querySelectorAll('.rtoggle').forEach(function(el){
-    el.addEventListener('click',function(e){e.stopPropagation();var n=el.getAttribute('data-rn');var gg=getG(n);gg.repeat=!gg.repeat;renderProps();});
-  });
-  document.querySelectorAll('.addstaybtn').forEach(function(b){
-    b.addEventListener('click',function(e){e.stopPropagation();openStay(b.getAttribute('data-sn'));});
-  });
+  document.querySelectorAll('.bookbtn').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openBook(parseInt(b.getAttribute('data-bp')));});});
+  document.querySelectorAll('[data-editp]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openEditProp(parseInt(b.getAttribute('data-editp')));});});
+  document.querySelectorAll('.xbtn[data-bk]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();var i=parseInt(b.getAttribute('data-bk'));if(confirm('Remove booking?')){bookings.splice(i,1);renderProps();}});});
+  document.querySelectorAll('.xbtn[data-gs]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();var n=b.getAttribute('data-gs'),i=parseInt(b.getAttribute('data-gi'));if(confirm('Remove stay?')){getG(n).stays.splice(i,1);renderProps();}});});
+  document.querySelectorAll('.rtoggle').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var n=el.getAttribute('data-rn');var gg=getG(n);gg.repeat=!gg.repeat;renderProps();});});
+  document.querySelectorAll('.addstaybtn').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openStay(b.getAttribute('data-sn'));});});
 }
 
-// ============ TASKS ============
-var dueOrd={'today':0,'May 2':1,'May 5':2,'May 6':3,'May 7':4,'May 8':5,'May 9':6,'May 10':7,'May 12':8,'May 15':9};
+// ADD / EDIT PROPERTY
+function openAddProp(){
+  editPropId=-1;selectedEmoji=EMOJIS[0];
+  g('propModalTitle').textContent='Add property';
+  g('pmName').value='';g('pmAddr').value='';g('pmRev').value='';
+  g('pmRate').value='Daily';g('pmStatus').value='vacant';
+  g('pmDelete').style.display='none';
+  buildEmojiGrid(selectedEmoji);
+  openM('propModal');setTimeout(function(){g('pmName').focus();},300);
+}
+
+function openEditProp(pid){
+  var p=props.find(function(x){return x.id===pid;});if(!p)return;
+  editPropId=pid;selectedEmoji=p.emoji;
+  g('propModalTitle').textContent='Edit property';
+  g('pmName').value=p.name;g('pmAddr').value=p.addr;
+  g('pmRev').value=p.rev||'';g('pmRate').value=p.rate||'Daily';g('pmStatus').value=p.status||'vacant';
+  g('pmDelete').style.display='';
+  buildEmojiGrid(selectedEmoji);
+  openM('propModal');setTimeout(function(){g('pmName').focus();},300);
+}
+
+g('pmSave').addEventListener('click',function(){
+  var name=g('pmName').value.trim();if(!name){alert('Please enter a property name.');return;}
+  var addr=g('pmAddr').value.trim();
+  var rev=parseFloat(g('pmRev').value)||0;
+  if(editPropId===-1){
+    var newId=Date.now();
+    props.push({id:newId,name:name,addr:addr,emoji:selectedEmoji,bg:propColor(props.length),status:g('pmStatus').value,rate:g('pmRate').value,rev:rev,occ:0,nextRenter:''});
+    if(finPid===-1)finPid=newId;
+  } else {
+    var p=props.find(function(x){return x.id===editPropId;});
+    if(p){p.name=name;p.addr=addr;p.emoji=selectedEmoji;p.status=g('pmStatus').value;p.rate=g('pmRate').value;p.rev=rev;}
+  }
+  closeM('propModal');renderProps();counts();
+});
+
+g('pmDelete').addEventListener('click',function(){
+  if(!confirm('Delete this property? All its bookings and expenses will also be removed.'))return;
+  props=props.filter(function(x){return x.id!==editPropId;});
+  bookings=bookings.filter(function(x){return x.pid!==editPropId;});
+  expenses=expenses.filter(function(x){return x.pid!==editPropId;});
+  tasks=tasks.filter(function(x){return x.pid!==editPropId;});
+  if(finPid===editPropId)finPid=props.length?props[0].id:-1;
+  closeM('propModal');renderProps();counts();
+});
+
+g('pmCancel').addEventListener('click',function(){closeM('propModal');});onOv('propModal');
+g('btnAddProp').addEventListener('click',openAddProp);
+
+// TASKS
 var PC={urgent:'var(--red)',high:'var(--amber)',med:'var(--accent)',low:'var(--t3)'};
+var dueOrd={'today':0,'May 2':1,'May 5':2,'May 6':3,'May 7':4,'May 8':5,'May 9':6,'May 10':7,'May 12':8,'May 15':9};
 function dcls(d){return d==='today'?'dtoday':['May 2','May 5','May 6','May 7'].indexOf(d)>=0?'dsoon':'dlater';}
 
 function renderTasks(){
-  var fl=tasks.slice();
-  var h2='All tasks';
+  var fl=tasks.slice(),h2='All tasks';
   if(taskFilter==='today'){fl=fl.filter(function(t){return t.due==='today'&&!t.done;});h2='Due today';}
   else if(taskFilter==='upcoming'){fl=fl.filter(function(t){return t.due!=='today'&&!t.done;});h2='Upcoming';}
   else if(taskFilter==='done'){fl=fl.filter(function(t){return t.done;});h2='Completed';}
-  else if(taskFilter.indexOf('prop:')===0){var pid=parseInt(taskFilter.split(':')[1]);fl=fl.filter(function(t){return t.pid===pid;});h2=props[pid]?props[pid].name:'Property';}
+  else if(taskFilter.indexOf('prop:')===0){var pid=parseInt(taskFilter.split(':')[1]);fl=fl.filter(function(t){return t.pid===pid;});var pp=props.find(function(x){return x.id===pid;});h2=pp?pp.name:'Property';}
   fl.sort(function(a,b){if(a.done!==b.done)return a.done?1:-1;return(dueOrd[a.due]||99)-(dueOrd[b.due]||99);});
   g('taskHeading').textContent=h2;
-  if(!fl.length){g('taskList').innerHTML='<div class="empty"><div class="eicon">&#10024;</div>No tasks here!</div>';return;}
+  if(!fl.length){g('taskList').innerHTML='<div class="empty"><div class="eicon">&#10024;</div>'+(tasks.length===0?'No tasks yet. Tap + to add one.':'No tasks here!')+'</div>';return;}
   var html='';
   fl.forEach(function(t){
+    var pp=props.find(function(x){return x.id===t.pid;});
     html+='<div class="titem" data-tid="'+t.id+'">';
     html+='<div class="tpbar" style="background:'+PC[t.prio]+'"></div>';
     html+='<div class="tcheck'+(t.done?' on':'')+'">'+( t.done?'&#10003;':'')+'</div>';
     html+='<div class="tbody"><div class="ttext'+(t.done?' done':'')+'">'+t.text+'</div>';
-    html+='<div class="tprop">'+(props[t.pid]?props[t.pid].name:'')+'</div>';
+    html+='<div class="tprop">'+(pp?pp.name:'General')+'</div>';
     if(t.notes)html+='<div class="tnotes">'+t.notes+'</div>';
     if(t.assignedTo)html+='<div class="tassigned">&#128100; '+t.assignedTo+'</div>';
     if(t.completedAt)html+='<div class="tts">&#9989; '+fmtTS(t.completedAt)+'</div>';
     html+='</div><span class="tdue '+dcls(t.due)+'">'+t.due+'</span></div>';
   });
   g('taskList').innerHTML=html;
-  document.querySelectorAll('.titem').forEach(function(el){
-    el.addEventListener('click',function(){openTD(parseInt(el.getAttribute('data-tid')));});
-  });
+  document.querySelectorAll('.titem').forEach(function(el){el.addEventListener('click',function(){openTD(parseInt(el.getAttribute('data-tid')));});});
 }
 
-// ============ TASK DETAIL ============
+// TASK DETAIL
 function openTD(tid){
-  var t=tasks.find(function(x){return x.id===tid;});
-  if(!t)return;
+  var t=tasks.find(function(x){return x.id===tid;});if(!t)return;
   activeTid=tid;
-  g('tdPbar').style.background=PC[t.prio]||'var(--t3)';
-  g('tdPbar').style.height='40px';
+  g('tdPbar').style.background=PC[t.prio]||'var(--t3)';g('tdPbar').style.height='40px';
   g('tdTitle').textContent=t.text;
-  g('tdProp').textContent=(props[t.pid]?props[t.pid].name:'')+' - '+(t.prio.charAt(0).toUpperCase()+t.prio.slice(1))+' priority';
-  g('tdDue').value=t.due||'';
-  g('tdNotes').value=t.notes||'';
-  var ch='';
-  ASSIGNEES.forEach(function(a){ch+='<button class="achip'+(t.assignedTo===a?' on':'')+'" data-a="'+a+'">'+a+'</button>';});
+  var pp=props.find(function(x){return x.id===t.pid;});
+  g('tdPropLbl').textContent=(pp?pp.name:'General')+' - '+(t.prio.charAt(0).toUpperCase()+t.prio.slice(1))+' priority';
+  g('tdDue').value=t.due||'';g('tdNotes').value=t.notes||'';
+  var ch='';ASSIGNEES.forEach(function(a){ch+='<button class="achip'+(t.assignedTo===a?' on':'')+'" data-a="'+a+'">'+a+'</button>';});
   g('tdAchips').innerHTML=ch;
   g('tdCustom').value=ASSIGNEES.indexOf(t.assignedTo)>=0?'':(t.assignedTo||'');
-  document.querySelectorAll('.achip').forEach(function(c){
-    c.addEventListener('click',function(){document.querySelectorAll('.achip').forEach(function(x){x.classList.remove('on');});c.classList.add('on');g('tdCustom').value='';});
-  });
-  updateTDStatus(t.done,t.completedAt);
-  openM('tdModal');
+  document.querySelectorAll('.achip').forEach(function(c){c.addEventListener('click',function(){document.querySelectorAll('.achip').forEach(function(x){x.classList.remove('on');});c.classList.add('on');g('tdCustom').value='';});});
+  updateTDS(t.done,t.completedAt);openM('tdModal');
 }
-
-function updateTDStatus(done,ts){
+function updateTDS(done,ts){
   g('tdTodo').className='tdsb todo'+(done?'':' on');
   g('tdDone').className='tdsb done'+(done?' on':'');
-  if(done){
-    g('tdStampWrap').style.display='';
-    g('tdStampVal').textContent=fmtTS(ts||new Date().toISOString());
-  } else {
-    g('tdStampWrap').style.display='none';
-  }
+  if(done){g('tdStampWrap').style.display='';g('tdStampVal').textContent=fmtTS(ts||new Date().toISOString());}
+  else g('tdStampWrap').style.display='none';
 }
-
-g('tdTodo').addEventListener('click',function(){
-  var t=tasks.find(function(x){return x.id===activeTid;});
-  if(t){t.done=false;t.completedAt=null;updateTDStatus(false,null);}
-});
-g('tdDone').addEventListener('click',function(){
-  var t=tasks.find(function(x){return x.id===activeTid;});
-  if(t){t.done=true;if(!t.completedAt)t.completedAt=new Date().toISOString();updateTDStatus(true,t.completedAt);}
-});
+g('tdTodo').addEventListener('click',function(){var t=tasks.find(function(x){return x.id===activeTid;});if(t){t.done=false;t.completedAt=null;updateTDS(false,null);}});
+g('tdDone').addEventListener('click',function(){var t=tasks.find(function(x){return x.id===activeTid;});if(t){t.done=true;if(!t.completedAt)t.completedAt=new Date().toISOString();updateTDS(true,t.completedAt);}});
 g('tdSave').addEventListener('click',function(){
-  var t=tasks.find(function(x){return x.id===activeTid;});
-  if(!t)return;
-  t.notes=g('tdNotes').value.trim();
-  t.due=g('tdDue').value.trim()||t.due;
-  var sc=document.querySelector('.achip.on');
-  var cu=g('tdCustom').value.trim();
+  var t=tasks.find(function(x){return x.id===activeTid;});if(!t)return;
+  t.notes=g('tdNotes').value.trim();t.due=g('tdDue').value.trim()||t.due;
+  var sc=document.querySelector('.achip.on');var cu=g('tdCustom').value.trim();
   t.assignedTo=cu||(sc?sc.getAttribute('data-a'):t.assignedTo||'');
   closeM('tdModal');renderTasks();counts();
 });
-g('tdDelete').addEventListener('click',function(){
-  if(!confirm('Delete this task?'))return;
-  tasks=tasks.filter(function(x){return x.id!==activeTid;});
-  closeM('tdModal');renderTasks();counts();
-});
-g('tdClose').addEventListener('click',function(){closeM('tdModal');});
-onOverlay('tdModal');
+g('tdDelete').addEventListener('click',function(){if(!confirm('Delete this task?'))return;tasks=tasks.filter(function(x){return x.id!==activeTid;});closeM('tdModal');renderTasks();counts();});
+g('tdClose').addEventListener('click',function(){closeM('tdModal');});onOv('tdModal');
 
-// ============ CALENDAR ============
+// CALENDAR
 function renderCal(){
   g('calLabel').textContent=MS[calMonth]+' '+calYear;
   var fh='<button class="cff'+(calPF===-1?' on':'')+'" data-cf="-1">All</button>';
@@ -888,8 +840,7 @@ function renderCal(){
   var h=DOWS.map(function(d){return '<div class="cdow">'+d+'</div>';}).join('');
   for(var i=0;i<fd;i++)h+='<div class="cday"><div class="cnum other">'+(prev-fd+1+i)+'</div></div>';
   for(var d=1;d<=dim;d++){
-    var iT=d===TD&&calMonth===TM&&calYear===TY;
-    var bk=getBk(calYear,calMonth,d);var ev='';
+    var iT=d===TD&&calMonth===TM&&calYear===TY;var bk=getBk(calYear,calMonth,d);var ev='';
     if(bk){var dt=new Date(calYear,calMonth,d);var lb=bk.guest.split(' ')[0];
       if(+dt===+bk.si)ev='<div class="cev ein">in: '+lb+'</div>';
       else if(+dt===+bk.ei)ev='<div class="cev eout">out: '+lb+'</div>';
@@ -902,7 +853,7 @@ function renderCal(){
 g('calPrev').addEventListener('click',function(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCal();});
 g('calNext').addEventListener('click',function(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCal();});
 
-// ============ UPCOMING ============
+// UPCOMING
 function renderUp(){
   var items=[];
   bookings.forEach(function(b){
@@ -915,7 +866,7 @@ function renderUp(){
   });
   tasks.filter(function(t){return !t.done&&(t.prio==='urgent'||t.prio==='high');}).forEach(function(t){
     var pn=props.find(function(p){return p.id===t.pid;});
-    items.push({ts:new Date(),day:TD,mon:MSS[TM],name:t.text,detail:(pn?pn.name:'')+' &middot; urgent',tc:'var(--red-bg)',tt:'var(--red)',type:'task'});
+    items.push({ts:new Date(),day:TD,mon:MSS[TM],name:t.text,detail:(pn?pn.name:'General')+' &middot; urgent',tc:'var(--red-bg)',tt:'var(--red)',type:'task'});
   });
   items.sort(function(a,b){return a.ts-b.ts;});
   var start=new Date(TY,TM,TD);items=items.filter(function(i){return i.ts>=start;});
@@ -929,21 +880,28 @@ function renderUp(){
   g('upcomingList').innerHTML=html;
 }
 
-// ============ WEATHER ============
+// WEATHER
 var WXI={0:'&#9728;',1:'&#127780;',2:'&#9925;',3:'&#9729;',45:'&#127787;',48:'&#127787;',51:'&#127746;',53:'&#127746;',55:'&#127783;',61:'&#127783;',63:'&#127783;',65:'&#127783;',71:'&#127784;',73:'&#127784;',75:'&#10052;',80:'&#127746;',81:'&#127783;',82:'&#9928;',95:'&#9928;',99:'&#9928;'};
-var WXD={0:'Clear',1:'Mostly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Foggy',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',75:'Heavy snow',80:'Showers',81:'Showers',82:'Thunderstorm',95:'Thunderstorm',96:'Thunderstorm',99:'Thunderstorm'};
-var COORDS=[{lat:34.8951,lon:-84.3207},{lat:33.7490,lon:-84.3880},{lat:31.9989,lon:-80.8445},{lat:34.6887,lon:-84.4655},{lat:32.0835,lon:-81.0998}];
+var WXD={0:'Clear',1:'Mostly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Foggy',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',75:'Heavy snow',80:'Showers',81:'Showers',82:'Thunderstorm',95:'Thunderstorm',99:'Thunderstorm'};
 
 function initWX(){
+  if(!props.length){g('wxStrip').innerHTML='';return;}
   var h='';
   props.forEach(function(p,i){h+='<div class="wxcard" id="wx'+i+'"><div class="wxname">'+p.name.split(' ')[0]+'</div><div style="font-size:11px;color:var(--t3);margin-top:6px">Loading...</div></div>';});
   g('wxStrip').innerHTML=h;
+  // Use a geocoding-free approach — just use Atlanta coords for all until user sets coords
+  // We'll try to get weather based on property address keywords
   props.forEach(function(p,i){
-    var c=COORDS[i];
-    var url='https://api.open-meteo.com/v1/forecast?latitude='+c.lat+'&longitude='+c.lon+'&current=temperature_2m,weathercode,windspeed_10m,relative_humidity_2m&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=America%2FNew_York';
+    // Default to Atlanta area
+    var lat=33.7490,lon=-84.3880;
+    var addr=(p.addr||'').toLowerCase();
+    if(addr.indexOf('blue ridge')>=0||addr.indexOf('ellijay')>=0){lat=34.8951;lon=-84.3207;}
+    else if(addr.indexOf('tybee')>=0||addr.indexOf('savannah')>=0){lat=32.0835;lon=-81.0998;}
+    else if(addr.indexOf('jekyll')>=0||addr.indexOf('brunswick')>=0){lat=31.0707;lon=-81.4192;}
+    else if(addr.indexOf('helen')>=0||addr.indexOf('dahlonega')>=0){lat=34.7001;lon=-83.7322;}
+    var url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current=temperature_2m,weathercode,windspeed_10m,relative_humidity_2m&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=America%2FNew_York';
     fetch(url).then(function(r){return r.json();}).then(function(data){
-      var cur=data.current;
-      var el=g('wx'+i);if(!el)return;
+      var cur=data.current,el=g('wx'+i);if(!el)return;
       el.innerHTML='<div class="wxname">'+p.name.split(' ')[0]+'</div>'
         +'<div class="wxmain"><span style="font-size:20px">'+(WXI[cur.weathercode]||'&#127777;')+'</span><span class="wxtemp">'+Math.round(cur.temperature_2m)+'&#176;F</span></div>'
         +'<div class="wxdesc">'+(WXD[cur.weathercode]||'')+'</div>'
@@ -954,8 +912,10 @@ function initWX(){
   });
 }
 
-// ============ FINANCE ============
+// FINANCE
 function renderFin(){
+  if(!props.length){g('finTabs').innerHTML='';g('finContent').innerHTML='<div class="empty"><div class="eicon">&#128176;</div>Add a property first</div>';return;}
+  if(finPid===-1)finPid=props[0].id;
   var th='';props.forEach(function(p){th+='<button class="fintab'+(finPid===p.id?' on':'')+'" data-fp="'+p.id+'">'+p.emoji+' '+p.name.split(' ')[0]+'</button>';});
   g('finTabs').innerHTML=th;
   document.querySelectorAll('.fintab').forEach(function(b){b.addEventListener('click',function(){finPid=parseInt(b.getAttribute('data-fp'));renderFin();});});
@@ -969,27 +929,26 @@ function renderFin(){
   h+='<div class="fincard"><div class="fclbl">Expenses</div><div class="fcval" style="color:var(--red)">'+fmt(exp)+'</div><div class="fcsub">'+ep+'% of income</div></div>';
   h+='<div class="fincard"><div class="fclbl">Net</div><div class="fcval" style="color:'+(net>=0?'var(--green)':'var(--red)')+'">'+fmt(net)+'</div><div class="fcsub">'+np+'% margin</div></div>';
   h+='</div>';
-  h+='<div class="finbar"><div class="fbrow"><span style="color:var(--teal)">'+fmt(inc)+' income</span><span style="color:var(--red)">'+fmt(exp)+' expenses</span></div>';
-  h+='<div class="fbtrack"><div class="fbinc" style="width:100%"></div><div class="fbexp" style="width:'+ep+'%"></div></div>';
-  h+='<div class="fbpcts"><span style="color:var(--teal)">'+np+'% profit</span><span style="color:var(--red)">'+ep+'% costs</span></div></div>';
+  if(inc>0||exp>0){
+    h+='<div class="finbar"><div class="fbrow"><span style="color:var(--teal)">'+fmt(inc)+' income</span><span style="color:var(--red)">'+fmt(exp)+' expenses</span></div>';
+    h+='<div class="fbtrack"><div class="fbinc" style="width:100%"></div><div class="fbexp" style="width:'+ep+'%"></div></div>';
+    h+='<div class="fbpcts"><span style="color:var(--teal)">'+np+'% profit</span><span style="color:var(--red)">'+ep+'% costs</span></div></div>';
+  }
   if(ce.length){
     h+='<div class="finbd"><div class="finbdh"><span>Cost breakdown</span><span style="font-size:11px;color:var(--t2)">'+ce.length+' categories</span></div>';
     ce.forEach(function(x){var m=CATS[x[0]]||CATS.other;var pct=inc>0?Math.round(x[1]/inc*100):0;
       h+='<div class="finrow"><div class="findot" style="background:'+m.c+'"></div>';
       h+='<div class="fincat"><div>'+m.l+'</div><div class="minibar"><div class="minifill" style="width:'+Math.min(pct*2,100)+'%;background:'+m.c+'"></div></div></div>';
       h+='<div><div class="finamt" style="color:var(--red)">'+fmt(x[1])+'</div><span class="finpct">'+pct+'%</span></div></div>';
-    });
-    h+='</div>';
+    });h+='</div>';
   }
   if(pe.length){
     h+='<div class="finbd"><div class="finbdh"><span>All expenses</span><span style="font-size:11px;color:var(--t2)">'+fmt(exp)+' total</span></div>';
     pe.forEach(function(e){var m=CATS[e.cat]||CATS.other;var gi=expenses.indexOf(e);
       h+='<div class="finrow"><div class="findot" style="background:'+m.c+'"></div>';
       h+='<div class="fincat"><div>'+e.desc+'</div><div class="fincatsub">'+m.l+' &middot; '+fmtD(e.date)+'</div></div>';
-      h+='<div style="display:flex;align-items:center;gap:8px"><div class="finamt" style="color:var(--red)">'+fmt(e.amt)+'</div>';
-      h+='<button class="xbtn" data-ei="'+gi+'">&times;</button></div></div>';
-    });
-    h+='</div>';
+      h+='<div style="display:flex;align-items:center;gap:8px"><div class="finamt" style="color:var(--red)">'+fmt(e.amt)+'</div><button class="xbtn" data-ei="'+gi+'">&times;</button></div></div>';
+    });h+='</div>';
   }
   h+='<div class="addbtn" id="addExpBtn">+ Add expense</div>';
   g('finContent').innerHTML=h;
@@ -997,40 +956,7 @@ function renderFin(){
   g('addExpBtn').addEventListener('click',function(){openExp(finPid);});
 }
 
-// ============ OVERALL ============
-function renderOverall(){
-  var ti=props.reduce(function(s,p){return s+pInc(p.id);},0);
-  var te=props.reduce(function(s,p){return s+pExp(p.id);},0);
-  var tn=ti-te;var ep=ti>0?Math.round(te/ti*100):0,np=100-ep;
-  var h='<div class="finsum">';
-  h+='<div class="fincard"><div class="fclbl">Total income</div><div class="fcval" style="color:var(--teal)">'+fmt(ti)+'</div><div class="fcsub">5 properties</div></div>';
-  h+='<div class="fincard"><div class="fclbl">Total expenses</div><div class="fcval" style="color:var(--red)">'+fmt(te)+'</div><div class="fcsub">'+ep+'% of income</div></div>';
-  h+='<div class="fincard"><div class="fclbl">Net profit</div><div class="fcval" style="color:'+(tn>=0?'var(--green)':'var(--red)')+'">'+fmt(tn)+'</div><div class="fcsub">'+np+'% margin</div></div>';
-  h+='</div>';
-  h+='<div class="finbar"><div class="fbrow" style="font-size:13px;font-weight:600">Portfolio P&amp;L</div>';
-  h+='<div class="fbtrack" style="height:14px"><div class="fbinc" style="width:100%"></div><div class="fbexp" style="width:'+ep+'%"></div></div>';
-  h+='<div class="fbpcts"><span style="color:var(--teal);font-weight:600">'+np+'% profit &middot; '+fmt(tn)+'</span><span style="color:var(--red);font-weight:600">'+ep+'% costs</span></div></div>';
-  h+='<div class="shead" style="padding-top:4px;margin-bottom:10px"><h2>By property</h2><span style="font-size:12px;color:var(--t2)">Tap for details</span></div>';
-  props.forEach(function(p){
-    var inc=pInc(p.id),exp=pExp(p.id),net=pNet(p.id),ew=inc>0?Math.round(exp/inc*100):0;
-    h+='<div class="orow" data-op="'+p.id+'"><div class="otop"><span style="font-size:18px">'+p.emoji+'</span><div class="oname">'+p.name+'</div><div class="onet" style="color:'+(net>=0?'var(--green)':'var(--red)')+'">'+fmt(net)+'</div></div>';
-    h+='<div class="ostack"><div class="oinc" style="flex:'+(100-ew)+'"></div><div class="oexp" style="flex:'+ew+'"></div></div>';
-    h+='<div class="ostats"><span style="color:var(--teal)">'+fmt(inc)+'</span><span style="color:var(--red)">'+fmt(exp)+' ('+ew+'%)</span><span style="color:var(--accent);font-size:10px">Details &rarr;</span></div></div>';
-  });
-  var ac={};expenses.forEach(function(e){ac[e.cat]=(ac[e.cat]||0)+e.amt;});
-  var ace=Object.keys(ac).map(function(k){return[k,ac[k]];}).sort(function(a,b){return b[1]-a[1];});
-  h+='<div class="shead" style="padding-top:16px;margin-bottom:10px"><h2>All costs by type</h2></div><div class="finbd">';
-  ace.forEach(function(x){var m=CATS[x[0]]||CATS.other;var pct=ti>0?Math.round(x[1]/ti*100):0;var eof=te>0?Math.round(x[1]/te*100):0;
-    h+='<div class="finrow"><div class="findot" style="background:'+m.c+'"></div>';
-    h+='<div class="fincat"><div>'+m.l+'</div><div class="minibar"><div class="minifill" style="width:'+Math.min(eof,100)+'%;background:'+m.c+'"></div></div><div class="fincatsub">'+eof+'% of total costs</div></div>';
-    h+='<div><div class="finamt" style="color:var(--red)">'+fmt(x[1])+'</div><span class="finpct">'+pct+'% of inc</span></div></div>';
-  });
-  h+='</div>';
-  g('overallContent').innerHTML=h;
-  document.querySelectorAll('[data-op]').forEach(function(r){r.addEventListener('click',function(){finPid=parseInt(r.getAttribute('data-op'));goView('finance');});});
-}
-
-// ============ RENTERS ============
+// RENTERS
 function renderRenters(){
   var gmap={};
   bookings.forEach(function(b){if(!gmap[b.guest])gmap[b.guest]={name:b.guest,bks:[],stays:[]};gmap[b.guest].bks.push(b);});
@@ -1040,22 +966,22 @@ function renderRenters(){
   var fl=all;
   if(renterFilter==='repeat')fl=all.filter(function(x){return x.repeat;});
   if(renterFilter==='new')fl=all.filter(function(x){return !x.repeat;});
-  fl.sort(function(a,b){var as=a.stays.reduce(function(s,st){return s+st.amt;},0);var bs=b.stays.reduce(function(s,st){return s+st.amt;},0);return bs-as;});
+  fl.sort(function(a,b){return b.stays.reduce(function(s,st){return s+st.amt;},0)-a.stays.reduce(function(s,st){return s+st.amt;},0);});
   g('renterHeading').textContent=renterFilter==='repeat'?'Repeat guests':renterFilter==='new'?'New guests':'All guests';
   g('renterCount').textContent=fl.length+' guest'+(fl.length!==1?'s':'');
-  if(!fl.length){g('renterList').innerHTML='<div class="empty"><div class="eicon">&#128101;</div>No guests found</div>';return;}
+  if(!fl.length){g('renterList').innerHTML='<div class="empty"><div class="eicon">&#128101;</div>'+(Object.keys(gmap).length===0?'No guests yet. Add a booking to get started.':'No guests found')+'</div>';return;}
   var html='';
   fl.forEach(function(guest){
     var n=guest.name,stays=guest.stays||[],bks=guest.bks||[];
     var tot=stays.reduce(function(s,st){return s+st.amt;},0);
     var sc=stays.length+bks.length;
-    var tn=stays.reduce(function(s,st){return s+nights(st.ci,st.co);},0)+bks.reduce(function(s,b){return s+nights(b.si,b.ei);},0);
+    var tn=stays.reduce(function(s,st){return s+nts(st.ci,st.co);},0)+bks.reduce(function(s,b){return s+nts(b.si,b.ei);},0);
     var ini=n.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
     html+='<div class="rccard"><div class="rctop"><div style="display:flex;align-items:center;flex:1;min-width:0">';
     html+='<div class="rcavatar">'+ini+'</div><div class="rcinfo"><div class="rcname">'+n;
     html+=guest.repeat?'<span class="rpill">&#11088; Repeat</span>':'<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(59,130,246,.12);color:var(--accent);font-weight:600;margin-left:5px">New</span>';
     html+='</div><div class="rcsub">'+sc+' stay'+(sc!==1?'s':'')+' &middot; '+tn+' total nights</div></div></div>';
-    html+='<button class="addstaybtn" style="font-size:13px" data-sn="'+n+'">+ Stay</button></div>';
+    html+='<button class="addstaybtn" style="font-size:13px;flex-shrink:0" data-sn="'+n+'">+ Stay</button></div>';
     html+='<div class="rcstats">';
     html+='<div class="rcsbox"><div class="rcsval" style="color:var(--teal)">'+fmt(tot)+'</div><div class="rcslbl">Paid</div></div>';
     html+='<div class="rcsbox"><div class="rcsval">'+sc+'</div><div class="rcslbl">Stays</div></div>';
@@ -1065,20 +991,16 @@ function renderRenters(){
       html+='<div class="rcsh">Current &amp; upcoming</div>';
       bks.forEach(function(b){
         var pp=props.find(function(p){return p.id===b.pid;});var pname=pp?pp.name:'';var pemoji=pp?pp.emoji:'&#127968;';var pbg=pp?pp.bg:'var(--bg3)';
-        var n2=nights(b.si,b.ei);
-        var ci=b.si instanceof Date?fmtD(b.si.toISOString().slice(0,10)):fmtD(b.si);
-        var co=b.ei instanceof Date?fmtD(b.ei.toISOString().slice(0,10)):fmtD(b.ei);
+        var n2=nts(b.si,b.ei);var ci=b.si instanceof Date?fmtD(b.si.toISOString().slice(0,10)):fmtD(b.si);var co=b.ei instanceof Date?fmtD(b.ei.toISOString().slice(0,10)):fmtD(b.co);
         html+='<div class="rcsrow"><div class="rcsicon" style="background:'+pbg+'">'+pemoji+'</div>';
         html+='<div class="rcsbody"><div class="rcsprop">'+pname+'</div><div class="rcsdates">'+ci+' to '+co+' &middot; '+n2+' nights</div></div>';
-        html+=(b.rate?'<div class="rcsamt">'+fmt(b.rate*n2)+'</div>':'<div class="rcsamt" style="color:var(--t3)">--</div>');
-        html+='</div>';
+        html+=(b.rate?'<div class="rcsamt">'+fmt(b.rate*n2)+'</div>':'<div class="rcsamt" style="color:var(--t3)">--</div>')+'</div>';
       });
     }
     if(stays.length){
       html+='<div class="rcsh" style="margin-top:8px">Stay history</div>';
       stays.forEach(function(st){
-        var pp=props.find(function(p){return p.id===st.pid;});var pname=pp?pp.name:'Property';var pemoji=pp?pp.emoji:'&#127968;';var pbg=pp?pp.bg:'var(--bg3)';
-        var n2=nights(st.ci,st.co);
+        var pp=props.find(function(p){return p.id===st.pid;});var pname=pp?pp.name:'';var pemoji=pp?pp.emoji:'&#127968;';var pbg=pp?pp.bg:'var(--bg3)';var n2=nts(st.ci,st.co);
         html+='<div class="rcsrow"><div class="rcsicon" style="background:'+pbg+'">'+pemoji+'</div>';
         html+='<div class="rcsbody"><div class="rcsprop">'+pname+'</div><div class="rcsdates">'+fmtD(st.ci)+' to '+fmtD(st.co)+' &middot; '+n2+' nights'+(st.note?' &middot; '+st.note:'')+'</div></div>';
         html+='<div class="rcsamt">'+fmt(st.amt)+'</div></div>';
@@ -1091,31 +1013,36 @@ function renderRenters(){
   document.querySelectorAll('#renterList .addstaybtn').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openStay(b.getAttribute('data-sn'));});});
 }
 
-// ============ CHARTS ============
-var CMONTHS=['Dec','Jan','Feb','Mar','Apr','May'];
-var MINC=[[1600,1750,1800,1700,1900,1950],[2400,2600,2500,2700,2750,2800],[1100,1200,1350,1400,1450,1490],[1400,1500,1550,1600,1700,1750],[1000,1100,1150,1200,1300,1380]];
-var MEXP=[[1100,1050,1000,980,1100,1555],[1900,1800,1850,2000,2050,2130],[900,950,1000,1050,1100,1315],[1300,1400,1350,1500,1450,1605],[1000,1100,1050,1150,1200,1335]];
-
+// CHARTS
 function renderCharts(){
   if(typeof Chart==='undefined'){setTimeout(renderCharts,500);return;}
   Object.keys(charts).forEach(function(k){if(charts[k])charts[k].destroy();});charts={};
-  var ti=CMONTHS.map(function(_,i){return MINC.reduce(function(s,p){return s+p[i];},0);});
-  var te=CMONTHS.map(function(_,i){return MEXP.reduce(function(s,p){return s+p[i];},0);});
-  var tn=ti.map(function(v,i){return v-te[i];});
-  var cd={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748B',font:{size:11}},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#64748B',font:{size:10},callback:function(v){return '$'+Math.round(v/1000)+'k';}},grid:{color:'rgba(255,255,255,.06)'}}}};
-  charts.mom=new Chart(g('cMoM'),{type:'bar',data:{labels:CMONTHS,datasets:[{label:'Income',data:ti,backgroundColor:'rgba(20,184,166,.8)',borderRadius:4},{label:'Expenses',data:te,backgroundColor:'rgba(239,68,68,.7)',borderRadius:4},{label:'Net',data:tn,backgroundColor:'rgba(34,197,94,.85)',borderRadius:4,type:'line',borderColor:'#22C55E',pointBackgroundColor:'#22C55E',pointRadius:4,fill:false,tension:0.3}]},options:cd});
-  var pl=g('propChartLeg');pl.innerHTML='';props.forEach(function(p,i){pl.innerHTML+='<div class="clegitem"><div class="clegdot" style="background:'+PCOLORS[i]+'"></div>'+p.name.split(' ')[0]+'</div>';});
-  charts.prop=new Chart(g('cProp'),{type:'bar',data:{labels:CMONTHS,datasets:props.map(function(p,i){return{label:p.name.split(' ')[0],data:MINC[i],backgroundColor:PCOLORS[i]+'CC',borderRadius:3};})},options:cd});
-  var ac={};expenses.forEach(function(e){ac[e.cat]=(ac[e.cat]||0)+e.amt;});var ck=Object.keys(ac).sort(function(a,b){return ac[b]-ac[a];});
-  var cc=['#EF4444','#3B82F6','#F59E0B','#14B8A6','#A78BFA','#22C55E','#FB7185','#60A5FA','#84CC16','#F97316','#8B5CF6','#EC4899','#94A3B8','#64748B'];
-  charts.cat=new Chart(g('cCat'),{type:'doughnut',data:{labels:ck.map(function(k){return(CATS[k]||CATS.other).l;}),datasets:[{data:ck.map(function(k){return ac[k];}),backgroundColor:cc.slice(0,ck.length),borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false}}}});
-  var te2=ck.reduce(function(s,k){return s+ac[k];},0);g('catLegend').innerHTML=ck.map(function(k,i){return'<div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#94A3B8"><div style="width:8px;height:8px;border-radius:2px;background:'+cc[i]+';flex-shrink:0"></div>'+(CATS[k]||CATS.other).l+' '+Math.round(ac[k]/te2*100)+'%</div>';}).join('');
-  charts.occ=new Chart(g('cOcc'),{type:'bar',data:{labels:props.map(function(p){return p.name.split(' ')[0];}),datasets:[{label:'Occupancy %',data:props.map(function(p){return p.occ;}),backgroundColor:PCOLORS,borderRadius:6}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{min:0,max:100,ticks:{color:'#64748B',font:{size:11},callback:function(v){return v+'%';}},grid:{color:'rgba(255,255,255,.06)'}},y:{ticks:{color:'#94A3B8',font:{size:11}},grid:{display:false}}}}});
+  if(!props.length){
+    g('cSummary').getContext('2d');g('cCat').getContext('2d');g('cOcc').getContext('2d');
+    return;
+  }
+  var labels=props.map(function(p){return p.name.split(' ')[0];});
+  var incData=props.map(function(p){return pInc(p.id);});
+  var expData=props.map(function(p){return pExp(p.id);});
+  var netData=props.map(function(p){return pNet(p.id);});
+  var cd={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748B',font:{size:10}},grid:{color:'rgba(255,255,255,.04)'}},y:{ticks:{color:'#64748B',font:{size:10},callback:function(v){return '$'+Math.round(v/1000)+'k';}},grid:{color:'rgba(255,255,255,.06)'}}}};
+  charts.sum=new Chart(g('cSummary'),{type:'bar',data:{labels:labels,datasets:[{label:'Income',data:incData,backgroundColor:'rgba(20,184,166,.8)',borderRadius:4},{label:'Expenses',data:expData,backgroundColor:'rgba(239,68,68,.7)',borderRadius:4}]},options:cd});
+  var ac={};expenses.forEach(function(e){ac[e.cat]=(ac[e.cat]||0)+e.amt;});
+  if(Object.keys(ac).length){
+    var ck=Object.keys(ac).sort(function(a,b){return ac[b]-ac[a];});
+    var cc=['#EF4444','#3B82F6','#F59E0B','#14B8A6','#A78BFA','#22C55E','#FB7185','#60A5FA','#84CC16','#F97316','#8B5CF6','#EC4899','#94A3B8','#64748B'];
+    charts.cat=new Chart(g('cCat'),{type:'doughnut',data:{labels:ck.map(function(k){return(CATS[k]||CATS.other).l;}),datasets:[{data:ck.map(function(k){return ac[k];}),backgroundColor:cc.slice(0,ck.length),borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false}}}});
+    var te2=ck.reduce(function(s,k){return s+ac[k];},0);
+    g('catLegend').innerHTML=ck.map(function(k,i){return'<div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#94A3B8"><div style="width:8px;height:8px;border-radius:2px;background:'+cc[i]+';flex-shrink:0"></div>'+(CATS[k]||CATS.other).l+' '+Math.round(ac[k]/te2*100)+'%</div>';}).join('');
+  }
+  var occData=props.map(function(p){return p.occ||0;});
+  charts.occ=new Chart(g('cOcc'),{type:'bar',data:{labels:labels,datasets:[{label:'Occupancy %',data:occData,backgroundColor:props.map(function(_,i){return PCOLORS[i%PCOLORS.length];}),borderRadius:6}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{min:0,max:100,ticks:{color:'#64748B',font:{size:10},callback:function(v){return v+'%';}},grid:{color:'rgba(255,255,255,.06)'}},y:{ticks:{color:'#94A3B8',font:{size:10}},grid:{display:false}}}}});
 }
 
-// ============ MODALS ============
+// MODALS
 function openBook(pid){
-  bkPid=pid;g('bookTitle').textContent='Book: '+props[pid].name;
+  bkPid=pid;var p=props.find(function(x){return x.id===pid;});
+  g('bookTitle').textContent='Book: '+(p?p.name:'Property');
   g('bkGuest').value='';g('bkRate').value='';g('bkNotes').value='';
   var t=new Date();t.setDate(t.getDate()+1);var t2=new Date();t2.setDate(t2.getDate()+2);
   g('bkIn').value=t.toISOString().slice(0,10);g('bkOut').value=t2.toISOString().slice(0,10);
@@ -1125,12 +1052,15 @@ g('bkSave').addEventListener('click',function(){
   var guest=g('bkGuest').value.trim(),ci=g('bkIn').value,co=g('bkOut').value;
   if(!guest||!ci||!co){alert('Fill in guest name, check-in and check-out.');return;}
   if(ci>=co){alert('Check-out must be after check-in.');return;}
+  var p=props.find(function(x){return x.id===bkPid;});
+  if(p){p.nextRenter=guest;p.status='booked';}
   bookings.push({pid:bkPid,guest:guest,si:new Date(ci+'T00:00:00'),ei:new Date(co+'T00:00:00'),notes:g('bkNotes').value.trim(),rate:g('bkRate').value?parseInt(g('bkRate').value):null});
-  props[bkPid].status='booked';closeM('bookModal');renderProps();if(curView==='calendar')renderCal();if(curView==='upcoming')renderUp();
+  closeM('bookModal');renderProps();if(curView==='calendar')renderCal();if(curView==='upcoming')renderUp();counts();
 });
-g('bkCancel').addEventListener('click',function(){closeM('bookModal');});onOverlay('bookModal');
+g('bkCancel').addEventListener('click',function(){closeM('bookModal');});onOv('bookModal');
 
 function openTaskModal(){
+  if(!props.length){alert('Add a property first!');return;}
   g('tkProp').innerHTML=props.map(function(p){return'<option value="'+p.id+'">'+p.name+'</option>';}).join('');
   g('tkText').value='';g('tkDue').value='';openM('taskModal');setTimeout(function(){g('tkText').focus();},300);
 }
@@ -1139,18 +1069,19 @@ g('tkSave').addEventListener('click',function(){
   tasks.push({id:Date.now(),text:text,pid:parseInt(g('tkProp').value),prio:g('tkPrio').value,due:g('tkDue').value.trim()||'today',done:false,notes:'',assignedTo:'',completedAt:null});
   closeM('taskModal');renderTasks();counts();
 });
-g('tkCancel').addEventListener('click',function(){closeM('taskModal');});onOverlay('taskModal');
+g('tkCancel').addEventListener('click',function(){closeM('taskModal');});onOv('taskModal');
 
 function openExp(pid){
-  expPid=pid;g('expTitle').textContent='Add expense: '+props[pid].name;
+  expPid=pid;var p=props.find(function(x){return x.id===pid;});
+  g('expTitle').textContent='Add expense: '+(p?p.name:'Property');
   g('expDesc').value='';g('expAmt').value='';g('expDate').value=new Date().toISOString().slice(0,10);openM('expModal');
 }
 g('expSave').addEventListener('click',function(){
   var amt=parseFloat(g('expAmt').value);if(!amt||amt<=0){alert('Enter a valid amount.');return;}
   expenses.push({pid:expPid,cat:g('expCat').value,desc:g('expDesc').value.trim()||(CATS[g('expCat').value]||CATS.other).l,amt:amt,date:g('expDate').value});
-  closeM('expModal');renderFin();renderOverall();renderProps();counts();
+  closeM('expModal');renderFin();renderProps();counts();
 });
-g('expCancel').addEventListener('click',function(){closeM('expModal');});onOverlay('expModal');
+g('expCancel').addEventListener('click',function(){closeM('expModal');});onOv('expModal');
 
 function openStay(name){
   stayGuest=name;g('stayTitle').textContent='Add stay: '+name;
@@ -1162,24 +1093,22 @@ function openStay(name){
 g('stSave').addEventListener('click',function(){
   var amt=parseFloat(g('stAmt').value),ci=g('stIn').value,co=g('stOut').value;
   if(!amt||!ci||!co){alert('Fill in amount, check-in and check-out.');return;}
-  getG(stayGuest).stays.unshift({pid:0,ci:ci,co:co,amt:amt,note:g('stNote').value.trim()});
+  getG(stayGuest).stays.unshift({pid:finPid,ci:ci,co:co,amt:amt,note:g('stNote').value.trim()});
   closeM('stayModal');renderProps();if(curView==='renters')renderRenters();
 });
-g('stCancel').addEventListener('click',function(){closeM('stayModal');});onOverlay('stayModal');
+g('stCancel').addEventListener('click',function(){closeM('stayModal');});onOv('stayModal');
 
-// ============ NAV WIRING ============
+// NAV
 document.querySelectorAll('.nbtn').forEach(function(b){b.addEventListener('click',function(){goView(b.getAttribute('data-view'));});});
 document.querySelectorAll('.fchip[data-tf]').forEach(function(c){c.addEventListener('click',function(){taskFilter=c.getAttribute('data-tf');document.querySelectorAll('.fchip[data-tf]').forEach(function(x){x.classList.remove('on');});c.classList.add('on');renderTasks();});});
 document.querySelectorAll('.fchip[data-rf]').forEach(function(c){c.addEventListener('click',function(){renterFilter=c.getAttribute('data-rf');document.querySelectorAll('.fchip[data-rf]').forEach(function(x){x.classList.remove('on');});c.classList.add('on');renderRenters();});});
 g('btnAddTask').addEventListener('click',openTaskModal);
 g('btnAddTask2').addEventListener('click',openTaskModal);
-g('btnGoCal').addEventListener('click',function(){goView('calendar');});
 
-// ============ INIT ============
+// INIT
 counts();
 renderProps();
 renderCal();
-initWX();
 
 })();
 </script>
