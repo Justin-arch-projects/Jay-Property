@@ -280,6 +280,19 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .eicon{font-size:40px;margin-bottom:10px;}
 .emoji-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px;}
 .epick{font-size:24px;padding:6px;border-radius:8px;border:none;background:var(--bg3);cursor:pointer;text-align:center;}
+
+  /* ASSIGNEE PICKER */
+  .assignee-wrap{margin-top:4px;}
+  .assignee-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+  .assignee-chip{font-size:12px;padding:6px 12px;border-radius:20px;border:0.5px solid var(--b2);background:var(--bg3);color:var(--t2);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;}
+  .assignee-chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+  .assignee-chip .chip-avatar{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;}
+  .assignee-add-row{display:flex;gap:8px;align-items:center;}
+  .assignee-add-input{flex:1;background:var(--bg3);border:0.5px solid var(--b2);border-radius:var(--rs);padding:9px 12px;font-size:14px;color:var(--t1);outline:none;font-family:inherit;}
+  .assignee-add-input:focus{border-color:var(--accent);}
+  .assignee-add-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--rs);padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;}
+  .assignee-none{font-size:12px;color:var(--t3);font-style:italic;}
+
 </style>
 </head>
 <body>
@@ -300,7 +313,7 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
   <div>
     <h1>Caldwell Living</h1>
     <div class="sub" id="propCount">Loading...</div>
-    <div class="ver">v11.0.0 &middot; Cloud</div>
+    <div class="ver">v11.2.1 &middot; Cloud</div>
   </div>
   <div class="tb-right">
     <div class="sync-dot" id="syncDot" title="Cloud sync status"></div>
@@ -454,6 +467,16 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
       <div class="mf"><div class="ml">Priority</div><select class="msel" id="tkPrio"><option value="urgent">Urgent</option><option value="high">High</option><option value="med" selected>Medium</option><option value="low">Low</option></select></div>
     </div>
     <div class="mf"><div class="ml">Due</div><input class="mi" id="tkDue" type="text" placeholder="e.g. today, May 10..."></div>
+    <div class="mf">
+      <div class="ml">Assign to</div>
+      <div class="assignee-wrap">
+        <div class="assignee-chips" id="tkAssigneeChips"></div>
+        <div class="assignee-add-row">
+          <input class="assignee-add-input" id="tkNewPerson" type="text" placeholder="+ Add new person...">
+          <button class="assignee-add-btn" id="tkAddPersonBtn">Add</button>
+        </div>
+      </div>
+    </div>
     <button class="mbtn" id="tkSave">Add task</button>
     <button class="mcancel" id="tkCancel">Cancel</button>
   </div>
@@ -515,8 +538,13 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
     <div class="tdlabel">Due date</div>
     <input class="mi" id="tdDue" type="text" placeholder="e.g. today, May 10...">
     <div class="tdlabel">Assigned to</div>
-    <div class="achips" id="tdAchips"></div>
-    <input class="mi" id="tdCustom" type="text" placeholder="Or type a name..." style="margin-top:6px;">
+    <div class="assignee-wrap">
+      <div class="assignee-chips" id="tdAchips"></div>
+      <div class="assignee-add-row" style="margin-top:4px;">
+        <input class="assignee-add-input" id="tdNewPerson" type="text" placeholder="+ Add new person...">
+        <button class="assignee-add-btn" id="tdAddPersonBtn">Add</button>
+      </div>
+    </div>
     <div class="tdlabel">Notes</div>
     <textarea class="mta" id="tdNotes" placeholder="Add notes, details, contact info..."></textarea>
     <button class="mbtn" id="tdSave" style="margin-top:14px;">Save changes</button>
@@ -807,10 +835,33 @@ function renderTasks(){
     html+='</div><span class="tdue '+dcls(t.due)+'">'+t.due+'</span></div>';
   });
   g('taskList').innerHTML=html;
-  document.querySelectorAll('.titem').forEach(function(el){el.addEventListener('click',function(){openTD(el.getAttribute('data-tid'));});});
+  document.querySelectorAll('.titem').forEach(function(el){el.addEventListener('click',function(){(window.openTD||openTD)(el.getAttribute('data-tid'));});});
 }
 
 // ============ TASK DETAIL ============
+var tdSelectedAssignee = '';
+
+function renderTdAssigneeChips(current) {
+  tdSelectedAssignee = current;
+  var html = '';
+  ASSIGNEES.forEach(function(a) {
+    var ini = a.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+    html += '<button class="assignee-chip' + (tdSelectedAssignee===a?' on':'') + '" data-tda="'+a+'">';
+    html += '<span class="chip-avatar">'+ini+'</span>' + a + '</button>';
+  });
+  if (!html) html = '<div class="assignee-none">No team members yet — add one below</div>';
+  var el = g('tdAchips');
+  if (!el) return;
+  el.innerHTML = html;
+  el._currentAssignee = tdSelectedAssignee;
+  document.querySelectorAll('#tdAchips .assignee-chip').forEach(function(c) {
+    c.addEventListener('click', function() {
+      tdSelectedAssignee = tdSelectedAssignee === c.getAttribute('data-tda') ? '' : c.getAttribute('data-tda');
+      renderTdAssigneeChips(tdSelectedAssignee);
+    });
+  });
+}
+
 function openTD(id){
   var t=tasks.find(function(x){return x.id===id;});if(!t)return;
   activeTid=id;
@@ -857,7 +908,7 @@ g('tdDelete').addEventListener('click',async function(){
   tasks=tasks.filter(function(x){return x.id!==activeTid;});
   closeM('tdModal');renderTasks();counts();showSync('Task deleted');
 });
-g('tdClose').addEventListener('click',function(){closeM('tdModal');});onOv('tdModal');
+g('tdClose').addEventListener('click',function(){closeM('tdModal');renderTasks();});onOv('tdModal');
 
 // ============ CALENDAR ============
 function renderCal(){
@@ -1076,15 +1127,55 @@ g('bkSave').addEventListener('click',async function(){
 });
 g('bkCancel').addEventListener('click',function(){closeM('bookModal');});onOv('bookModal');
 
-function openTaskModal(){
-  if(!props.length){alert('Add a property first!');return;}
-  g('tkProp').innerHTML=props.map(function(p){return'<option value="'+p.id+'">'+p.name+'</option>';}).join('');
-  g('tkText').value='';g('tkDue').value='';openM('taskModal');setTimeout(function(){g('tkText').focus();},300);
+var tkSelectedAssignee = '';
+
+function renderTkAssigneeChips() {
+  var html = '';
+  ASSIGNEES.forEach(function(a) {
+    var ini = a.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+    html += '<button class="assignee-chip' + (tkSelectedAssignee===a?' on':'') + '" data-ta="'+a+'">';
+    html += '<span class="chip-avatar">'+ini+'</span>' + a + '</button>';
+  });
+  if (!html) html = '<div class="assignee-none">No team members yet — add one below</div>';
+  g('tkAssigneeChips').innerHTML = html;
+  document.querySelectorAll('#tkAssigneeChips .assignee-chip').forEach(function(c) {
+    c.addEventListener('click', function() {
+      tkSelectedAssignee = tkSelectedAssignee === c.getAttribute('data-ta') ? '' : c.getAttribute('data-ta');
+      renderTkAssigneeChips();
+    });
+  });
 }
+
+function openTaskModal(){
+  g('tkProp').innerHTML = props.length
+    ? props.map(function(p){return'<option value="'+p.id+'">'+p.name+'</option>';}).join('')
+    : '<option value="">No property (General)</option>';
+  g('tkText').value='';g('tkDue').value='';
+  tkSelectedAssignee = '';
+  g('tkNewPerson').value = '';
+  renderTkAssigneeChips();
+  openM('taskModal');setTimeout(function(){g('tkText').focus();},300);
+}
+// Add new person to team from task modal
+g('tkAddPersonBtn').addEventListener('click', function() {
+  var name = g('tkNewPerson').value.trim();
+  if (!name) return;
+  if (ASSIGNEES.indexOf(name) === -1) ASSIGNEES.push(name);
+  tkSelectedAssignee = name;
+  g('tkNewPerson').value = '';
+  renderTkAssigneeChips();
+  // Also refresh tdAchips if task detail is open
+  var tdA = g('tdAchips');
+  if (tdA) renderTdAssigneeChips(tdA._currentAssignee || '');
+});
+g('tkNewPerson').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { e.preventDefault(); g('tkAddPersonBtn').click(); }
+});
+
 g('tkSave').addEventListener('click',async function(){
   var text=g('tkText').value.trim();if(!text){alert('Enter a task description.');return;}
   setSyncDot('syncing');
-  var r=await supa.from('tasks').insert({property_id:g('tkProp').value,text:text,priority:g('tkPrio').value,due:g('tkDue').value.trim()||'today',done:false,notes:'',assigned_to:''}).select().single();
+  var pidVal2=g('tkProp').value||null;var r=await supa.from('tasks').insert({property_id:pidVal2,text:text,priority:g('tkPrio').value,due:g('tkDue').value.trim()||'today',done:false,notes:'',assigned_to:tkSelectedAssignee||''}).select().single();
   if(r.error){showSync('Error: '+r.error.message,true);setSyncDot('offline');return;}
   closeM('taskModal');showSync('Task added!');await loadAll();
 });
@@ -1123,6 +1214,21 @@ g('stSave').addEventListener('click',async function(){
 });
 g('stCancel').addEventListener('click',function(){closeM('stayModal');});onOv('stayModal');
 
+// ============ TEAM MEMBER ADD (from task detail) ============
+g('tdAddPersonBtn').addEventListener('click', function() {
+  var name = g('tdNewPerson').value.trim();
+  if (!name) return;
+  if (ASSIGNEES.indexOf(name) === -1) ASSIGNEES.push(name);
+  tdSelectedAssignee = name;
+  g('tdNewPerson').value = '';
+  renderTdAssigneeChips(name);
+  // Also refresh task modal chips if open
+  if (g('taskModal').classList.contains('open')) renderTkAssigneeChips();
+});
+g('tdNewPerson').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { e.preventDefault(); g('tdAddPersonBtn').click(); }
+});
+
 // ============ NAV ============
 document.querySelectorAll('.nbtn').forEach(function(b){b.addEventListener('click',function(){goView(b.getAttribute('data-view'));});});
 document.querySelectorAll('.fchip[data-tf]').forEach(function(c){c.addEventListener('click',function(){taskFilter=c.getAttribute('data-tf');document.querySelectorAll('.fchip[data-tf]').forEach(function(x){x.classList.remove('on');});c.classList.add('on');renderTasks();});});
@@ -1133,6 +1239,11 @@ g('btnAddTask2').addEventListener('click',openTaskModal);
 // ============ INIT ============
 setupRealtime();
 loadAll();
+
+// Expose key functions globally so they work from any context
+window.openTD = openTD;
+window.closeM = closeM;
+window.openM = openM;
 
 })();
 </script>
