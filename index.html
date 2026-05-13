@@ -587,7 +587,9 @@ function onOv(id){g(id).addEventListener('click',function(e){if(e.target===g(id)
 var sTO;
 function showSync(msg,isErr){
   var b=g('sbar');b.textContent=msg;b.className='sync-bar show'+(isErr?' err':'');
-  clearTimeout(sTO);sTO=setTimeout(function(){b.classList.remove('show');},2500);
+  clearTimeout(sTO);
+  // Errors stay visible 10s; success toasts 2.5s
+  sTO=setTimeout(function(){b.classList.remove('show');},isErr?10000:2500);
 }
 function setSdot(s){g('sdot').className='sdot'+(s==='off'?' off':s==='syn'?' syn':'');}
 
@@ -891,16 +893,22 @@ async function setStat(newSt){
   if(!db){showSync('Saved locally \u2014 cloud offline',true);return;}
   var updates={status:newSt,done:t.done,completed_at:t.completed_at};
   try{
-    var r=await db.from('tasks').update(updates).eq('id',activeTid);
+    // .select() so we can detect silent RLS-blocked writes (no error but no rows affected)
+    var r=await db.from('tasks').update(updates).eq('id',activeTid).select();
     if(r.error){
       // If status column doesn't exist yet in Supabase, retry without it
       if(/(column|schema).*status/i.test(r.error.message||'')){
         var fb={done:updates.done,completed_at:updates.completed_at};
-        var r2=await db.from('tasks').update(fb).eq('id',activeTid);
+        var r2=await db.from('tasks').update(fb).eq('id',activeTid).select();
         if(r2.error)showSync('Cloud save error: '+r2.error.message,true);
+        else if(!r2.data||r2.data.length===0)showSync('Cloud blocked (check RLS policies)',true);
+        else showSync('Saved \u00b7 but add \"status\" column for full sync',true);
       }else{
         showSync('Cloud save error: '+r.error.message,true);
       }
+    }else if(!r.data||r.data.length===0){
+      // RLS most likely — update was accepted by Supabase but no row was actually modified
+      showSync('⚠️ Cloud blocked update — enable RLS write policies',true);
     }
   }catch(e){showSync('Cloud save failed: '+(e.message||e),true);}
 }
