@@ -313,7 +313,7 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
   <div>
     <h1>Caldwell Living</h1>
     <div class="sub" id="propCount">Loading...</div>
-    <div class="ver">v12.0.0 &middot; Cloud</div>
+    <div class="ver">v12.0.1 &middot; Cloud</div>
   </div>
   <div class="tb-right">
     <div class="sync-dot" id="syncDot" title="Cloud sync status"></div>
@@ -596,13 +596,17 @@ async function loadAll(){
   setSyncDot('syncing');
   g('loadingMsg').textContent='Loading properties...';
   try{
-    var [pr,bk,tk,ex,st]=await Promise.all([
+    // Add 10 second timeout so app never gets stuck spinning
+    var timeoutP=new Promise(function(_,rej){setTimeout(function(){rej(new Error('Connection timeout'));},10000);});
+    var fetchP=Promise.all([
       supa.from('properties').select('*').order('sort_order',{ascending:true}),
       supa.from('bookings').select('*').order('check_in',{ascending:true}),
       supa.from('tasks').select('*').order('created_at',{ascending:true}),
       supa.from('expenses').select('*').order('date',{ascending:false}),
       supa.from('stays').select('*').order('check_in',{ascending:false})
     ]);
+    var results=await Promise.race([fetchP,timeoutP]);
+    var pr=results[0],bk=results[1],tk=results[2],ex=results[3],st=results[4];
     if(pr.error)throw pr.error;
     props=pr.data||[];
     bookings=bk.data||[];
@@ -628,8 +632,14 @@ async function loadAll(){
     initWX();
   }catch(err){
     setSyncDot('offline');
-    g('loadingMsg').textContent='Error: '+err.message+'. Check your internet connection.';
+    // Don't get stuck - hide loading screen and show app even if offline
+    g('loadingScreen').style.display='none';
+    showSync('Connection error - working offline',true);
     console.error(err);
+    counts();
+    renderProps();
+    renderCal();
+    initWX();
   }
 }
 
