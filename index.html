@@ -552,6 +552,24 @@ var rentFilter='all',editPid=null,selEmoji=EMOJIS[0];
 var tkAss='',tdAss='';
 var charts={};
 
+// ============ LOCAL CACHE (always persists changes, even when offline) ============
+var LK='caldwell_v12';
+function cacheSave(){
+  try{ localStorage.setItem(LK,JSON.stringify({props:props,tasks:tasks,bookings:bookings,expenses:expenses,gmap:gmap,ts:Date.now()})); }catch(e){}
+}
+function cacheLoad(){
+  try{
+    var raw=localStorage.getItem(LK);if(!raw)return false;
+    var d=JSON.parse(raw);
+    if(d.props)props=d.props;
+    if(d.tasks)tasks=d.tasks;
+    if(d.bookings)bookings=d.bookings;
+    if(d.expenses)expenses=d.expenses;
+    if(d.gmap)gmap=d.gmap;
+    return true;
+  }catch(e){return false;}
+}
+
 // ============ HELPERS ============
 function g(id){return document.getElementById(id);}
 function fmt(n){return '$'+Number(n||0).toLocaleString();}
@@ -575,7 +593,13 @@ function setSdot(s){g('sdot').className='sdot'+(s==='off'?' off':s==='syn'?' syn
 
 // ============ LOAD DATA ============
 async function loadAll(){
-  if(!db){g('ls').style.display='none';setSdot('off');showSync('Cloud not connected',true);return;}
+  if(!db){
+    // Offline: load from cache so the UI shows something usable
+    if(cacheLoad()){counts();renderProps();renderCal();initWX();}
+    g('ls').style.display='none';setSdot('off');
+    if(typeof showSync==='function')showSync('Working offline',true);
+    return;
+  }
   setSdot('syn');
   try{
     var pr=await db.from('properties').select('*').order('sort_order',{ascending:true});
@@ -585,6 +609,22 @@ async function loadAll(){
     bookings=bk.data||[];
     var tk=await db.from('tasks').select('*').order('created_at',{ascending:true});
     tasks=tk.data||[];
+    // Merge local status changes on top of cloud data (so an in-flight status edit isn't clobbered
+    // by a slower realtime push or pull-to-refresh while the network update is still pending)
+    try{
+      var raw=localStorage.getItem(LK);
+      if(raw){
+        var cached=JSON.parse(raw);
+        if(cached&&cached.tasks){
+          var byId={};cached.tasks.forEach(function(ct){byId[ct.id]=ct;});
+          tasks=tasks.map(function(t){
+            var c=byId[t.id];
+            if(c&&c.status&&!t.status){t.status=c.status;}
+            return t;
+          });
+        }
+      }
+    }catch(e){}
     var ex=await db.from('expenses').select('*').order('date',{ascending:false});
     expenses=ex.data||[];
     var st=await db.from('stays').select('*').order('check_in',{ascending:false});
@@ -597,8 +637,12 @@ async function loadAll(){
     Object.keys(gc).forEach(function(n){if(gc[n]>1){if(!gmap[n])gmap[n]={repeat:false,stays:[]};gmap[n].repeat=true;}});
     if(finPid===null&&props.length)finPid=props[0].id;
     setSdot('online');
+    cacheSave();
   }catch(err){
-    setSdot('off');showSync('Sync error: '+err.message,true);console.error(err);
+    setSdot('off');
+    if(cacheLoad())showSync('Cloud unreachable — showing last sync',true);
+    else showSync('Sync error: '+err.message,true);
+    console.error(err);
   }
   g('ls').style.display='none';
   counts();renderProps();renderCal();initWX();
@@ -842,6 +886,7 @@ async function setStat(newSt){
   updateTDS(newSt,t.completed_at);
   showSync((STATUSES[newSt]||{l:newSt}).l);
   counts();renderTasks();
+  cacheSave(); // persist locally so it survives reload even without cloud
   // Try to persist to cloud in the background
   if(!db){showSync('Saved locally \u2014 cloud offline',true);return;}
   var updates={status:newSt,done:t.done,completed_at:t.completed_at};
