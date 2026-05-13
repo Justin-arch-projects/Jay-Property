@@ -503,8 +503,19 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 
 // ============ SUPABASE ============
 var SURL='https://sfnlocmdukdtuotawqdu.supabase.co';
-var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmbmxvY21kdWtkdHVvdGF3cWR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5MDE2MjEsImV4cCI6MjA5MzQ3NzYyMX0.aTiEeZjjU83tNWWO8MZWoH5CPFnE4zJmJkL_cPGrHvQ';
-var db=supabase.createClient(SURL,SKEY);
+var SKEY='sb_publishable_AtrQw4SSKoOZt2AI17QO7A_J0S60opq';
+var db=null;
+try{ db=supabase.createClient(SURL,SKEY); }catch(e){ console.error('Supabase init failed',e); }
+
+// Failsafe — if Supabase hangs/fails, hide the splash after 6s so the UI is always usable
+setTimeout(function(){
+  var ls=document.getElementById('ls');
+  if(ls&&ls.style.display!=='none'){
+    ls.style.display='none';
+    if(typeof showSync==='function')showSync('Offline mode — check connection',true);
+    var sd=document.getElementById('sdot');if(sd)sd.className='sdot off';
+  }
+},6000);
 
 // ============ CONSTANTS ============
 var MS=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -556,6 +567,7 @@ function setSdot(s){g('sdot').className='sdot'+(s==='off'?' off':s==='syn'?' syn
 
 // ============ LOAD DATA ============
 async function loadAll(){
+  if(!db){g('ls').style.display='none';setSdot('off');showSync('Cloud not connected',true);return;}
   setSdot('syn');
   try{
     var pr=await db.from('properties').select('*').order('sort_order',{ascending:true});
@@ -586,6 +598,7 @@ async function loadAll(){
 
 // ============ REALTIME ============
 function setupRT(){
+  if(!db)return;
   db.channel('cl')
     .on('postgres_changes',{event:'*',schema:'public',table:'properties'},function(){loadAll();showSync('Updated');})
     .on('postgres_changes',{event:'*',schema:'public',table:'bookings'},function(){loadAll();showSync('Updated');})
