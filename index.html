@@ -52,8 +52,15 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .sdot.off{background:var(--red);}
 .sdot.syn{background:var(--amber);animation:pulse 1s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(76px + var(--sab));}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(76px + var(--sab));position:relative;}
 .scroll::-webkit-scrollbar{display:none;}
+/* Pull-to-refresh */
+.ptr{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:center;height:0;overflow:hidden;color:var(--gold);pointer-events:none;z-index:5;}
+.ptr-inner{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-style:italic;font-size:13px;color:var(--gold);opacity:.85;}
+.ptr-spin{width:18px;height:18px;border:1.5px solid var(--gold-soft);border-top-color:var(--gold);border-radius:50%;}
+.ptr.refreshing .ptr-spin{animation:spin .8s linear infinite;}
+.scroll.dragging{transition:none;}
+.scroll.snapping{transition:transform .28s cubic-bezier(.32,.72,0,1);}
 .metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px 0;}
 .metric{background:var(--card);border-radius:var(--r);padding:13px;border:0.5px solid var(--b1);}
 .mlbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
@@ -295,6 +302,7 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 </div>
 
 <div class="scroll" id="scrollArea">
+  <div class="ptr" id="ptr"><div class="ptr-inner"><div class="ptr-spin"></div><span id="ptrLbl">Pull to refresh</span></div></div>
   <div class="metrics">
     <div class="metric"><div class="mlbl">Net income</div><div class="mval" id="mNet" style="color:var(--green)">$0</div><div class="msub">After expenses</div></div>
     <div class="metric"><div class="mlbl">Tasks due</div><div class="mval" id="mTasks" style="color:var(--red)">0</div><div class="msub">Today</div></div>
@@ -1170,6 +1178,65 @@ window.openM=openM;
 // ============ INIT ============
 setupRT();
 loadAll();
+
+// ============ PULL-TO-REFRESH ============
+(function(){
+  var sc=g('scrollArea'),ptr=g('ptr'),lbl=g('ptrLbl');
+  if(!sc||!ptr)return;
+  var startY=0,pulling=false,decided=false,pull=0,refreshing=false;
+  var TH=70;  // pixels to pull before refresh triggers
+  function setPull(p){
+    pull=p;
+    ptr.style.height=Math.max(0,p)+'px';
+    sc.style.transform=p>0?'translateY('+p*0.4+'px)':'';
+    if(!refreshing)lbl.textContent=p>=TH?'Release to refresh':'Pull to refresh';
+  }
+  sc.addEventListener('touchstart',function(e){
+    if(refreshing)return;
+    if(sc.scrollTop>0)return;
+    startY=e.touches[0].clientY;
+    pulling=true;decided=false;
+    sc.classList.add('dragging');sc.classList.remove('snapping');
+  },{passive:true});
+  sc.addEventListener('touchmove',function(e){
+    if(!pulling||refreshing)return;
+    var dy=e.touches[0].clientY-startY;
+    if(!decided){
+      if(Math.abs(dy)<6)return;
+      decided=true;
+    }
+    if(dy<=0){setPull(0);pulling=false;return;}
+    // Rubber-band: damping past threshold
+    var damped=dy<TH*1.5?dy:TH*1.5+(dy-TH*1.5)*0.35;
+    setPull(Math.min(damped,160));
+    e.preventDefault();
+  },{passive:false});
+  function endPull(){
+    if(!pulling)return;
+    pulling=false;
+    sc.classList.remove('dragging');sc.classList.add('snapping');
+    if(pull>=TH){
+      refreshing=true;
+      ptr.classList.add('refreshing');
+      lbl.textContent='Refreshing…';
+      ptr.style.height='56px';
+      sc.style.transform='translateY(20px)';
+      (async function(){
+        try{ await loadAll(); }catch(e){}
+        setTimeout(function(){
+          refreshing=false;
+          ptr.classList.remove('refreshing');
+          setPull(0);
+          showSync('Refreshed');
+        },400);
+      })();
+    }else{
+      setPull(0);
+    }
+  }
+  sc.addEventListener('touchend',endPull);
+  sc.addEventListener('touchcancel',endPull);
+})();
 
 })();
 </script>
