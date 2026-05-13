@@ -826,22 +826,30 @@ function updateTDS(st,ts){
 }
 async function setStat(newSt){
   var t=tasks.find(function(x){return x.id===activeTid;});if(!t)return;
-  var updates={status:newSt};
-  if(newSt==='done'){updates.done=true;updates.completed_at=new Date().toISOString();}
-  else{updates.done=false;updates.completed_at=null;}
-  var r=await db.from('tasks').update(updates).eq('id',activeTid);
-  if(r.error){
-    // Backward compat: if status column doesn't exist yet in Supabase, fall back to just done
-    if(/column.*status/i.test(r.error.message||'')){
-      var fb={done:updates.done,completed_at:updates.completed_at};
-      var r2=await db.from('tasks').update(fb).eq('id',activeTid);
-      if(r2.error){showSync('Error: '+r2.error.message,true);return;}
-      t.status=newSt;Object.assign(t,fb);
-    }else{showSync('Error: '+r.error.message,true);return;}
-  }else{Object.assign(t,updates);}
+  var nowIso=new Date().toISOString();
+  // Update UI immediately (optimistic) so it always feels responsive
+  t.status=newSt;
+  if(newSt==='done'){t.done=true;t.completed_at=nowIso;}
+  else{t.done=false;t.completed_at=null;}
   updateTDS(newSt,t.completed_at);
   showSync((STATUSES[newSt]||{l:newSt}).l);
   counts();renderTasks();
+  // Try to persist to cloud in the background
+  if(!db){showSync('Saved locally \u2014 cloud offline',true);return;}
+  var updates={status:newSt,done:t.done,completed_at:t.completed_at};
+  try{
+    var r=await db.from('tasks').update(updates).eq('id',activeTid);
+    if(r.error){
+      // If status column doesn't exist yet in Supabase, retry without it
+      if(/(column|schema).*status/i.test(r.error.message||'')){
+        var fb={done:updates.done,completed_at:updates.completed_at};
+        var r2=await db.from('tasks').update(fb).eq('id',activeTid);
+        if(r2.error)showSync('Cloud save error: '+r2.error.message,true);
+      }else{
+        showSync('Cloud save error: '+r.error.message,true);
+      }
+    }
+  }catch(e){showSync('Cloud save failed: '+(e.message||e),true);}
 }
 g('tdTodo').addEventListener('click',function(){setStat('not_started');});
 g('tdStarted').addEventListener('click',function(){setStat('started');});
