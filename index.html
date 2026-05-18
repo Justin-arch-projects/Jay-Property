@@ -770,9 +770,12 @@ function setupRT(){
 
 // ============ COUNTS ============
 function counts(){
-  var dt=tasks.filter(function(t){return t.due==='today'&&!t.done;}).length;
+  var billTasks=(typeof synthBillTasks==='function')?synthBillTasks():[];
+  var dt=tasks.filter(function(t){return t.due==='today'&&!t.done;}).length
+       +billTasks.filter(function(t){return t.due==='today'&&!t.done;}).length
+       +billTasks.filter(function(t){return t.due==='overdue';}).length;
   g('mTasks').textContent=dt;
-  var tot=tasks.filter(function(t){return !t.done;}).length;
+  var tot=tasks.filter(function(t){return !t.done;}).length+billTasks.filter(function(t){return !t.done;}).length;
   g('taskBadge').textContent=tot;g('taskBadge').style.display=tot>0?'':'none';
   g('mNet').textContent=fmt(props.reduce(function(s,p){return s+pNet(p.id);},0));
   var mn=new Date();
@@ -1096,32 +1099,104 @@ g('pmCancel').addEventListener('click',function(){closeM('propModal');});onOv('p
 g('btnAddProp').addEventListener('click',openAddProp);
 
 // ============ TASKS ============
+// Synthesize task rows from each property's bills so they appear in the unified task list,
+// sorted by due date. Tapping a bill-task opens the bill modal (mark paid / edit).
+function synthBillTasks(){
+  var now=new Date(),y=now.getFullYear(),m=now.getMonth(),today=now.getDate();
+  var out=[];
+  props.forEach(function(p){
+    var bills=getBills(p);
+    bills.forEach(function(b,i){
+      var s=billStatus(b);
+      // due date for current period
+      var dueDay=b.due_day||1;
+      var dueDate=new Date(y,m,dueDay);
+      // Quarterly bills: skip if not due this month (every 3 months from Jan)
+      if(b.freq==='quarterly' && m%3!==0) return;
+      // Yearly bills: only show in their last_paid month or January by default
+      if(b.freq==='yearly'){
+        var anchor=b.last_paid?new Date(b.last_paid+'T00:00:00').getMonth():0;
+        if(m!==anchor)return;
+      }
+      var diff=Math.round((dueDate-new Date(y,m,today))/86400000);
+      var due='';
+      if(diff===0)due='today';else if(diff===1)due='tomorrow';else if(diff<0)due='overdue';
+      else due=MSS[m]+' '+dueDay;
+      var priority=s.key==='late'?'urgent':s.key==='due'?'high':'med';
+      out.push({
+        id:'bill-'+p.id+'-'+i,
+        __isBill:true,
+        __billKey:p.id+'|'+i,
+        text:'Pay '+(b.name||'bill')+(b.amount?' · '+fmt(b.amount):''),
+        property_id:p.id,
+        priority:priority,
+        due:due,
+        done:s.key==='paid',
+        notes:'',
+        assigned_to:b.owner||'',
+        completed_at:b.last_paid?b.last_paid+'T00:00:00':null,
+        status:s.key==='paid'?'done':(s.key==='late'?'delayed':s.key==='due'?'started':'not_started'),
+        __dueDate:dueDate,
+        __statLabel:s.label
+      });
+    });
+  });
+  return out;
+}
+function dueSortKey(t){
+  if(t.__dueDate)return t.__dueDate.getTime();
+  if(t.due==='today')return new Date().getTime();
+  if(t.due==='tomorrow')return new Date().getTime()+86400000;
+  if(t.due==='overdue')return 0;
+  // Try to parse "May 12" / "Jun 3" formats
+  var mm=/^([A-Za-z]{3,})\s+(\d{1,2})$/.exec(t.due||'');
+  if(mm){
+    var mi=MSS.findIndex(function(x){return x.toLowerCase()===mm[1].slice(0,3).toLowerCase();});
+    if(mi>=0)return new Date(TY,mi,parseInt(mm[2])).getTime();
+  }
+  return Number.MAX_SAFE_INTEGER;
+}
 function renderTasks(){
-  var fl=tasks.slice(),h2='All tasks';
+  // Merge real tasks with synthesized bill-tasks
+  var billTasks=synthBillTasks();
+  var all=tasks.concat(billTasks);
+  var fl=all.slice(),h2='All tasks';
   if(taskFilter==='today'){fl=fl.filter(function(t){return t.due==='today'&&!t.done;});h2='Due today';}
   else if(taskFilter==='upcoming'){fl=fl.filter(function(t){return t.due!=='today'&&!t.done;});h2='Upcoming';}
   else if(taskFilter==='done'){fl=fl.filter(function(t){return t.done;});h2='Completed';}
-  fl.sort(function(a,b){if(a.done!==b.done)return a.done?1:-1;if(a.due==='today'&&b.due!=='today')return -1;if(b.due==='today'&&a.due!=='today')return 1;return 0;});
+  // Sort by due date (earliest first), then by priority
+  fl.sort(function(a,b){
+    if(a.done!==b.done)return a.done?1:-1;
+    var ka=dueSortKey(a),kb=dueSortKey(b);
+    if(ka!==kb)return ka-kb;
+    var order=['urgent','high','med','low'],pa=order.indexOf(a.priority||'med'),pb=order.indexOf(b.priority||'med');
+    return pa-pb;
+  });
   g('taskH').textContent=h2;
   if(!fl.length){g('taskList').innerHTML='<div class="empty"><div class="eico">&#10024;</div>No tasks here!</div>';return;}
   var html='';
   fl.forEach(function(t){
     var pp=props.find(function(x){return x.id===t.property_id;});
-    html+='<div class="titem" data-tid="'+t.id+'">';
+    html+='<div class="titem" data-tid="'+t.id+'"'+(t.__isBill?' data-bill="'+t.__billKey+'"':'')+'>';
     html+='<div class="tpbar" style="background:'+PC[t.priority||'med']+'"></div>';
     html+='<div class="tcheck'+(t.done?' on':'')+'">'+( t.done?'&#10003;':'')+'</div>';
-    html+='<div class="tbody"><div class="ttext'+(t.done?' done':'')+'">'+t.text+'</div>';
-    html+='<div class="tprop">'+(pp?pp.name:'General')+'</div>';
+    html+='<div class="tbody"><div class="ttext'+(t.done?' done':'')+'">'+(t.__isBill?'💰 ':'')+t.text+'</div>';
+    html+='<div class="tprop">'+(pp?pp.name:'General')+(t.__isBill?' · recurring bill':'')+'</div>';
     var st=tStat(t),sm=STATUSES[st]||STATUSES.not_started;
-    html+='<div class="tsmeta"><span class="tstatus" style="color:'+sm.c+';border-color:'+sm.c+';background:'+sm.bg+'"><span class="tsdot" style="background:'+sm.c+'"></span>'+sm.l+'</span></div>';
+    html+='<div class="tsmeta"><span class="tstatus" style="color:'+sm.c+';border-color:'+sm.c+';background:'+sm.bg+'"><span class="tsdot" style="background:'+sm.c+'"></span>'+sm.l+'</span>';
+    if(t.assigned_to)html+='<span class="tass" style="margin:0">· '+t.assigned_to+'</span>';
+    html+='</div>';
     if(t.notes)html+='<div class="tnotes">'+t.notes+'</div>';
-    if(t.assigned_to)html+='<div class="tass">&#128100; '+t.assigned_to+'</div>';
-    if(t.completed_at)html+='<div class="tts">&#9989; '+fmtTS(t.completed_at)+'</div>';
-    html+='</div><span class="tdue '+(t.due==='today'?'dtoday':'dlater')+'">'+t.due+'</span></div>';
+    if(t.completed_at&&!t.__isBill)html+='<div class="tts">&#9989; '+fmtTS(t.completed_at)+'</div>';
+    html+='</div><span class="tdue '+(t.due==='today'?'dtoday':t.due==='overdue'?'dtoday':'dlater')+'">'+t.due+'</span></div>';
   });
   g('taskList').innerHTML=html;
   document.querySelectorAll('.titem').forEach(function(el){
-    el.addEventListener('click',function(){openTD(el.getAttribute('data-tid'));});
+    el.addEventListener('click',function(){
+      var bk=el.getAttribute('data-bill');
+      if(bk){openBill(bk);return;}
+      openTD(el.getAttribute('data-tid'));
+    });
   });
 }
 
