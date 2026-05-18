@@ -42,7 +42,7 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .sync-bar{position:fixed;top:calc(var(--sat) + 56px);left:50%;transform:translateX(-50%);background:var(--gold);color:#0A0A0B;font-size:9px;font-weight:700;padding:5px 16px;border-radius:0;z-index:30;opacity:0;transition:opacity .3s;pointer-events:none;letter-spacing:1.5px;text-transform:uppercase;}
 .sync-bar.show{opacity:1;}
 .sync-bar.err{background:var(--red);}
-.tb{padding:calc(var(--sat)+64px) 16px 22px;background:var(--bg);border-bottom:0.5px solid var(--b1);flex-shrink:0;display:grid;grid-template-columns:60px 1fr 60px;align-items:center;}
+.tb{padding:calc(var(--sat)+96px) 16px 24px;background:var(--bg);border-bottom:0.5px solid var(--b1);flex-shrink:0;display:grid;grid-template-columns:60px 1fr 60px;align-items:center;}
 .tb h1{font-family:var(--serif);font-size:26px;font-weight:400;font-style:italic;color:var(--gold);letter-spacing:.4px;text-align:center;}
 .tb .sub{font-size:10px;color:var(--t2);margin-top:3px;text-transform:uppercase;letter-spacing:2px;text-align:center;}
 .tb .ver{font-size:9px;color:var(--t3);margin-top:2px;letter-spacing:1.5px;text-transform:uppercase;text-align:center;}
@@ -1425,8 +1425,6 @@ g('pmSave').addEventListener('click',async function(){
     showSync('Property saved!');
   }
   await loadAll();
-});
-  closeM('propModal');showSync('Property saved!');await loadAll();
 });
 g('pmDelete').addEventListener('click',async function(){
   if(!confirm('Delete this property and all its data?'))return;
