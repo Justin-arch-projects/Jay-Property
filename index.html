@@ -42,7 +42,7 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .sync-bar{position:fixed;top:calc(var(--sat) + 56px);left:50%;transform:translateX(-50%);background:var(--gold);color:#0A0A0B;font-size:9px;font-weight:700;padding:5px 16px;border-radius:0;z-index:30;opacity:0;transition:opacity .3s;pointer-events:none;letter-spacing:1.5px;text-transform:uppercase;}
 .sync-bar.show{opacity:1;}
 .sync-bar.err{background:var(--red);}
-.tb{padding:calc(var(--sat)+32px) 16px 18px;background:var(--bg);border-bottom:0.5px solid var(--b1);flex-shrink:0;display:grid;grid-template-columns:60px 1fr 60px;align-items:center;}
+.tb{padding:calc(var(--sat)+64px) 16px 22px;background:var(--bg);border-bottom:0.5px solid var(--b1);flex-shrink:0;display:grid;grid-template-columns:60px 1fr 60px;align-items:center;}
 .tb h1{font-family:var(--serif);font-size:26px;font-weight:400;font-style:italic;color:var(--gold);letter-spacing:.4px;text-align:center;}
 .tb .sub{font-size:10px;color:var(--t2);margin-top:3px;text-transform:uppercase;letter-spacing:2px;text-align:center;}
 .tb .ver{font-size:9px;color:var(--t3);margin-top:2px;letter-spacing:1.5px;text-transform:uppercase;text-align:center;}
@@ -644,15 +644,17 @@ var SKEY='sb_publishable_AtrQw4SSKoOZt2AI17QO7A_J0S60opq';
 var db=null;
 try{ db=supabase.createClient(SURL,SKEY); }catch(e){ console.error('Supabase init failed',e); }
 
-// Failsafe — if Supabase hangs/fails, hide the splash after 6s so the UI is always usable
+// Failsafe — if Supabase hangs/fails, hide the splash after 4s so the UI is always usable
 setTimeout(function(){
   var ls=document.getElementById('ls');
   if(ls&&ls.style.display!=='none'){
     ls.style.display='none';
-    if(typeof showSync==='function')showSync('Offline mode — check connection',true);
+    if(typeof showSync==='function')showSync('Slow connection — working offline',true);
     var sd=document.getElementById('sdot');if(sd)sd.className='sdot off';
+    // Still try to render whatever we have from local cache
+    try{ if(typeof cacheLoad==='function' && cacheLoad()){ counts();renderProps();renderCal();initWX(); } }catch(e){}
   }
-},6000);
+},4000);
 
 // ============ CONSTANTS ============
 var MS=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -727,7 +729,25 @@ function billDueLabel(b){
 // ============ LOCAL CACHE (always persists changes, even when offline) ============
 var LK='caldwell_v12';
 function cacheSave(){
-  try{ localStorage.setItem(LK,JSON.stringify({props:props,tasks:tasks,bookings:bookings,expenses:expenses,gmap:gmap,ts:Date.now()})); }catch(e){}
+  try{
+    // Strip base64 photo data URLs out of the cache — they’re huge (50-150KB each)
+    // and will quickly blow past localStorage quota with 9+ properties.
+    // Photos still live in memory (and in Supabase if the column exists).
+    var slimProps=props.map(function(p){
+      var c=Object.assign({},p);
+      if(c.image_url && /^data:/.test(c.image_url)) delete c.image_url;
+      return c;
+    });
+    localStorage.setItem(LK,JSON.stringify({props:slimProps,tasks:tasks,bookings:bookings,expenses:expenses,gmap:gmap,ts:Date.now()}));
+  }catch(e){
+    // Quota exceeded — fall back to caching minimal data only
+    try{
+      var minimal={props:props.map(function(p){return {id:p.id,name:p.name,bills:p.bills};}),tasks:tasks,ts:Date.now()};
+      localStorage.setItem(LK,JSON.stringify(minimal));
+    }catch(e2){
+      try{localStorage.removeItem(LK);}catch(e3){}
+    }
+  }
 }
 function cacheLoad(){
   try{
@@ -766,6 +786,7 @@ function showSync(msg,isErr){
 function setSdot(s){g('sdot').className='sdot'+(s==='off'?' off':s==='syn'?' syn':'');}
 
 // ============ LOAD DATA ============
+// loadAll merges local image_url and bills changes back on top of cloud data
 async function loadAll(){
   if(!db){
     // Offline: load from cache so the UI shows something usable
@@ -777,8 +798,16 @@ async function loadAll(){
   setSdot('syn');
   try{
     var pr=await db.from('properties').select('*').order('sort_order',{ascending:true});
-    if(pr.error)throw pr.error;
-    props=pr.data||[];
+    if(pr.error){
+      // If bills/image_url columns are missing the whole SELECT fails. Retry with just basic columns.
+      if(/(column|schema).*\b(bills|image_url)\b/i.test(pr.error.message||'')){
+        var pr2=await db.from('properties').select('id,name,addr,emoji,bg,status,rate,rev,next_renter,sort_order').order('sort_order',{ascending:true});
+        if(pr2.error)throw pr2.error;
+        props=pr2.data||[];
+      }else throw pr.error;
+    }else{
+      props=pr.data||[];
+    }
     var bk=await db.from('bookings').select('*').order('check_in',{ascending:true});
     bookings=bk.data||[];
     var tk=await db.from('tasks').select('*').order('created_at',{ascending:true});
@@ -801,6 +830,26 @@ async function loadAll(){
     }catch(e){}
     var ex=await db.from('expenses').select('*').order('date',{ascending:false});
     expenses=ex.data||[];
+    // Re-apply locally cached image_url / bills onto the freshly fetched rows so
+    // a photo or bill the user just saved on this phone isn't overwritten by an
+    // older cloud row (or by a cloud row missing the image_url column).
+    try{
+      var rawC=localStorage.getItem(LK);
+      if(rawC){
+        var cachedC=JSON.parse(rawC);
+        if(cachedC&&cachedC.props){
+          var pById={};cachedC.props.forEach(function(cp){pById[cp.id]=cp;});
+          props=props.map(function(p){
+            var c=pById[p.id];
+            if(c){
+              if(c.image_url && !p.image_url) p.image_url=c.image_url;
+              if(c.bills && (!p.bills || !p.bills.length)) p.bills=c.bills;
+            }
+            return p;
+          });
+        }
+      }
+    }catch(eMerge){}
     var st=await db.from('stays').select('*').order('check_in',{ascending:false});
     gmap={};
     (st.data||[]).forEach(function(s){
@@ -1339,19 +1388,44 @@ g('pmSave').addEventListener('click',async function(){
   var name=g('pmName').value.trim();if(!name){alert('Enter a name.');return;}
   setSdot('syn');
   var data={name:name,addr:g('pmAddr').value.trim(),emoji:selEmoji,image_url:g('pmImg').value.trim()||null,bg:PBGS[props.length%PBGS.length],status:g('pmStatus').value,rate:g('pmRate').value,rev:parseFloat(g('pmRev').value)||0,next_renter:g('pmRenter').value.trim(),sort_order:props.length};
-  var r;
-  if(!editPid)r=await db.from('properties').insert(data);
-  else r=await db.from('properties').update(data).eq('id',editPid);
-  if(r.error){
-    // Older Supabase schemas may not have image_url yet — retry without it
-    if(/(column|schema).*image_url/i.test(r.error.message||'')){
-      delete data.image_url;
-      if(!editPid)r=await db.from('properties').insert(data);
-      else r=await db.from('properties').update(data).eq('id',editPid);
-      if(r.error){showSync('Error: '+r.error.message,true);return;}
-      showSync('Saved · add image_url column for photos',true);
-    }else{showSync('Error: '+r.error.message,true);return;}
+
+  // Update locally FIRST so the photo is saved on this device no matter what the cloud does
+  if(editPid){
+    var idx=props.findIndex(function(x){return x.id===editPid;});
+    if(idx>=0)props[idx]=Object.assign({},props[idx],data,{id:editPid});
+  }else{
+    var localId='local-'+Date.now();
+    props.push(Object.assign({id:localId},data));
   }
+  cacheSave();renderProps();
+  closeM('propModal');
+
+  if(!db){showSync('Saved locally',true);return;}
+  var r;
+  if(!editPid){
+    var insertData=Object.assign({},data);delete insertData.id;
+    r=await db.from('properties').insert(insertData).select();
+  }else{
+    r=await db.from('properties').update(data).eq('id',editPid).select();
+  }
+  if(r.error){
+    if(/(column|schema).*image_url/i.test(r.error.message||'')){
+      showSync('⚠️ Add image_url column in Supabase — photo saved on phone only',true);
+      var d2=Object.assign({},data);delete d2.image_url;
+      if(!editPid){var ins=Object.assign({},d2);delete ins.id;await db.from('properties').insert(ins).select();}
+      else await db.from('properties').update(d2).eq('id',editPid).select();
+    }else if(/payload too large|value.*too long/i.test(r.error.message||'')){
+      showSync('⚠️ Photo too big for cloud — saved on phone only',true);
+    }else{
+      showSync('Cloud error: '+r.error.message,true);
+    }
+  }else if(!r.data||r.data.length===0){
+    showSync('⚠️ Cloud blocked update — photo saved on phone only',true);
+  }else{
+    showSync('Property saved!');
+  }
+  await loadAll();
+});
   closeM('propModal');showSync('Property saved!');await loadAll();
 });
 g('pmDelete').addEventListener('click',async function(){
