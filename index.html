@@ -87,7 +87,14 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .pemoji{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;cursor:pointer;}
 .pnw{display:flex;align-items:center;gap:6px;margin-bottom:2px;}
 .pname{font-family:var(--serif);font-size:18px;font-weight:400;font-style:italic;letter-spacing:.1px;color:var(--t1);}
-.pedit{font-size:12px;color:var(--t3);background:none;border:none;cursor:pointer;}
+.pedit{font-size:11px;color:var(--gold);background:transparent;border:0.5px solid var(--gold);cursor:pointer;padding:5px 11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:600;border-radius:0;}
+.pedit:active{background:var(--gold-soft);}
+/* Make the entire header tappable for editing */
+.pheader-tap{cursor:pointer;display:flex;align-items:flex-start;gap:12px;flex:1;min-width:0;}
+.pheader-tap:active{opacity:.7;}
+.pimg{width:60px;height:60px;border-radius:6px;flex-shrink:0;background-size:cover;background-position:center;background-color:var(--bg3);border:0.5px solid var(--gold-soft);display:flex;align-items:center;justify-content:center;font-size:28px;}
+/* Image input row in the edit modal */
+.pimg-prev{width:100%;height:160px;border-radius:6px;background-size:cover;background-position:center;background-color:var(--bg3);border:0.5px solid var(--gold-soft);margin-bottom:10px;display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;}
 .paddr{font-size:11px;color:var(--t2);margin-top:2px;line-height:1.3;}
 .pact{display:flex;align-items:center;gap:6px;flex-shrink:0;}
 .badge{font-size:9px;font-weight:600;padding:3px 9px;border-radius:0;white-space:nowrap;letter-spacing:1.2px;text-transform:uppercase;border:0.5px solid;}
@@ -119,6 +126,31 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .samt{font-family:var(--serif);font-size:14px;font-weight:400;color:var(--gold);}
 .addstay{font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;padding:2px 0;display:block;}
 .pstats{display:flex;border-top:0.5px solid var(--b1);padding-top:10px;margin-top:2px;}
+/* Recurring bills table */
+.bills{margin-top:14px;border-top:0.5px solid var(--b1);padding-top:12px;}
+.bills-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.bills-hl{font-family:var(--serif);font-size:14px;font-style:italic;color:var(--gold);letter-spacing:.2px;}
+.bills-hr{display:flex;align-items:center;gap:8px;}
+.bills-hsub{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1.2px;}
+.bills-add{font-size:10px;color:var(--gold);background:transparent;border:0.5px solid var(--gold-soft);padding:3px 8px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;font-weight:600;}
+.bills-add:active{background:var(--gold-soft);}
+.bills-tbl{background:var(--bg3);border-radius:var(--rs);overflow:hidden;}
+.bill-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:9px 11px;border-bottom:0.5px solid rgba(201,169,97,0.06);align-items:center;cursor:pointer;}
+.bill-row:last-child{border-bottom:none;}
+.bill-row:active{background:rgba(201,169,97,0.04);}
+.bill-l{min-width:0;}
+.bill-name{font-size:12.5px;color:var(--t1);font-weight:500;display:flex;align-items:center;gap:6px;}
+.bill-meta{font-size:10px;color:var(--t3);margin-top:1px;letter-spacing:.3px;}
+.bill-amt{font-family:var(--serif);font-size:14px;color:var(--t1);text-align:right;white-space:nowrap;}
+.bill-stat{font-size:8.5px;font-weight:700;padding:3px 7px;border-radius:0;letter-spacing:1.2px;text-transform:uppercase;border:0.5px solid;white-space:nowrap;}
+.bs-paid{color:var(--green);border-color:var(--green);}
+.bs-due{color:var(--gold);border-color:var(--gold);background:var(--gold-soft);}
+.bs-late{color:var(--red);border-color:var(--red);background:var(--red-bg);}
+.bs-up{color:var(--t2);border-color:var(--t2);}
+.bill-owner{display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--bg);border:0.5px solid var(--gold);font-size:9px;color:var(--gold);text-align:center;line-height:17px;font-weight:700;letter-spacing:.5px;}
+/* Bill modal day/month picker */
+.bill-mark{padding:14px;background:var(--green-bg);color:var(--green);border:0.5px solid var(--green);border-radius:var(--r);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:2px;text-transform:uppercase;width:100%;margin-bottom:8px;}
+.bill-unmark{padding:10px;background:transparent;color:var(--amber);border:0.5px solid var(--amber);border-radius:var(--r);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1.5px;text-transform:uppercase;width:100%;margin-bottom:8px;}
 .pst{flex:1;text-align:center;}
 .pst+.pst{border-left:0.5px solid var(--b1);}
 .psv{font-family:var(--serif);font-size:16px;font-weight:400;}
@@ -390,13 +422,44 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
   <button class="nbtn" data-view="charts"><div class="ni">&#128202;</div><div class="nl">Charts</div></button>
 </div>
 
+<!-- BILL MODAL -->
+<div class="mo" id="billModal">
+  <div class="modal">
+    <div class="pt"></div>
+    <h3 id="blT">Bill</h3>
+    <div id="blStatus" style="margin-bottom:14px;text-align:center;font-size:11px;color:var(--t2);letter-spacing:1px;text-transform:uppercase;"></div>
+    <button class="bill-mark" id="blMarkPaid">✓ Mark paid for this month</button>
+    <button class="bill-unmark" id="blUnmark" style="display:none">Un-mark (still unpaid)</button>
+    <div class="mf"><div class="ml">Name</div><input class="mi" id="blName" type="text" placeholder="e.g. Mortgage"></div>
+    <div class="mrow">
+      <div class="mf"><div class="ml">Amount ($)</div><input class="mi" id="blAmt" type="number" step="0.01" placeholder="0"></div>
+      <div class="mf"><div class="ml">Due day of month</div><input class="mi" id="blDay" type="number" min="1" max="31" placeholder="1"></div>
+    </div>
+    <div class="mrow">
+      <div class="mf"><div class="ml">Frequency</div><select class="msel" id="blFreq"><option value="monthly">Monthly</option><option value="quarterly">Quarterly</option><option value="yearly">Yearly</option></select></div>
+      <div class="mf"><div class="ml">Owner</div><select class="msel" id="blOwner"><option value="Jay">Jay</option><option value="Marrissa">Marrissa</option><option value="Auto-pay">Auto-pay</option><option value="Either">Either</option></select></div>
+    </div>
+    <div class="mf"><div class="ml">Last paid (optional)</div><input class="mi" id="blLast" type="date"></div>
+    <div class="mf"><div class="ml">Category</div>
+      <select class="msel" id="blCat">
+        <option value="mortgage">Mortgage</option><option value="insurance">Insurance</option><option value="taxes">Property Tax</option><option value="utilities">Utilities (electric/gas/water)</option><option value="internet">Internet</option><option value="hoa">HOA</option><option value="landscaping">Landscaping</option><option value="pest">Pest Control</option><option value="cleaning">Cleaning Service</option><option value="other">Other</option>
+      </select>
+    </div>
+    <button class="mbtn" id="blSave">Save changes</button>
+    <button class="mbtnd" id="blDelete" style="display:none">Delete this bill</button>
+    <button class="mcancel" id="blCancel">Cancel</button>
+  </div>
+</div>
+
 <!-- PROPERTY MODAL -->
 <div class="mo" id="propModal">
   <div class="modal">
     <div class="pt"></div><h3 id="propMT">Add property</h3>
+    <div class="pimg-prev" id="pmImgPrev">No photo yet</div>
+    <div class="mf"><div class="ml">Photo URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)">(paste a link from Zillow, your camera roll uploaded somewhere, Unsplash, etc.)</span></div><input class="mi" id="pmImg" type="text" placeholder="https://..."></div>
     <div class="mf"><div class="ml">Name</div><input class="mi" id="pmName" type="text" placeholder="e.g. Lakeside Cabin"></div>
     <div class="mf"><div class="ml">Address</div><input class="mi" id="pmAddr" type="text" placeholder="e.g. 12 Pine Ridge Dr, GA"></div>
-    <div class="mf"><div class="ml">Icon</div><div class="egrid" id="emojiGrid"></div></div>
+    <div class="mf"><div class="ml">Fallback icon <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)">(shown if no photo)</span></div><div class="egrid" id="emojiGrid"></div></div>
     <div class="mf"><div class="ml">Rental type</div><select class="msel" id="pmRate"><option value="Daily">Daily</option><option value="Weekly">Weekly</option><option value="Monthly">Monthly</option></select></div>
     <div class="mf"><div class="ml">Monthly income ($)</div><input class="mi" id="pmRev" type="number" placeholder="2000"></div>
     <div class="mf"><div class="ml">Status</div><select class="msel" id="pmStatus"><option value="vacant">Vacant</option><option value="booked">Booked</option><option value="maint">Maintenance</option><option value="prep">Preparing</option></select></div>
@@ -551,6 +614,49 @@ var taskFilter='all',finPid=null,bkPid=null,expPid=null,stayGuest='',activeTid=n
 var rentFilter='all',editPid=null,selEmoji=EMOJIS[0];
 var tkAss='',tdAss='';
 var charts={};
+var activeBillKey=null;  // 'propId|billIndex'
+
+// Default starter bills for a property that has none yet (one tap to customize per property)
+var DEFAULT_BILLS=[
+  {name:'Mortgage',     amount:0, due_day:1,  freq:'monthly',  owner:'Jay',     category:'mortgage'},
+  {name:'Electric',     amount:0, due_day:15, freq:'monthly',  owner:'Marrissa',category:'utilities'},
+  {name:'Water/Sewer',  amount:0, due_day:20, freq:'monthly',  owner:'Marrissa',category:'utilities'},
+  {name:'Internet',     amount:0, due_day:5,  freq:'monthly',  owner:'Auto-pay',category:'internet'},
+  {name:'Insurance',    amount:0, due_day:10, freq:'monthly',  owner:'Jay',     category:'insurance'},
+  {name:'Property Tax', amount:0, due_day:1,  freq:'quarterly',owner:'Jay',     category:'taxes'}
+];
+
+function getBills(p){
+  // Bills stored as JSON array on the property row (column: bills)
+  if(p && Array.isArray(p.bills) && p.bills.length) return p.bills;
+  if(p && typeof p.bills==='string'){
+    try{ var a=JSON.parse(p.bills); if(Array.isArray(a)) return a; }catch(e){}
+  }
+  return [];
+}
+function billStatus(b){
+  // Returns {key, label} relative to today
+  var now=new Date(),thisMo=now.getMonth(),thisYr=now.getFullYear(),today=now.getDate();
+  var freq=b.freq||'monthly';
+  if(b.last_paid){
+    var lp=new Date(b.last_paid+(b.last_paid.length===10?'T00:00:00':''));
+    if(freq==='monthly' && lp.getMonth()===thisMo && lp.getFullYear()===thisYr) return {key:'paid',label:'Paid'};
+    if(freq==='quarterly'){
+      var q1=Math.floor(thisMo/3),q2=Math.floor(lp.getMonth()/3);
+      if(lp.getFullYear()===thisYr && q1===q2) return {key:'paid',label:'Paid'};
+    }
+    if(freq==='yearly' && lp.getFullYear()===thisYr) return {key:'paid',label:'Paid'};
+  }
+  var dueDay=b.due_day||1;
+  if(today>dueDay+3) return {key:'late',label:'Overdue'};
+  if(today>=dueDay-2) return {key:'due',label:'Due'};
+  return {key:'up',label:'Upcoming'};
+}
+function billDueLabel(b){
+  var dd=b.due_day||1,suf=(dd>=11&&dd<=13)?'th':(dd%10===1?'st':dd%10===2?'nd':dd%10===3?'rd':'th');
+  var freq=b.freq||'monthly';
+  return 'Due '+dd+suf+(freq==='monthly'?' each month':freq==='quarterly'?' quarterly':' yearly');
+}
 
 // ============ LOCAL CACHE (always persists changes, even when offline) ============
 var LK='caldwell_v12';
@@ -753,10 +859,13 @@ function renderProps(){
     });
     var exp=pExp(p.id),net=pNet(p.id),pt=tasks.filter(function(t){return t.property_id===p.id&&!t.done;}).length;
     html+='<div class="pcard">';
-    html+='<div class="ptop"><div class="pleft"><div class="pemoji" style="background:'+bg+'" data-ep="'+p.id+'">'+(p.emoji||'&#127968;')+'</div>';
-    html+='<div><div class="pnw"><span class="pname">'+p.name+'</span><button class="pedit" data-ep="'+p.id+'">&#9998;</button></div>';
+    var imgStyle=p.image_url?'background-image:url('+p.image_url+')':'background:'+bg;
+    var imgInner=p.image_url?'':( p.emoji||'&#127968;');
+    html+='<div class="ptop"><div class="pheader-tap" data-ep="'+p.id+'"><div class="pimg" style="'+imgStyle+'">'+imgInner+'</div>';
+    html+='<div style="flex:1;min-width:0"><div class="pnw"><span class="pname">'+p.name+'</span></div>';
     html+='<div class="paddr">'+(p.addr||'')+'</div></div></div>';
-    html+='<div class="pact">'+sBadge(p.status)+'<button class="bookbtn" data-bp="'+p.id+'">+ Book</button></div></div>';
+    html+='<div class="pact"><button class="pedit" data-ep="'+p.id+'">Edit</button></div></div>';
+    html+='<div style="display:flex;gap:8px;margin:8px 0 10px;align-items:center;">'+sBadge(p.status)+'<button class="bookbtn" data-bp="'+p.id+'" style="margin-left:auto">+ Book</button></div>';
     if(p.next_renter)html+='<div class="rrow"><div class="rdot" style="background:'+sColor(p.status)+'"></div><div><span class="rname">'+p.next_renter+'</span><span style="color:var(--t3);font-size:11px"> &middot; current renter</span></div></div>';
     if(pb.length)html+='<div class="bklist">'+chips+'</div>';
     if(p.next_renter){
@@ -771,7 +880,10 @@ function renderProps(){
     html+='<div class="pst"><div class="psv" style="color:var(--red)">'+fmt(exp)+'</div><div class="psl">Expenses</div></div>';
     html+='<div class="pst"><div class="psv" style="color:'+(net>=0?'var(--green)':'var(--red)')+'">'+fmt(net)+'</div><div class="psl">Net</div></div>';
     html+='<div class="pst"><div class="psv" style="color:'+(pt>0?'var(--amber)':'var(--t1)')+'">'+pt+'</div><div class="psl">Tasks</div></div>';
-    html+='</div></div>';
+    html+='</div>';
+    // Recurring bills table
+    html+=renderBillsTable(p);
+    html+='</div>';
   });
   g('propList').innerHTML=html;
   bindProps();
@@ -783,33 +895,196 @@ function bindProps(){
   document.querySelectorAll('.xbtn[data-bki]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();var i=parseInt(b.getAttribute('data-bki'));if(confirm('Remove booking?'))delBooking(bookings[i].id);});});
   document.querySelectorAll('.rtog').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var n=el.getAttribute('data-rn');if(!gmap[n])gmap[n]={repeat:false,stays:[]};gmap[n].repeat=!gmap[n].repeat;renderProps();});});
   document.querySelectorAll('.addstay').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openStay(b.getAttribute('data-sn'));});});
+  document.querySelectorAll('.bill-row').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();openBill(el.getAttribute('data-bk'));});});
+  document.querySelectorAll('.bills-add').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openBill(b.getAttribute('data-bp')+'|new');});});
 }
+
+// ============ BILLS ============
+function renderBillsTable(p){
+  var bills=getBills(p);
+  // Use defaults if empty (display only — not saved until edited)
+  if(!bills.length){
+    bills=DEFAULT_BILLS.map(function(b){return Object.assign({},b);});
+  }
+  var paid=0,late=0,due=0;
+  bills.forEach(function(b){var s=billStatus(b);if(s.key==='paid')paid++;else if(s.key==='late')late++;else if(s.key==='due')due++;});
+  var summary;
+  if(late>0)summary='<span style="color:var(--red);font-weight:700">'+late+' OVERDUE</span>';
+  else if(due>0)summary='<span style="color:var(--gold);font-weight:700">'+due+' DUE NOW</span>';
+  else summary='<span style="color:var(--green)">All caught up</span>';
+  var h='<div class="bills"><div class="bills-hd"><div><div class="bills-hl">Recurring bills</div><div class="bills-hsub" style="margin-top:2px">'+summary+' · '+paid+'/'+bills.length+' paid this month</div></div><div class="bills-hr"><button class="bills-add" data-bp="'+p.id+'">+ Add bill</button></div></div>';
+  h+='<div class="bills-tbl">';
+  bills.forEach(function(b,i){
+    var s=billStatus(b);
+    var statClass='bs-'+s.key;
+    var ownerInit=(b.owner||'?').substr(0,1).toUpperCase();
+    var amtStr=b.amount?fmt(b.amount):'—';
+    var paidNote=b.last_paid?' · Last paid '+fmtD(b.last_paid):'';
+    h+='<div class="bill-row" data-bk="'+p.id+'|'+i+'">';
+    h+='<div class="bill-l"><div class="bill-name"><span class="bill-owner" title="'+b.owner+'">'+ownerInit+'</span> '+b.name+'</div>';
+    h+='<div class="bill-meta">'+billDueLabel(b)+paidNote+'</div></div>';
+    h+='<div class="bill-amt">'+amtStr+'</div>';
+    h+='<span class="bill-stat '+statClass+'">'+s.label+'</span>';
+    h+='</div>';
+  });
+  h+='</div></div>';
+  return h;
+}
+
+function openBill(key){
+  // key = 'propId|index' or 'propId|new'
+  activeBillKey=key;
+  var parts=key.split('|');
+  var pid=parts[0],idx=parts[1];
+  var p=props.find(function(x){return x.id===pid;});if(!p)return;
+  var bills=getBills(p);
+  // If new and property has no bills yet, hydrate with defaults so the user can tap any of the suggestions
+  var b;
+  if(idx==='new'){
+    b={name:'',amount:0,due_day:1,freq:'monthly',owner:'Jay',category:'other',last_paid:null};
+    g('blT').textContent='New bill for '+p.name;
+    g('blDelete').style.display='none';
+    g('blMarkPaid').style.display='none';
+    g('blUnmark').style.display='none';
+    g('blStatus').textContent='';
+  }else{
+    // If bills empty, the index refers to DEFAULT_BILLS — hydrate
+    var src=bills.length?bills:DEFAULT_BILLS;
+    b=Object.assign({},src[parseInt(idx)]||{});
+    g('blT').textContent='Edit: '+b.name+' · '+p.name;
+    var s=billStatus(b);
+    g('blStatus').textContent=s.label.toUpperCase()+(b.last_paid?' · Last paid '+fmtD(b.last_paid):'');
+    g('blStatus').style.color=(s.key==='paid'?'var(--green)':s.key==='late'?'var(--red)':s.key==='due'?'var(--gold)':'var(--t2)');
+    g('blDelete').style.display=bills.length?'':'none';
+    g('blMarkPaid').style.display=s.key==='paid'?'none':'';
+    g('blUnmark').style.display=s.key==='paid'?'':'none';
+  }
+  g('blName').value=b.name||'';
+  g('blAmt').value=b.amount||'';
+  g('blDay').value=b.due_day||1;
+  g('blFreq').value=b.freq||'monthly';
+  g('blOwner').value=b.owner||'Jay';
+  g('blCat').value=b.category||'other';
+  g('blLast').value=b.last_paid||'';
+  openM('billModal');
+}
+async function saveBills(p,newBills){
+  // Optimistic local update
+  p.bills=newBills;
+  renderProps();cacheSave();
+  if(!db)return;
+  try{
+    var r=await db.from('properties').update({bills:newBills}).eq('id',p.id).select();
+    if(r.error){
+      if(/(column|schema).*bills/i.test(r.error.message||'')){
+        showSync('Saved locally · add "bills" column to sync',true);
+      }else showSync('Cloud error: '+r.error.message,true);
+    }else if(!r.data||r.data.length===0){
+      showSync('⚠️ Cloud blocked update — enable RLS write policies',true);
+    }
+  }catch(e){showSync('Cloud save failed: '+(e.message||e),true);}
+}
+function collectBillForm(){
+  return {
+    name:g('blName').value.trim()||'Bill',
+    amount:parseFloat(g('blAmt').value)||0,
+    due_day:Math.max(1,Math.min(31,parseInt(g('blDay').value)||1)),
+    freq:g('blFreq').value,
+    owner:g('blOwner').value,
+    category:g('blCat').value,
+    last_paid:g('blLast').value||null
+  };
+}
+g('blSave').addEventListener('click',function(){
+  if(!activeBillKey)return;
+  var parts=activeBillKey.split('|'),pid=parts[0],idx=parts[1];
+  var p=props.find(function(x){return x.id===pid;});if(!p)return;
+  var bills=getBills(p).slice();
+  if(!bills.length)bills=DEFAULT_BILLS.map(function(b){return Object.assign({},b);});
+  var data=collectBillForm();
+  if(idx==='new')bills.push(data);else bills[parseInt(idx)]=data;
+  saveBills(p,bills);
+  closeM('billModal');showSync('Bill saved');
+});
+g('blMarkPaid').addEventListener('click',function(){
+  if(!activeBillKey)return;
+  var parts=activeBillKey.split('|'),pid=parts[0],idx=parts[1];
+  var p=props.find(function(x){return x.id===pid;});if(!p||idx==='new')return;
+  var bills=getBills(p).slice();
+  if(!bills.length)bills=DEFAULT_BILLS.map(function(b){return Object.assign({},b);});
+  var today=new Date(),y=today.getFullYear(),m=String(today.getMonth()+1).padStart(2,'0'),d=String(today.getDate()).padStart(2,'0');
+  bills[parseInt(idx)].last_paid=y+'-'+m+'-'+d;
+  saveBills(p,bills);
+  closeM('billModal');showSync('Marked paid ✓');
+});
+g('blUnmark').addEventListener('click',function(){
+  if(!activeBillKey)return;
+  var parts=activeBillKey.split('|'),pid=parts[0],idx=parts[1];
+  var p=props.find(function(x){return x.id===pid;});if(!p||idx==='new')return;
+  var bills=getBills(p).slice();
+  bills[parseInt(idx)].last_paid=null;
+  saveBills(p,bills);
+  closeM('billModal');showSync('Un-marked');
+});
+g('blDelete').addEventListener('click',function(){
+  if(!activeBillKey||!confirm('Delete this bill?'))return;
+  var parts=activeBillKey.split('|'),pid=parts[0],idx=parts[1];
+  var p=props.find(function(x){return x.id===pid;});if(!p||idx==='new')return;
+  var bills=getBills(p).slice();
+  bills.splice(parseInt(idx),1);
+  saveBills(p,bills);
+  closeM('billModal');showSync('Bill deleted');
+});
+g('blCancel').addEventListener('click',function(){closeM('billModal');});
+onOv('billModal');
 
 // ============ PROPERTY CRUD ============
 function openAddProp(){
   editPid=null;selEmoji=EMOJIS[0];
   g('propMT').textContent='Add property';
   g('pmName').value='';g('pmAddr').value='';g('pmRev').value='';g('pmRate').value='Daily';g('pmStatus').value='vacant';g('pmRenter').value='';
+  g('pmImg').value='';updatePmImg('');
   g('pmDelete').style.display='none';buildEG(selEmoji);openM('propModal');
   setTimeout(function(){g('pmName').focus();},300);
 }
 function openEditProp(id){
   var p=props.find(function(x){return x.id===id;});if(!p)return;
   editPid=id;selEmoji=p.emoji||EMOJIS[0];
-  g('propMT').textContent='Edit property';
+  g('propMT').textContent='Edit '+p.name;
   g('pmName').value=p.name||'';g('pmAddr').value=p.addr||'';g('pmRev').value=p.rev||'';
   g('pmRate').value=p.rate||'Daily';g('pmStatus').value=p.status||'vacant';g('pmRenter').value=p.next_renter||'';
+  g('pmImg').value=p.image_url||'';updatePmImg(p.image_url||'');
   g('pmDelete').style.display='';buildEG(selEmoji);openM('propModal');
   setTimeout(function(){g('pmName').focus();},300);
 }
+function updatePmImg(url){
+  var prev=g('pmImgPrev');
+  if(url&&url.trim()){
+    prev.style.backgroundImage='url('+url.trim()+')';
+    prev.textContent='';
+  }else{
+    prev.style.backgroundImage='';
+    prev.textContent='No photo yet';
+  }
+}
+g('pmImg').addEventListener('input',function(){updatePmImg(g('pmImg').value);});
 g('pmSave').addEventListener('click',async function(){
   var name=g('pmName').value.trim();if(!name){alert('Enter a name.');return;}
   setSdot('syn');
-  var data={name:name,addr:g('pmAddr').value.trim(),emoji:selEmoji,bg:PBGS[props.length%PBGS.length],status:g('pmStatus').value,rate:g('pmRate').value,rev:parseFloat(g('pmRev').value)||0,next_renter:g('pmRenter').value.trim(),sort_order:props.length};
+  var data={name:name,addr:g('pmAddr').value.trim(),emoji:selEmoji,image_url:g('pmImg').value.trim()||null,bg:PBGS[props.length%PBGS.length],status:g('pmStatus').value,rate:g('pmRate').value,rev:parseFloat(g('pmRev').value)||0,next_renter:g('pmRenter').value.trim(),sort_order:props.length};
   var r;
   if(!editPid)r=await db.from('properties').insert(data);
   else r=await db.from('properties').update(data).eq('id',editPid);
-  if(r.error){showSync('Error: '+r.error.message,true);return;}
+  if(r.error){
+    // Older Supabase schemas may not have image_url yet — retry without it
+    if(/(column|schema).*image_url/i.test(r.error.message||'')){
+      delete data.image_url;
+      if(!editPid)r=await db.from('properties').insert(data);
+      else r=await db.from('properties').update(data).eq('id',editPid);
+      if(r.error){showSync('Error: '+r.error.message,true);return;}
+      showSync('Saved · add image_url column for photos',true);
+    }else{showSync('Error: '+r.error.message,true);return;}
+  }
   closeM('propModal');showSync('Property saved!');await loadAll();
 });
 g('pmDelete').addEventListener('click',async function(){
