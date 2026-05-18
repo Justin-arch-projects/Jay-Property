@@ -42,11 +42,12 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .sync-bar{position:fixed;top:calc(var(--sat) + 56px);left:50%;transform:translateX(-50%);background:var(--gold);color:#0A0A0B;font-size:9px;font-weight:700;padding:5px 16px;border-radius:0;z-index:30;opacity:0;transition:opacity .3s;pointer-events:none;letter-spacing:1.5px;text-transform:uppercase;}
 .sync-bar.show{opacity:1;}
 .sync-bar.err{background:var(--red);}
-.tb{padding:calc(var(--sat)+12px) 16px 14px;background:var(--bg);border-bottom:0.5px solid var(--b1);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;}
-.tb h1{font-family:var(--serif);font-size:24px;font-weight:400;font-style:italic;color:var(--gold);letter-spacing:.3px;}
-.tb .sub{font-size:10px;color:var(--t2);margin-top:2px;text-transform:uppercase;letter-spacing:2px;}
-.tb .ver{font-size:9px;color:var(--t3);margin-top:2px;letter-spacing:1.5px;text-transform:uppercase;}
-.tb-r{display:flex;align-items:center;gap:8px;}
+.tb{padding:calc(var(--sat)+32px) 16px 18px;background:var(--bg);border-bottom:0.5px solid var(--b1);flex-shrink:0;display:grid;grid-template-columns:60px 1fr 60px;align-items:center;}
+.tb h1{font-family:var(--serif);font-size:26px;font-weight:400;font-style:italic;color:var(--gold);letter-spacing:.4px;text-align:center;}
+.tb .sub{font-size:10px;color:var(--t2);margin-top:3px;text-transform:uppercase;letter-spacing:2px;text-align:center;}
+.tb .ver{font-size:9px;color:var(--t3);margin-top:2px;letter-spacing:1.5px;text-transform:uppercase;text-align:center;}
+.tb-l-spacer{display:flex;align-items:center;gap:8px;justify-content:flex-start;}
+.tb-r{display:flex;align-items:center;gap:8px;justify-content:flex-end;}
 .tb-plus{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;}
 .sdot{width:8px;height:8px;border-radius:50%;background:var(--teal);}
 .sdot.off{background:var(--red);}
@@ -80,8 +81,27 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .wxtemp{font-size:22px;font-weight:700;}
 .wxdesc{font-size:10px;color:var(--t2);margin-top:2px;}
 .wxd{font-size:10px;color:var(--t3);margin-top:1px;}
-.pcard{background:var(--card);border-radius:var(--r);border:0.5px solid var(--b1);padding:16px;margin-bottom:18px;position:relative;}
+.pcard{background:var(--card);border-radius:var(--r);border:0.5px solid var(--b1);padding:16px;margin-bottom:18px;position:relative;cursor:pointer;}
+.pcard:active{opacity:.85;}
 .pcard::before{content:'';position:absolute;left:14px;right:14px;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold-soft) 30%,var(--gold) 50%,var(--gold-soft) 70%,transparent);opacity:.6;}
+/* Property detail (full-screen) styles */
+.pdhero{height:200px;background-size:cover;background-position:center;background-color:var(--bg3);position:relative;}
+.pdhero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,11,0) 0%,rgba(10,10,11,0.9) 100%);}
+.pd-close{position:absolute;top:14px;left:14px;width:36px;height:36px;border-radius:50%;background:rgba(10,10,11,0.7);border:0.5px solid var(--gold);color:var(--gold);font-size:18px;display:flex;align-items:center;justify-content:center;z-index:5;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.pd-edit{position:absolute;top:14px;right:14px;background:rgba(10,10,11,0.7);border:0.5px solid var(--gold);color:var(--gold);padding:8px 14px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;z-index:5;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.pd-name{position:absolute;left:18px;right:18px;bottom:14px;z-index:4;}
+.pd-name h2{font-family:var(--serif);font-size:26px;font-weight:400;font-style:italic;color:var(--t1);letter-spacing:.2px;line-height:1.1;}
+.pd-addr{font-size:11px;color:rgba(244,239,230,0.75);margin-top:4px;}
+.pd-sec{padding:18px 20px 0;}
+.pd-sec-h{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.pd-sec-h .pd-sec-sub{color:var(--gold);font-weight:600;letter-spacing:1px;}
+.pd-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;}
+.pd-stat{background:var(--bg3);padding:11px 8px;text-align:center;border:0.5px solid var(--b1);}
+.pd-stat .v{font-family:var(--serif);font-size:18px;font-weight:400;}
+.pd-stat .l{font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:1.3px;margin-top:3px;}
+.pd-task{padding:10px 12px;background:var(--bg3);border:0.5px solid var(--b1);margin-bottom:6px;display:flex;gap:10px;align-items:center;}
+.pd-task .t{flex:1;font-size:12.5px;}
+.pd-task .due{font-size:10px;color:var(--gold);}
 /* Quick “go to bills” strip so it’s impossible to miss */
 .bills-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:10px 12px;border:0.5px dashed var(--gold-soft);border-radius:var(--rs);background:rgba(201,169,97,0.03);}
 .bills-banner-l{display:flex;flex-direction:column;}
@@ -140,7 +160,7 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .bills-add{font-size:10px;color:var(--gold);background:transparent;border:0.5px solid var(--gold-soft);padding:3px 8px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;font-weight:600;}
 .bills-add:active{background:var(--gold-soft);}
 .bills-tbl{background:var(--bg3);border-radius:var(--rs);overflow:hidden;}
-.bill-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:9px 11px;border-bottom:0.5px solid rgba(201,169,97,0.06);align-items:center;cursor:pointer;}
+.bill-row{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;padding:9px 11px;border-bottom:0.5px solid rgba(201,169,97,0.06);align-items:center;cursor:pointer;}
 .bill-row:last-child{border-bottom:none;}
 .bill-row:active{background:rgba(201,169,97,0.04);}
 .bill-l{min-width:0;}
@@ -153,6 +173,8 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 .bs-late{color:var(--red);border-color:var(--red);background:var(--red-bg);}
 .bs-up{color:var(--t2);border-color:var(--t2);}
 .bill-owner{display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--bg);border:0.5px solid var(--gold);font-size:9px;color:var(--gold);text-align:center;line-height:17px;font-weight:700;letter-spacing:.5px;}
+.bill-owner-sel{background:transparent;border:0.5px solid var(--gold-soft);color:var(--gold);font-size:9.5px;padding:3px 6px;border-radius:0;letter-spacing:.6px;font-weight:600;-webkit-appearance:none;appearance:none;cursor:pointer;font-family:inherit;padding-right:14px;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 6px) center,calc(100% - 3px) center;background-size:3px 3px,3px 3px;background-repeat:no-repeat;}
+.bill-owner-sel:focus{outline:none;border-color:var(--gold);}
 /* Bill modal day/month picker */
 .bill-mark{padding:14px;background:var(--green-bg);color:var(--green);border:0.5px solid var(--green);border-radius:var(--r);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:2px;text-transform:uppercase;width:100%;margin-bottom:8px;}
 .bill-unmark{padding:10px;background:transparent;color:var(--amber);border:0.5px solid var(--amber);border-radius:var(--r);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1.5px;text-transform:uppercase;width:100%;margin-bottom:8px;}
@@ -340,6 +362,7 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 <div class="sync-bar" id="sbar"></div>
 
 <div class="tb">
+  <div class="tb-l-spacer"></div>
   <div>
     <h1>Caldwell Living</h1>
     <div class="sub" id="pcount">Loading...</div>
@@ -448,6 +471,13 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
   <button class="nbtn" data-view="updates"><div class="ni">&#10024;</div><div class="nl">Updates</div></button>
 </div>
 
+<!-- PROPERTY DETAIL MODAL (full-screen "click into" view) -->
+<div class="mo" id="propDetail">
+  <div class="modal" style="max-height:96vh;padding:0;">
+    <div id="pdBody" style="padding:0 0 calc(24px + var(--sab));"></div>
+  </div>
+</div>
+
 <!-- BILL MODAL -->
 <div class="mo" id="billModal">
   <div class="modal">
@@ -472,6 +502,7 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
       </select>
     </div>
     <button class="mbtn" id="blSave">Save changes</button>
+    <button class="mbtnd" id="blApplyAll" style="background:transparent;color:var(--gold);border:0.5px solid var(--gold);margin-top:8px;">Apply this bill to ALL properties</button>
     <button class="mbtnd" id="blDelete" style="display:none">Delete this bill</button>
     <button class="mcancel" id="blCancel">Cancel</button>
   </div>
@@ -482,7 +513,15 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
   <div class="modal">
     <div class="pt"></div><h3 id="propMT">Add property</h3>
     <div class="pimg-prev" id="pmImgPrev">No photo yet</div>
-    <div class="mf"><div class="ml">Photo URL <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t3)">(paste an image link — from Zillow, Airbnb, etc.)</span></div><input class="mi" id="pmImg" type="text" placeholder="https://..."></div>
+    <div class="mf">
+      <div class="ml">Photo</div>
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="mbtnd" id="pmPickPhoto" style="flex:1;background:transparent;color:var(--gold);border:0.5px solid var(--gold);margin:0;padding:12px;font-size:11px;letter-spacing:1.5px;">📷 Take or upload</button>
+        <button type="button" class="mbtnd" id="pmClearPhoto" style="flex:0 0 auto;background:transparent;color:var(--t2);border:0.5px solid var(--b2);margin:0;padding:12px 14px;font-size:11px;letter-spacing:1.5px;">Clear</button>
+      </div>
+      <input type="file" id="pmFile" accept="image/*" style="display:none">
+    </div>
+    <div class="mf"><div class="ml" style="font-size:9px;letter-spacing:1.2px;color:var(--t3)">Or paste an image URL</div><input class="mi" id="pmImg" type="text" placeholder="https://..." style="font-size:12px"></div>
     <div class="mf"><div class="ml">Name</div><input class="mi" id="pmName" type="text" placeholder="e.g. Lakeside Cabin"></div>
     <div class="mf"><div class="ml">Address</div><input class="mi" id="pmAddr" type="text" placeholder="e.g. 12 Pine Ridge Dr, GA"></div>
     <!-- emoji picker removed; will be replaced by real photos -->
@@ -949,14 +988,16 @@ function renderProps(){
       strows+='<div class="srow"><div><div class="sdt">'+fmtD(st.check_in)+' to '+fmtD(st.check_out)+'</div><div class="snt">'+n+' nights'+(pn?' &middot; '+pn.name:'')+'</div></div><div class="samt">'+fmt(st.amount)+'</div></div>';
     });
     var exp=pExp(p.id),net=pNet(p.id),pt=tasks.filter(function(t){return t.property_id===p.id&&!t.done;}).length;
-    html+='<div class="pcard">';
+    html+='<div class="pcard" data-prop="'+p.id+'">';
     var hasImg=!!p.image_url;
     var imgStyle=hasImg?'background-image:url('+p.image_url+')':'background:'+bg;
     var imgInner=hasImg?'':'<span style="font-size:9px;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase">Photo</span>';
     html+='<div class="ptop"><div class="pheader-tap" data-ep="'+p.id+'"><div class="pimg" style="'+imgStyle+'">'+imgInner+'</div>';
     html+='<div style="flex:1;min-width:0"><div class="pnw"><span class="pname">'+p.name+'</span></div>';
     html+='<div class="paddr">'+(p.addr||'')+'</div></div></div>';
-    html+='<div class="pact"><button class="pedit" data-ep="'+p.id+'">Edit</button></div></div>';
+    html+='</div></div>';
+    // Recurring bills table — RIGHT AFTER the header so it's impossible to miss
+    html+=renderBillsTable(p);
     html+='<div style="display:flex;gap:8px;margin:8px 0 10px;align-items:center;">'+sBadge(p.status)+'<button class="bookbtn" data-bp="'+p.id+'" style="margin-left:auto">+ Book</button></div>';
     if(p.next_renter)html+='<div class="rrow"><div class="rdot" style="background:'+sColor(p.status)+'"></div><div><span class="rname">'+p.next_renter+'</span><span style="color:var(--t3);font-size:11px"> &middot; current renter</span></div></div>';
     if(pb.length)html+='<div class="bklist">'+chips+'</div>';
@@ -973,23 +1014,92 @@ function renderProps(){
     html+='<div class="pst"><div class="psv" style="color:'+(net>=0?'var(--green)':'var(--red)')+'">'+fmt(net)+'</div><div class="psl">Net</div></div>';
     html+='<div class="pst"><div class="psv" style="color:'+(pt>0?'var(--amber)':'var(--t1)')+'">'+pt+'</div><div class="psl">Tasks</div></div>';
     html+='</div>';
-    // Recurring bills table
-    html+=renderBillsTable(p);
-    html+='</div>';
+    html+='</div>'; // end pcard
   });
   g('propList').innerHTML=html;
   bindProps();
 }
 
 function bindProps(){
-  document.querySelectorAll('[data-ep]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openEditProp(b.getAttribute('data-ep'));});});
+  // Tap entire card (except action buttons) to open detail view
+  document.querySelectorAll('.pcard').forEach(function(card){
+    card.addEventListener('click',function(e){
+      if(e.target.closest('button,.bill-row,.rtog,.xbtn,.bills-add,.bookbtn,.pedit,.addstay'))return;
+      var pid=card.getAttribute('data-prop');if(pid)openPropDetail(pid);
+    });
+  });
+  document.querySelectorAll('.pedit[data-ep]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openEditProp(b.getAttribute('data-ep'));});});
+  document.querySelectorAll('.pheader-tap[data-ep]').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();openPropDetail(el.getAttribute('data-ep'));});});
   document.querySelectorAll('.bookbtn').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openBook(b.getAttribute('data-bp'));});});
   document.querySelectorAll('.xbtn[data-bki]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();var i=parseInt(b.getAttribute('data-bki'));if(confirm('Remove booking?'))delBooking(bookings[i].id);});});
   document.querySelectorAll('.rtog').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var n=el.getAttribute('data-rn');if(!gmap[n])gmap[n]={repeat:false,stays:[]};gmap[n].repeat=!gmap[n].repeat;renderProps();});});
   document.querySelectorAll('.addstay').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openStay(b.getAttribute('data-sn'));});});
   document.querySelectorAll('.bill-row').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();openBill(el.getAttribute('data-bk'));});});
   document.querySelectorAll('.bills-add').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();openBill(b.getAttribute('data-bp')+'|new');});});
+  document.querySelectorAll('.bill-owner-sel').forEach(function(sel){
+    sel.addEventListener('change',function(e){
+      e.stopPropagation();
+      var parts=sel.getAttribute('data-bo').split('|'),pid=parts[0],idx=parseInt(parts[1]);
+      var p=props.find(function(x){return x.id===pid;});if(!p)return;
+      var bills=getBills(p).slice();
+      if(!bills.length)bills=DEFAULT_BILLS.map(function(b){return Object.assign({},b);});
+      bills[idx].owner=sel.value;
+      saveBills(p,bills);
+      showSync('Owner → '+sel.value);
+    });
+    sel.addEventListener('click',function(e){e.stopPropagation();});
+  });
 }
+
+// ============ PROPERTY DETAIL VIEW ============
+function todayISO(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function openPropDetail(pid){
+  var p=props.find(function(x){return x.id===pid;});if(!p)return;
+  var heroBg=p.image_url?'background-image:linear-gradient(rgba(10,10,11,0),rgba(10,10,11,0.5)),url('+p.image_url+')':'background:'+(p.bg||'#1C1C1F');
+  var pb=bookings.filter(function(b){return b.property_id===pid;});
+  var cur=pb.find(function(b){return b.check_in<=todayISO()&&b.check_out>=todayISO();});
+  var nextBk=pb.filter(function(b){return b.check_in>todayISO();}).sort(function(a,b){return a.check_in.localeCompare(b.check_in);})[0];
+  var exp=pExp(pid),inc=Number(p.rev||0),net=inc-exp;
+  var pTasks=tasks.filter(function(t){return t.property_id===pid&&!t.done;});
+  var pExps=expenses.filter(function(e){return e.property_id===pid;}).slice(0,5);
+  var html='';
+  html+='<div class="pdhero" style="'+heroBg+'"><button class="pd-close" id="pdClose">&times;</button><button class="pd-edit" id="pdEdit" data-ep="'+pid+'">Edit</button>';
+  html+='<div class="pd-name"><h2>'+p.name+'</h2>'+(p.addr?'<div class="pd-addr">'+p.addr+'</div>':'')+'</div></div>';
+  html+='<div class="pd-sec"><div class="pd-stats">';
+  html+='<div class="pd-stat"><div class="v" style="color:var(--gold)">'+fmt(inc)+'</div><div class="l">Income</div></div>';
+  html+='<div class="pd-stat"><div class="v" style="color:var(--red)">'+fmt(exp)+'</div><div class="l">Expenses</div></div>';
+  html+='<div class="pd-stat"><div class="v" style="color:'+(net>=0?'var(--green)':'var(--red)')+'">'+fmt(net)+'</div><div class="l">Net</div></div>';
+  html+='<div class="pd-stat"><div class="v">'+pTasks.length+'</div><div class="l">Tasks</div></div>';
+  html+='</div></div>';
+  html+='<div class="pd-sec"><div class="pd-sec-h">Status '+sBadge(p.status)+'</div>';
+  if(cur)html+='<div class="rrow"><div class="rdot" style="background:var(--green)"></div><div><span class="rname">'+cur.guest+'</span><span style="color:var(--t3);font-size:11px"> &middot; in residence &middot; checks out '+fmtD(cur.check_out)+'</span></div></div>';
+  else if(nextBk)html+='<div class="rrow"><div class="rdot" style="background:var(--gold)"></div><div><span class="rname">'+nextBk.guest+'</span><span style="color:var(--t3);font-size:11px"> &middot; next &middot; arrives '+fmtD(nextBk.check_in)+'</span></div></div>';
+  else html+='<div style="font-size:12px;color:var(--t2);padding:8px 0">No upcoming bookings.</div>';
+  html+='<button class="bookbtn" data-bp="'+pid+'" style="width:auto;margin-top:6px">+ New booking</button>';
+  html+='</div>';
+  html+='<div class="pd-sec">'+renderBillsTable(p)+'</div>';
+  html+='<div class="pd-sec"><div class="pd-sec-h">Open Tasks <span class="pd-sec-sub">'+pTasks.length+'</span></div>';
+  if(!pTasks.length)html+='<div style="font-size:12px;color:var(--t2);padding:8px 0">No open tasks.</div>';
+  pTasks.forEach(function(t){
+    html+='<div class="pd-task"><div style="background:'+PC[t.priority||'med']+';width:3px;height:24px;border-radius:2px;flex-shrink:0;"></div><div class="t">'+t.text+'</div><div class="due">'+(t.due||'')+'</div></div>';
+  });
+  html+='</div>';
+  html+='<div class="pd-sec" style="padding-bottom:24px"><div class="pd-sec-h">Recent Expenses <span class="pd-sec-sub">'+expenses.filter(function(e){return e.property_id===pid;}).length+' total</span></div>';
+  if(!pExps.length)html+='<div style="font-size:12px;color:var(--t2);padding:8px 0">No expenses logged.</div>';
+  pExps.forEach(function(e){
+    var cat=CATS[e.category]||{l:e.category,c:'#888'};
+    html+='<div class="pd-task"><div style="width:8px;height:8px;border-radius:50%;background:'+cat.c+';flex-shrink:0"></div><div class="t"><div>'+(e.desc||cat.l)+'</div><div style="font-size:10px;color:var(--t3);margin-top:1px">'+cat.l+' &middot; '+fmtD(e.date)+'</div></div><div class="due" style="color:var(--red);font-family:var(--serif);font-size:14px">'+fmt(e.amount)+'</div></div>';
+  });
+  html+='</div>';
+  g('pdBody').innerHTML=html;
+  openM('propDetail');
+  g('pdClose').addEventListener('click',function(){closeM('propDetail');});
+  g('pdEdit').addEventListener('click',function(){closeM('propDetail');setTimeout(function(){openEditProp(pid);},250);});
+  g('pdBody').querySelectorAll('.bill-row').forEach(function(el){el.addEventListener('click',function(){closeM('propDetail');setTimeout(function(){openBill(el.getAttribute('data-bk'));},250);});});
+  g('pdBody').querySelectorAll('.bills-add').forEach(function(b){b.addEventListener('click',function(){closeM('propDetail');setTimeout(function(){openBill(b.getAttribute('data-bp')+'|new');},250);});});
+  g('pdBody').querySelectorAll('.bookbtn').forEach(function(b){b.addEventListener('click',function(){closeM('propDetail');setTimeout(function(){openBook(b.getAttribute('data-bp'));},250);});});
+}
+onOv('propDetail');
 
 // ============ BILLS ============
 function renderBillsTable(p){
@@ -1009,12 +1119,18 @@ function renderBillsTable(p){
   bills.forEach(function(b,i){
     var s=billStatus(b);
     var statClass='bs-'+s.key;
-    var ownerInit=(b.owner||'?').substr(0,1).toUpperCase();
     var amtStr=b.amount?fmt(b.amount):'—';
     var paidNote=b.last_paid?' · Last paid '+fmtD(b.last_paid):'';
+    var owners=['Jay','Marrissa','Auto-pay','Either','Justin','Cleaner','Plumber','Landscaper'];
+    var curOwner=b.owner||'Jay';
+    if(owners.indexOf(curOwner)<0)owners.unshift(curOwner);
+    var ownerSel='<select class="bill-owner-sel" data-bo="'+p.id+'|'+i+'" onclick="event.stopPropagation();">';
+    owners.forEach(function(o){ ownerSel+='<option value="'+o+'"'+(o===curOwner?' selected':'')+'>'+o+'</option>'; });
+    ownerSel+='</select>';
     h+='<div class="bill-row" data-bk="'+p.id+'|'+i+'">';
-    h+='<div class="bill-l"><div class="bill-name"><span class="bill-owner" title="'+b.owner+'">'+ownerInit+'</span> '+b.name+'</div>';
+    h+='<div class="bill-l"><div class="bill-name">'+b.name+'</div>';
     h+='<div class="bill-meta">'+billDueLabel(b)+paidNote+'</div></div>';
+    h+=ownerSel;
     h+='<div class="bill-amt">'+amtStr+'</div>';
     h+='<span class="bill-stat '+statClass+'">'+s.label+'</span>';
     h+='</div>';
@@ -1127,6 +1243,34 @@ g('blDelete').addEventListener('click',function(){
   saveBills(p,bills);
   closeM('billModal');showSync('Bill deleted');
 });
+// Apply this bill template to every property
+g('blApplyAll').addEventListener('click',async function(){
+  if(!activeBillKey)return;
+  var data=collectBillForm();
+  if(!confirm('Add "'+data.name+'" as a recurring bill on ALL '+props.length+' properties?\n\nExisting bills with the same name on each property will be replaced.'))return;
+  data.last_paid=null;
+  var ops=[];
+  props.forEach(function(p){
+    var bills=getBills(p).slice();
+    if(!bills.length)bills=DEFAULT_BILLS.map(function(b){return Object.assign({},b);});
+    var matchIdx=bills.findIndex(function(b){return (b.name||'').toLowerCase()===(data.name||'').toLowerCase();});
+    var copy=Object.assign({},data);
+    if(matchIdx>=0){
+      copy.last_paid=bills[matchIdx].last_paid||null;
+      bills[matchIdx]=copy;
+    }else{
+      bills.push(copy);
+    }
+    p.bills=bills;
+    ops.push(p);
+  });
+  renderProps();cacheSave();
+  closeM('billModal');showSync('Applied to all '+props.length+' properties');
+  if(!db)return;
+  for(var i=0;i<ops.length;i++){
+    try{ await db.from('properties').update({bills:ops[i].bills}).eq('id',ops[i].id); }catch(e){}
+  }
+});
 g('blCancel').addEventListener('click',function(){closeM('billModal');});
 onOv('billModal');
 
@@ -1160,6 +1304,37 @@ function updatePmImg(url){
   }
 }
 g('pmImg').addEventListener('input',function(){updatePmImg(g('pmImg').value);});
+
+// Photo upload from camera / library — resize + compress to keep row size sane
+g('pmPickPhoto').addEventListener('click',function(){g('pmFile').click();});
+g('pmClearPhoto').addEventListener('click',function(){g('pmImg').value='';updatePmImg('');});
+g('pmFile').addEventListener('change',function(e){
+  var file=e.target.files&&e.target.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var img=new Image();
+    img.onload=function(){
+      var MAX=900;
+      var w=img.width,h=img.height;
+      if(w>h){if(w>MAX){h=h*MAX/w;w=MAX;}}
+      else{if(h>MAX){w=w*MAX/h;h=MAX;}}
+      var canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+      var ctx=canvas.getContext('2d');
+      ctx.fillStyle='#0A0A0B';ctx.fillRect(0,0,w,h);
+      ctx.drawImage(img,0,0,w,h);
+      var dataUrl=canvas.toDataURL('image/jpeg',0.78);
+      g('pmImg').value=dataUrl;
+      updatePmImg(dataUrl);
+      var kb=Math.round(dataUrl.length/1024);
+      showSync('Photo loaded · '+kb+'KB');
+    };
+    img.onerror=function(){showSync('Couldn\'t read that image',true);};
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  // reset so the same file can be re-picked
+  e.target.value='';
+});
 g('pmSave').addEventListener('click',async function(){
   var name=g('pmName').value.trim();if(!name){alert('Enter a name.');return;}
   setSdot('syn');
@@ -1444,8 +1619,28 @@ function renderUp(){
 // ============ WEATHER ============
 var WXI={0:'&#9728;',1:'&#127780;',2:'&#9925;',3:'&#9729;',45:'&#127787;',61:'&#127783;',63:'&#127783;',80:'&#127746;',95:'&#9928;'};
 var WXD={0:'Clear',1:'Mostly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',61:'Light rain',63:'Rain',80:'Showers',95:'Thunderstorm'};
-var COORDS=[{lat:34.8951,lon:-84.3207},{lat:33.7490,lon:-84.3880},{lat:31.9989,lon:-80.8445},{lat:34.6887,lon:-84.4655},{lat:32.0835,lon:-81.0998}];
+var WX_LOCS=[
+  {name:'Roswell, GA', lat:34.0232, lon:-84.3616},
+  {name:'Augusta, GA', lat:33.4735, lon:-82.0105}
+];
 function initWX(){
+  var el=g('wxStrip');if(!el)return;
+  var h='';
+  WX_LOCS.forEach(function(loc,i){h+='<div class="wxcard" id="wx'+i+'"><div class="wxname">'+loc.name+'</div><div style="font-size:11px;color:var(--t3);margin-top:6px">Loading…</div></div>';});
+  el.innerHTML=h;
+  WX_LOCS.forEach(function(loc,i){
+    fetch('https://api.open-meteo.com/v1/forecast?latitude='+loc.lat+'&longitude='+loc.lon+'&current=temperature_2m,weathercode,windspeed_10m,relative_humidity_2m&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=America%2FNew_York')
+      .then(function(r){return r.json();}).then(function(data){
+        var cur=data.current,box=g('wx'+i);if(!box||!cur)return;
+        box.innerHTML='<div class="wxname">'+loc.name+'</div>'
+          +'<div class="wxmain"><span style="font-size:20px">'+(WXI[cur.weathercode]||'\u{1F321}\uFE0F')+'</span><span class="wxtemp">'+Math.round(cur.temperature_2m)+'\u00b0F</span></div>'
+          +'<div class="wxdesc">'+(WXD[cur.weathercode]||'')+'</div>'
+          +'<div class="wxd">'+Math.round(cur.windspeed_10m)+' mph \u00b7 '+cur.relative_humidity_2m+'% hum</div>';
+      }).catch(function(){});
+  });
+}
+// Stub — the rest of the old initWX is replaced by the new two-city version above.
+function __oldInitWX(){
   if(!props.length){g('wxStrip').innerHTML='';return;}
   var h='';
   props.forEach(function(p,i){h+='<div class="wxcard" id="wx'+i+'"><div class="wxname">'+p.name.split(' ')[0]+'</div><div style="font-size:11px;color:var(--t3);margin-top:6px">Loading...</div></div>';});
