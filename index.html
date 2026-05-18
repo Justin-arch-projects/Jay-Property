@@ -87,8 +87,12 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);display:flex
 /* Property detail (full-screen) styles */
 .pdhero{height:200px;background-size:cover;background-position:center;background-color:var(--bg3);position:relative;}
 .pdhero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,11,0) 0%,rgba(10,10,11,0.9) 100%);}
-.pd-close{position:absolute;top:14px;left:14px;width:36px;height:36px;border-radius:50%;background:rgba(10,10,11,0.7);border:0.5px solid var(--gold);color:var(--gold);font-size:18px;display:flex;align-items:center;justify-content:center;z-index:5;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
-.pd-edit{position:absolute;top:14px;right:14px;background:rgba(10,10,11,0.7);border:0.5px solid var(--gold);color:var(--gold);padding:8px 14px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;z-index:5;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+/* iPhone-friendly: floating Close/Edit at the bottom of the detail sheet */
+.pd-actions{position:sticky;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(10,10,11,0.96) 0%,rgba(10,10,11,0.96) 70%,rgba(10,10,11,0) 100%);padding:18px 20px calc(22px + var(--sab));display:flex;gap:10px;z-index:10;margin-top:14px;}
+.pd-actions-close{flex:1;background:transparent;border:0.5px solid var(--t2);color:var(--t1);padding:14px;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;cursor:pointer;font-family:inherit;border-radius:0;}
+.pd-actions-close:active{background:var(--bg3);}
+.pd-actions-edit{flex:1;background:var(--gold);border:0.5px solid var(--gold);color:#0A0A0B;padding:14px;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;cursor:pointer;font-family:inherit;border-radius:0;}
+.pd-actions-edit:active{background:var(--gold-dim);}
 .pd-name{position:absolute;left:18px;right:18px;bottom:14px;z-index:4;}
 .pd-name h2{font-family:var(--serif);font-size:26px;font-weight:400;font-style:italic;color:var(--t1);letter-spacing:.2px;line-height:1.1;}
 .pd-addr{font-size:11px;color:rgba(244,239,230,0.75);margin-top:4px;}
@@ -1113,7 +1117,7 @@ function openPropDetail(pid){
   var pTasks=tasks.filter(function(t){return t.property_id===pid&&!t.done;});
   var pExps=expenses.filter(function(e){return e.property_id===pid;}).slice(0,5);
   var html='';
-  html+='<div class="pdhero" style="'+heroBg+'"><button class="pd-close" id="pdClose">&times;</button><button class="pd-edit" id="pdEdit" data-ep="'+pid+'">Edit</button>';
+  html+='<div class="pdhero" style="'+heroBg+'">';
   html+='<div class="pd-name"><h2>'+p.name+'</h2>'+(p.addr?'<div class="pd-addr">'+p.addr+'</div>':'')+'</div></div>';
   html+='<div class="pd-sec"><div class="pd-stats">';
   html+='<div class="pd-stat"><div class="v" style="color:var(--gold)">'+fmt(inc)+'</div><div class="l">Income</div></div>';
@@ -1141,6 +1145,8 @@ function openPropDetail(pid){
     html+='<div class="pd-task"><div style="width:8px;height:8px;border-radius:50%;background:'+cat.c+';flex-shrink:0"></div><div class="t"><div>'+(e.desc||cat.l)+'</div><div style="font-size:10px;color:var(--t3);margin-top:1px">'+cat.l+' &middot; '+fmtD(e.date)+'</div></div><div class="due" style="color:var(--red);font-family:var(--serif);font-size:14px">'+fmt(e.amount)+'</div></div>';
   });
   html+='</div>';
+  // Bottom action bar — easy to reach on iPhone
+  html+='<div class="pd-actions"><button class="pd-actions-close" id="pdClose">✕ Close</button><button class="pd-actions-edit" id="pdEdit" data-ep="'+pid+'">Edit ✎</button></div>';
   g('pdBody').innerHTML=html;
   openM('propDetail');
   g('pdClose').addEventListener('click',function(){closeM('propDetail');});
